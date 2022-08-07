@@ -10,4 +10,9 @@ public class HomeController {
     public String home(){
         return "you are in the home page";
     }
+
+    @GetMapping("/dashboard")
+    public String dashboard(){
+        return "this is dashboard contents";
+    }
 }
