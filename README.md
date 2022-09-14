@@ -28,5 +28,5 @@ mvn spring-boot:run
 
 Then we browse localhost:8080. The application starts with a prebuilt admin user with the following credentials:
 
-username: admin
-password: admin123
+username: admin@example.org
+password: admin
