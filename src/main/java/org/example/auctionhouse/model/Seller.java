@@ -20,12 +20,6 @@ public class Seller {
     private User user;
 
     @Column
-    private String country;
-
-    @Column
-    private String location;
-
-    @Column
     private Integer rating;
 
     @OneToMany(targetEntity = Auction.class, mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

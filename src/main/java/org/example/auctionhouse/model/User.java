@@ -24,8 +24,14 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String phone;
+
+    @Column
+    private String country;
+
+    @Column
+    private String location;
 
     @Column(nullable = false)
     private String password;

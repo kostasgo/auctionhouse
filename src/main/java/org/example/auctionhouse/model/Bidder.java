@@ -20,12 +20,6 @@ public class Bidder {
     private User user;
 
     @Column
-    private String country;
-
-    @Column
-    private String location;
-
-    @Column
     private Integer rating;
 
     @OneToMany(targetEntity = Bid.class, mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
