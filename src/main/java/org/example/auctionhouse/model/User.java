@@ -1,5 +1,7 @@
 package org.example.auctionhouse.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,13 +39,16 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonBackReference
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
+    @JsonManagedReference
     private Bidder bidder;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
+    @JsonManagedReference
     private Seller seller;
 }

@@ -1,5 +1,7 @@
 package org.example.auctionhouse.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,10 +21,12 @@ public class Bid {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "bidder_id")
+    @JsonManagedReference
     private Bidder bidder;
 
     @ManyToOne
     @JoinColumn(name = "auction_id")
+    @JsonBackReference
     private Auction auction;
 
     @Column(nullable = false)

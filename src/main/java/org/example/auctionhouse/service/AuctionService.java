@@ -19,6 +19,10 @@ public class AuctionService {
         return auctionRepository.findAll();
     }
 
+    public Auction findById(Long id) {
+        return auctionRepository.findById(id).get();
+    }
+
     public Auction saveOrUpdate(Auction auction) {
         return auctionRepository.saveAndFlush(auction);
     }
