@@ -40,10 +40,10 @@ public class User {
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn
     private Bidder bidder;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @JoinColumn
     private Seller seller;
 }

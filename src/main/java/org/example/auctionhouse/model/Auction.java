@@ -42,7 +42,7 @@ public class Auction {
     @Column(nullable = false)
     private LocalDateTime ends;
 
-    @ManyToMany(cascade =  CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade =  CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "auction_category", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
     private List<Category> categories;
 
@@ -56,10 +56,24 @@ public class Auction {
     private Double firstBid;
 
     @Column(name="number_of_bids")
-    private Long numberOfBids;
+    private Integer numberOfBids;
 
     @OneToMany(targetEntity = Bid.class, mappedBy = "auction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Bid> bids;
 
-
+    public Auction(Seller seller, String name, String description, String country, String location, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid) {
+        this.seller = seller;
+        this.name = name;
+        this.description = description;
+        this.country = country;
+        this.location = location;
+        this.started = started;
+        this.ends = ends;
+        this.categories = categories;
+        this.currently = firstBid;
+        this.buyPrice = buyPrice;
+        this.firstBid = firstBid;
+        this.numberOfBids = 0;
+        this.bids = null;
+    }
 }
