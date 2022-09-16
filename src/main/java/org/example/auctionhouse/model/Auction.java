@@ -1,7 +1,9 @@
 package org.example.auctionhouse.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 @NoArgsConstructor
 @Table(name = "auction")
 public class Auction {
@@ -24,7 +27,6 @@ public class Auction {
 
     @ManyToOne
     @JoinColumn(name = "seller_id")
-    @JsonManagedReference
     private Seller seller;
 
     @Column(nullable = false)
@@ -62,7 +64,6 @@ public class Auction {
     private Integer numberOfBids;
 
     @OneToMany(targetEntity = Bid.class, mappedBy = "auction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
     private Set<Bid> bids;
 
     public Auction(Seller seller, String name, String description, String country, String location, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid) {

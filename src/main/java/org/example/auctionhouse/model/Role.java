@@ -1,6 +1,8 @@
 package org.example.auctionhouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +18,7 @@ import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Table(name = "role")
 @NoArgsConstructor
 @Getter
@@ -28,7 +31,6 @@ public class Role {
     private String name;
 
     @OneToMany(targetEntity = User.class, mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
     private Set<User> users;
 
     public Role(String name) {
