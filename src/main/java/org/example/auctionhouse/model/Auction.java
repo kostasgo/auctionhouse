@@ -1,8 +1,6 @@
 package org.example.auctionhouse.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -66,7 +64,10 @@ public class Auction {
     @OneToMany(targetEntity = Bid.class, mappedBy = "auction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Bid> bids;
 
-    public Auction(Seller seller, String name, String description, String country, String location, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid) {
+    @Column
+    private String imgUrl;
+
+    public Auction(Seller seller, String name, String description, String country, String location, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
         this.seller = seller;
         this.name = name;
         this.description = description;
@@ -80,5 +81,6 @@ public class Auction {
         this.firstBid = firstBid;
         this.numberOfBids = 0;
         this.bids = null;
+        this.imgUrl = imgUrl;
     }
 }

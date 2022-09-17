@@ -1,7 +1,7 @@
 package org.example.auctionhouse.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Table(name = "bid")
 public class Bid {
 
@@ -21,12 +22,10 @@ public class Bid {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "bidder_id")
-    @JsonManagedReference
     private Bidder bidder;
 
     @ManyToOne
     @JoinColumn(name = "auction_id")
-    @JsonBackReference
     private Auction auction;
 
     @Column(nullable = false)

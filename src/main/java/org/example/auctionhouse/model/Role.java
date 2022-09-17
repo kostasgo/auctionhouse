@@ -1,7 +1,7 @@
 package org.example.auctionhouse.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,7 @@ public class Role {
     @Column(nullable = false)
     private String name;
 
+    @JsonIgnore
     @OneToMany(targetEntity = User.class, mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<User> users;
 
