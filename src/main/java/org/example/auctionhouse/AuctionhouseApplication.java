@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -61,7 +61,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 			user1.setName("Test Admin");
 			user1.setPhone("9787456545");
 			user1.setRole(roleService.findByName(RoleTypes.ADMIN.toString()));
-			user1.setPassword(new BCryptPasswordEncoder().encode("admin"));
+			user1.setPassword("admin");
 			userService.saveOrUpdate(user1);
 
 			User user2= new User();
@@ -70,7 +70,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 			user2.setName("Test user");
 			user2.setPhone("1234516367");
 			user2.setRole(roleService.findByName(RoleTypes.ADMIN.toString()));
-			user2.setPassword(new BCryptPasswordEncoder().encode("user"));
+			user2.setPassword("user");
 			userService.saveOrUpdate(user2);
 
 			if (auctionService.findAll().isEmpty()){
@@ -94,7 +94,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				LocalDateTime ends = LocalDateTime.parse("23-09-2022 11:59:32", formatter);
 				LocalDateTime bidTime = LocalDateTime.parse("16-09-2022 08:43:11", formatter);
 
-				Auction auction = new Auction(seller, "Electric Guitar, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75);
+				Auction auction = new Auction(seller, "Electric Guitar, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
 
 				auctionService.saveOrUpdate(auction);
 
