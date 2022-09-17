@@ -1,19 +1,18 @@
-import logo from './logo.svg';
 import './App.css';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import NavigationBar from './components/sharedComponents/NavigationBar';
-import AuctionsListPage from './components/pages/AuctionsListPage/AuctionsListPage';
+import AuctionsListPage from './components/pages/AuctionsListPage';
 
 function App() {
   return (
-    <div className="App">
-      <NavigationBar/>
+    <div>
+      <NavigationBar />
       <Router>
         <Routes>
-         
-          <Route path="/explore" element={<AuctionsListPage />} />
+
+          <Route path="/auctions" element={<AuctionsListPage />} />
 
         </Routes>
       </Router>
