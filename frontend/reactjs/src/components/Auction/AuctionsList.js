@@ -92,7 +92,7 @@ export default class AuctionsList extends Component {
                                                     <ListGroup.Item className='mb-2 text-muted'>Time remaining&nbsp;&nbsp;: &emsp;
                                                     { diff = Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;
                                                     { diff2 = Math.floor( Math.abs( diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 / 60 )} hours&ensp;
-                                                    { Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes left
+                                                    { Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes
                                                         
                                                         
                                                     </ListGroup.Item>

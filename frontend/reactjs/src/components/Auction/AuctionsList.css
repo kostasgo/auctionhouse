@@ -16,8 +16,6 @@
     -moz-text-size-adjust: auto;
 }
 
-.wrap-all-search{
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
+.userName{
+    line-height: 0.8rem;
 }
