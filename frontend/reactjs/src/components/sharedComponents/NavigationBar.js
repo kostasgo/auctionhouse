@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Nav, Navbar, Container, Offcanvas, NavDropdown, Form, Button } from 'react-bootstrap';
+import { Nav, Navbar, Container, Offcanvas, Form, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 class NavigationBar extends React.Component {
   render() {
@@ -18,26 +19,13 @@ class NavigationBar extends React.Component {
               >
                 <Offcanvas.Header closeButton>
                   <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-                    Offcanvas
+                    AuctionHouse
                   </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
                     <Nav.Link href="#action1">Home</Nav.Link>
                     <Nav.Link href="/auctions">Auctions</Nav.Link>
-                    <NavDropdown
-                      title="Dropdown"
-                      id={`offcanvasNavbarDropdown-expand-${expand}`}
-                    >
-                      <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-                      <NavDropdown.Item href="#action4">
-                        Another action
-                      </NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item href="#action5">
-                        Something else here
-                      </NavDropdown.Item>
-                    </NavDropdown>
                   </Nav>
                   <Form className="d-flex">
                     <Form.Control
@@ -48,6 +36,12 @@ class NavigationBar extends React.Component {
                     />
                     <Button variant="outline-success">Search</Button>
                   </Form>
+                  <Nav className="justify-content-end mt-5">
+                    <Nav.Link href="/login" className="text-danger text-decoration-underline">Login</Nav.Link>
+                    <Nav.Link href="/register" className="text-danger text-decoration-underline">Register</Nav.Link>
+
+                  </Nav>
+
                 </Offcanvas.Body>
               </Navbar.Offcanvas>
             </Container>

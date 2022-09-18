@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import axios from 'axios'
 
-export default class AuctionsListPage extends Component {
+export default class AuctionsList extends Component {
 
     constructor(props) {
         super(props);
@@ -21,8 +21,7 @@ export default class AuctionsListPage extends Component {
 
     render() {
         return (
-            <Container>
-                <h2>Auctions</h2>
+            <>
                 <Row>
                     {
                         this.state.auctions.length === 0 ?
@@ -48,7 +47,7 @@ export default class AuctionsListPage extends Component {
                             ))
                     }
                 </Row >
-            </Container >
+            </>
         )
     }
 }
