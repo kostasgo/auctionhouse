@@ -1,9 +1,21 @@
 import React, { Component } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
+import "./AuctionsList.css"
+import moment from "moment";
+
+function calcDifference(dt1, dt2) {
+    var diff = (dt1 - dt2) / 1000;
+    diff /= 60;
+    return Math.abs(Math.round(diff));
+}
+
+
 
 export default class AuctionsList extends Component {
-
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -18,10 +30,43 @@ export default class AuctionsList extends Component {
                 this.setState({ auctions: data });
             });
     }
-
+    
     render() {
+        const handleSearch = () => {
+            console.log("SEARCH CLICKED");
+            <Route path="/" element={ <Navigate to="/" /> } />
+        };
+
+        const handleSelect = () => {
+            console.log("SELECT CLICKED");
+            <Route path="/" element={ <Navigate to="/" /> } />
+        };
+
+        const handleUserClick = () => {
+            console.log("USER CLICKED");
+            <Route path="/" element={ <Navigate to="/" /> } />
+        };
+
+        var diff;
+        var diff2;
+        var days;
+        var hours;
+        var minutes;
+
         return (
+    
             <>
+                <Container className='search-container'>
+                    <Row className='search-input' >
+                        <input
+                            className="auctions-search"
+                            type={"text"}
+                            placeholder="ex. Decorations, Clothes etc."
+                        ></input>
+                        <Button className='search-button' variant="primary" onClick={handleSearch}>SEARCH</Button>
+                    </Row>
+                </Container>
+
                 <Row>
                     {
                         this.state.auctions.length === 0 ?
@@ -35,11 +80,35 @@ export default class AuctionsList extends Component {
                                             <Card.Img variant="top" src={auction.imgUrl} style={{ objectFit: 'cover', maxHeight: '350px' }} />
                                             <Card.Body>
                                                 <Card.Title className="text-left">{auction.name}</Card.Title>
-                                                <Card.Subtitle className="mb-2 text-muted">Auctioned By: {auction.seller.user.username} ({auction.seller.rating}/5)</Card.Subtitle>
+                                                <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5)</Card.Subtitle>
                                                 <Card.Text className="text-left">
                                                     {auction.description}
                                                 </Card.Text>
-                                                <Button variant="primary">Go somewhere</Button>
+
+                                                <ListGroup variant="flush">
+                                                    {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
+                                                    {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
+                                                    <ListGroup.Item className='mb-2 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
+                                                    <ListGroup.Item className='mb-2 text-muted'>Time remaining&nbsp;&nbsp;: &emsp;
+                                                    { diff = Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;
+                                                    { diff2 = Math.floor( Math.abs( diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 / 60 )} hours&ensp;
+                                                    { Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes left
+                                                        
+                                                        
+                                                    </ListGroup.Item>
+                                                </ListGroup>
+                                                {/* Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) */}
+                                                <Card.Footer> 
+                                                    <Row>
+                                                        <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>
+                                                        <Col> {auction.currently} € </Col>
+                                                    </Row>
+                                                
+                                                    <Row >
+                                                        <Button variant="primary" className='select-button' onClick={handleSelect}>SEE MORE</Button>
+                                                    </Row>
+                                                </Card.Footer>
+
                                             </Card.Body>
                                         </Card>
                                     </div>
