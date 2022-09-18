@@ -3,14 +3,17 @@ import React from 'react';
 import { Nav, Navbar, Container, Offcanvas, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import '../../css/header.css';
+
+
 class NavigationBar extends React.Component {
   render() {
     return (
       <>
         {[false].map((expand) => (
-          <Navbar key={expand} bg="light" expand={expand} className="mb-3">
+          <Navbar key={expand} bg="transparent" expand={expand} className="mb-3">
             <Container fluid>
-              <Navbar.Brand href="#">AuctionHouse</Navbar.Brand>
+              <Navbar.Brand href="#"><img className='logo_navbar'  src={require('./../../media/logo/500x500.png')} /></Navbar.Brand>
               <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}
@@ -19,7 +22,7 @@ class NavigationBar extends React.Component {
               >
                 <Offcanvas.Header closeButton>
                   <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-                    AuctionHouse
+                    <img className='logo_navbar'  src={require('./../../media/logo/500x500.png')} />
                   </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
