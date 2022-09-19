@@ -4,14 +4,12 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
 import "./AuctionsList.css"
-import moment from "moment";
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
     diff /= 60;
     return Math.abs(Math.round(diff));
 }
-
 
 
 export default class AuctionsList extends Component {
@@ -39,7 +37,7 @@ export default class AuctionsList extends Component {
 
         const handleSelect = () => {
             console.log("SELECT CLICKED");
-            <Route path="/" element={ <Navigate to="/" /> } />
+            Navigate( "/AuctionPage", {state: { id: this.id } });
         };
 
         const handleUserClick = () => {
