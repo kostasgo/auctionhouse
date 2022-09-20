@@ -11,9 +11,9 @@ class NavigationBar extends React.Component {
     return (
       <>
         {[false].map((expand) => (
-          <Navbar key={expand} bg="light" expand={expand} className="mb-3">
-            <Container fluid className='color-nav'>
-              <Navbar.Brand href="#"><img className='logo_navbar' href="/" src={require('./../../media/logo/500x500.png')} /></Navbar.Brand>
+          <Navbar key={expand} bg="transparent" expand={expand} className="mb-3">
+            <Container fluid>
+              <Navbar.Brand href="#"><img className='logo_navbar'  src={require('./../../media/logo/500x500.png')} /></Navbar.Brand>
               <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}

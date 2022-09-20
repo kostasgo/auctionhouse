@@ -28,16 +28,12 @@ public class Bidder {
     @Column
     private Integer rating;
 
-    @Column
-    private Integer rating_count;
-
     @OneToMany(targetEntity = Bid.class, mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Bid> bids;
 
-    public Bidder(User user) {
-        this.user = user ;
-        this.rating = 0 ;
-        this.rating_count = 0;
+    public Bidder(User user, Integer rating) {
+        this.user = user;
+        this.rating = rating;
     }
 
 

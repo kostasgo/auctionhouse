@@ -6,7 +6,6 @@ import org.example.auctionhouse.repository.AuctionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +15,7 @@ public class AuctionService {
     @Autowired
     private AuctionRepository auctionRepository;
 
-    public Collection<Auction> findAll() {
+    public List<Auction> findAll() {
         return auctionRepository.findAll();
     }
 

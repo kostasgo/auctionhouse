@@ -1,8 +1,6 @@
 package org.example.auctionhouse.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,8 +24,6 @@ public class Auction {
     private Long id;
 
     @ManyToOne
-//    @JsonIdentityReference(alwaysAsId = true)
-    @JsonIgnoreProperties({ "auctions" })
     @JoinColumn(name = "seller_id")
     private Seller seller;
 

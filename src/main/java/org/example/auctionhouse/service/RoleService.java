@@ -1,5 +1,6 @@
 package org.example.auctionhouse.service;
 
+import org.example.auctionhouse.enums.RoleTypes;
 import org.example.auctionhouse.model.Role;
 import org.example.auctionhouse.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class RoleService{
         return roleRepository.findById(id);
     }
 
-    public Role findByName(String name) {
+    public Optional<Role> findByName(RoleTypes name) {
         return roleRepository.findByName(name);
     }
 

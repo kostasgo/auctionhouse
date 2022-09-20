@@ -2,32 +2,22 @@
     align-self: center;
     margin-top : 5rem;
     margin-bottom : 5rem;
-    padding-left: 10%;
-    padding-right: 10%;
 }
 
 .search-input{
     align-self: center;
-    font-size : 1.5rem;
-    line-height: 3rem;
+    font-size : 3rem;
+    line-height: 5rem;
 }
 
 .search-button{
-    align-self: center;
-    font-size : 1.5rem;
-    line-height: 3rem;
-    /* -moz-text-size-adjust: auto; */
+    font-size : 2rem;
+    line-height: 4rem;
+    -moz-text-size-adjust: auto;
 }
 
-.userName{
-    line-height: 0.8rem;
-}
-
-.votecount{
-    line-height: 0.2rem;
-    color: rgb(160, 160, 160);
-}
-
-.text-left{
-    padding: 0.5rem;
+.wrap-all-search{
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
 }

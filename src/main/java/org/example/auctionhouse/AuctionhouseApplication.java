@@ -81,8 +81,8 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 			if (auctionService.findAll().isEmpty()){
 
-				Seller seller = new Seller(user2);
-				Bidder bidder = new Bidder(user2);
+				Seller seller = new Seller(user2, 0);
+				Bidder bidder = new Bidder(user2, 0);
 
 				Category category = new Category("Instruments");
 
@@ -100,24 +100,18 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				LocalDateTime ends = LocalDateTime.parse("23-09-2022 11:59:32", formatter);
 				LocalDateTime bidTime = LocalDateTime.parse("16-09-2022 08:43:11", formatter);
 
-				Auction auction1 = new Auction(seller, "Electric Guitar, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
-				Auction auction2 = new Auction(seller, "Electric Guitar2, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
-				Auction auction3 = new Auction(seller, "Electric Guitar3, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
+				Auction auction = new Auction(seller, "Electric Guitar, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
 
-				auctionService.saveOrUpdate(auction1);
-				auctionService.saveOrUpdate(auction2);
-				auctionService.saveOrUpdate(auction3);
+				auctionService.saveOrUpdate(auction);
 
-
-
-				Bid bid = new Bid(bidder, auction1, bidTime, 140.00);
+				Bid bid = new Bid(bidder, auction, bidTime, 140.00);
 				bidService.saveOrUpdate(bid);
 
 				Set<Bid> bids = new HashSet<Bid>();
 				bids.add(bid);
-				auction1.setBids(bids);
+				auction.setBids(bids);
 
-				auctionService.saveOrUpdate(auction1);
+				auctionService.saveOrUpdate(auction);
 			}
 
 		}

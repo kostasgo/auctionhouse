@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.auctionhouse.enums.RoleTypes;
 
+
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
@@ -21,14 +21,9 @@ public class Role {
     @Id
     @GeneratedValue
     private Long id;
-
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleTypes name;
-
-    @JsonIgnore
-    @OneToMany(targetEntity = User.class, mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<User> users;
 
     public Role(RoleTypes name) {
         this.name = name;
