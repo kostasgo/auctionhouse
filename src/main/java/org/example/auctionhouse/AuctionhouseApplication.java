@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -41,16 +45,18 @@ public class AuctionhouseApplication implements CommandLineRunner {
 	private  CategoryService categoryService;
 
 
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuctionhouseApplication.class, args);
 	}
 
+
 	@Override
 	public void run(String... args) throws Exception {
 		if (roleService.findAll().isEmpty()) {
-			roleService.saveOrUpdate(new Role(RoleTypes.ADMIN.toString()));
-			roleService.saveOrUpdate(new Role(RoleTypes.USER.toString()));
+			roleService.saveOrUpdate(new Role(RoleTypes.ADMIN));
+			roleService.saveOrUpdate(new Role(RoleTypes.USER));
 		}
 
 		if (userService.findAll().isEmpty()) {
@@ -60,8 +66,8 @@ public class AuctionhouseApplication implements CommandLineRunner {
 			user1.setEmail("admin@example.org");
 			user1.setName("Test Admin");
 			user1.setPhone("9787456545");
-			user1.setRole(roleService.findByName(RoleTypes.ADMIN.toString()));
-			user1.setPassword("admin");
+			user1.setPassword(this.passwordEncoder.encode("admin"));
+			user1.setEnabled(true);
 			userService.saveOrUpdate(user1);
 
 			User user2= new User();
@@ -69,8 +75,8 @@ public class AuctionhouseApplication implements CommandLineRunner {
 			user2.setEmail("user@example.org");
 			user2.setName("Test user");
 			user2.setPhone("1234516367");
-			user2.setRole(roleService.findByName(RoleTypes.ADMIN.toString()));
-			user2.setPassword("user");
+			user2.setPassword(this.passwordEncoder.encode("user"));
+			user1.setEnabled(true);
 			userService.saveOrUpdate(user2);
 
 			if (auctionService.findAll().isEmpty()){

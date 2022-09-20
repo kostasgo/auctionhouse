@@ -5,14 +5,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import java.util.HashSet;
+import java.util.Set;
 
 @Table(name = "user")
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -25,6 +30,7 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Email
     @Column(nullable = false)
     private String email;
 
@@ -40,9 +46,12 @@ public class User {
     @JsonIgnore
     @Column(nullable = false)
     private String password;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(  name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn
@@ -52,4 +61,17 @@ public class User {
     @JoinColumn
     @JsonIgnoreProperties({"user"})
     private Seller seller;
+
+    @Column
+    private Boolean enabled = false;
+
+    public User(String username, String name, String email, String phone, String country, String location, String password) {
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.country = country;
+        this.location = location;
+        this.password = password;
+    }
 }
