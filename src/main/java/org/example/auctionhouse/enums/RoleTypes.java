@@ -1,5 +1,5 @@
 package org.example.auctionhouse.enums;
 
 public enum RoleTypes {
-    ADMIN, USER
+    ROLE_ADMIN, ROLE_USER
 }

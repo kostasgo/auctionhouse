@@ -55,28 +55,38 @@ public class AuctionhouseApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		if (roleService.findAll().isEmpty()) {
-			roleService.saveOrUpdate(new Role(RoleTypes.ADMIN));
-			roleService.saveOrUpdate(new Role(RoleTypes.USER));
+			roleService.saveOrUpdate(new Role(RoleTypes.ROLE_ADMIN));
+			roleService.saveOrUpdate(new Role(RoleTypes.ROLE_USER));
 		}
 
 		if (userService.findAll().isEmpty()) {
 
 			User user1 = new User();
+			Set<Role> roles = user1.getRoles();
+			roles.add(roleService.findByName(RoleTypes.ROLE_ADMIN).get());
+			roles.add(roleService.findByName(RoleTypes.ROLE_USER).get());
+
 			user1.setUsername("admin");
 			user1.setEmail("admin@example.org");
 			user1.setName("Test Admin");
 			user1.setPhone("9787456545");
+			user1.setRoles(roles);
 			user1.setPassword(this.passwordEncoder.encode("admin"));
 			user1.setEnabled(true);
 			userService.saveOrUpdate(user1);
 
 			User user2= new User();
+
+			roles = user2.getRoles();
+			roles.add(roleService.findByName(RoleTypes.ROLE_USER).get());
+
 			user2.setUsername("user");
 			user2.setEmail("user@example.org");
 			user2.setName("Test user");
 			user2.setPhone("1234516367");
+			user2.setRoles(roles);
 			user2.setPassword(this.passwordEncoder.encode("user"));
-			user1.setEnabled(true);
+			user2.setEnabled(true);
 			userService.saveOrUpdate(user2);
 
 			if (auctionService.findAll().isEmpty()){

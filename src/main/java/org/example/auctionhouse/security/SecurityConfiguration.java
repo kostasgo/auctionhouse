@@ -69,6 +69,8 @@ public class SecurityConfiguration {
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        http.csrf().disable();
+
         return http.build();
     }
 }
