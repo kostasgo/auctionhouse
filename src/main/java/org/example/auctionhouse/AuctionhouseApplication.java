@@ -75,8 +75,8 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 			if (auctionService.findAll().isEmpty()){
 
-				Seller seller = new Seller(user2, 0);
-				Bidder bidder = new Bidder(user2, 0);
+				Seller seller = new Seller(user2);
+				Bidder bidder = new Bidder(user2);
 
 				Category category = new Category("Instruments");
 
@@ -96,9 +96,11 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 				Auction auction1 = new Auction(seller, "Electric Guitar, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
 				Auction auction2 = new Auction(seller, "Electric Guitar2, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
+				Auction auction3 = new Auction(seller, "Electric Guitar3, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
 
 				auctionService.saveOrUpdate(auction1);
 				auctionService.saveOrUpdate(auction2);
+				auctionService.saveOrUpdate(auction3);
 
 
 

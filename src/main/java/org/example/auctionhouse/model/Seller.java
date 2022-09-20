@@ -30,12 +30,17 @@ public class Seller {
     @Column
     private Integer rating;
 
+    @Column
+    private Integer rating_count;
+
+
 
     @OneToMany(targetEntity = Auction.class, mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Auction> auctions;
 
-    public Seller(User user, Integer rating) {
+    public Seller(User user) {
         this.user = user;
-        this.rating = rating;
+        this.rating = 0;
+        this.rating_count = 0;
     }
 }
