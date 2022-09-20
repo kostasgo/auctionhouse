@@ -1,7 +1,6 @@
 package org.example.auctionhouse.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 @NoArgsConstructor
 @Table(name = "seller")
 public class Seller {
@@ -22,17 +20,22 @@ public class Seller {
     private Long id;
 
     @OneToOne
+    @JsonIgnoreProperties({"seller", "email", "name","phone","country","role","bidder","location"})
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column
     private Integer rating;
 
+    @Column(name= "rating_count")
+    private Double ratingCount;
+
     @OneToMany(targetEntity = Auction.class, mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Auction> auctions;
 
-    public Seller(User user, Integer rating) {
+    public Seller(User user) {
         this.user = user;
-        this.rating = rating;
+        this.rating = 0;
+        this.ratingCount = 0.0;
     }
 }

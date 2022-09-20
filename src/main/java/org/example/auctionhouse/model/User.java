@@ -2,6 +2,7 @@ package org.example.auctionhouse.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,6 @@ import java.util.Set;
 
 @Table(name = "user")
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property="id")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -54,10 +54,12 @@ public class User {
 
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"user"})
     @JoinColumn
     private Bidder bidder;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"user"})
     @JoinColumn
     private Seller seller;
 

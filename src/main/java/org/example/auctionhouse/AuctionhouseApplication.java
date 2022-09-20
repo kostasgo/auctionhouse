@@ -81,8 +81,8 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 			if (auctionService.findAll().isEmpty()){
 
-				Seller seller = new Seller(user2, 0);
-				Bidder bidder = new Bidder(user2, 0);
+				Seller seller = new Seller(user2);
+				Bidder bidder = new Bidder(user2);
 
 				Category category = new Category("Instruments");
 

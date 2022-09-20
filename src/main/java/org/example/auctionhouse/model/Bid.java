@@ -1,6 +1,7 @@
 package org.example.auctionhouse.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class Bid {
     @Id
     private Long id;
     @ManyToOne
+    @JsonIgnoreProperties({"bids"})
     @JoinColumn(name = "bidder_id")
     private Bidder bidder;
 
