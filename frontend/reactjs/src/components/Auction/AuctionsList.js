@@ -18,7 +18,8 @@ export default class AuctionsList extends Component {
         super(props);
         this.state = {
             auctions: [],
-            toAuction : false
+            toAuction : false,
+            auction_id : -1
         };
     }
 
@@ -36,9 +37,10 @@ export default class AuctionsList extends Component {
             <Route path="/" element={ <Navigate to="/" /> } />
         };
 
-        const handleSelect = () => {
+        const handleSelect = (id) => {
             console.log("SELECT CLICKED");
-            this.setState({toAuction:true});
+            this.setState({toAuction : true});
+            this.setState({auction_id : id }) ;
         };
 
         const handleUserClick = () => {
@@ -78,7 +80,7 @@ export default class AuctionsList extends Component {
                                         <Card.Img variant="top" src={auction.imgUrl} style={{ objectFit: 'cover', maxHeight: '350px' }} />
                                         <Card.Body>
                                             <Card.Title className="text-left">{auction.name}</Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5)</Card.Subtitle>
+                                            <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
                                             <Card.Text className="text-left">
                                                 {auction.description}
                                             </Card.Text>
@@ -91,8 +93,6 @@ export default class AuctionsList extends Component {
                                                 { diff = Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;
                                                 { diff2 = Math.floor( Math.abs( diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 / 60 )} hours&ensp;
                                                 { Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes
-                                                    
-                                                    
                                                 </ListGroup.Item>
                                             </ListGroup>
                                             {/* Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) */}
@@ -103,7 +103,7 @@ export default class AuctionsList extends Component {
                                                 </Row>
                                             
                                                 <Row >
-                                                    <Button variant="primary" className='select-button' onClick={handleSelect}>SEE MORE</Button>
+                                                    <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>SEE MORE</Button>
                                                 </Row>
                                             </Card.Footer>
 
@@ -114,7 +114,7 @@ export default class AuctionsList extends Component {
                         ))
                 }
             </Row >
-        </> : <AuctionPage />
+        </> : <AuctionPage  data_tranfer = {this.state.auction_id} />
             
         
     }
