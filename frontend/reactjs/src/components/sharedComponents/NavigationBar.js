@@ -7,13 +7,14 @@ import '../../css/header.css';
 
 
 class NavigationBar extends React.Component {
+
   render() {
     return (
       <>
         {[false].map((expand) => (
           <Navbar key={expand} bg="transparent" expand={expand} className="mb-3">
             <Container fluid>
-              <Navbar.Brand href="#"><img className='logo_navbar'  src={require('./../../media/logo/500x500.png')} /></Navbar.Brand>
+              <Navbar.Brand href="#"><img className='logo_navbar' src={require('./../../media/logo/500x500.png')} alt="logo" /></Navbar.Brand>
               <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}
@@ -22,7 +23,7 @@ class NavigationBar extends React.Component {
               >
                 <Offcanvas.Header closeButton>
                   <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-                    <img className='logo_navbar'  src={require('./../../media/logo/500x500.png')} />
+                    <img className='logo_navbar' src={require('./../../media/logo/500x500.png')} alt="logo" />
                   </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
@@ -39,11 +40,29 @@ class NavigationBar extends React.Component {
                     />
                     <Button variant="outline-success">Search</Button>
                   </Form>
-                  <Nav className="justify-content-end mt-5">
-                    <Nav.Link href="/login" className="text-danger text-decoration-underline">Login</Nav.Link>
-                    <Nav.Link href="/register" className="text-danger text-decoration-underline">Register</Nav.Link>
 
-                  </Nav>
+                  {this.props.currentUser ? (
+                    <Nav className="justify-content-end mt-5">
+
+
+                      <Nav.Link href="/profile" className="text-danger text-decoration-underline">{this.props.currentUser.username}</Nav.Link>
+                      <Nav.Link href="/login" className="text-danger text-decoration-underline">Logout</Nav.Link>
+
+                    </Nav>
+                  ) : (
+
+                    <Nav className="justify-content-end mt-5">
+                      <Link to={"/login"} className="nav-link">Admin Board</Link>
+
+                      <Nav.Link href="/login" className="text-danger text-decoration-underline">Login</Nav.Link>
+                      <Nav.Link href="/register" className="text-danger text-decoration-underline">Register</Nav.Link>
+
+                    </Nav>
+
+
+                  )}
+
+
 
                 </Offcanvas.Body>
               </Navbar.Offcanvas>

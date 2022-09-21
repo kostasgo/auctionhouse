@@ -18,8 +18,8 @@ export default class AuctionsList extends Component {
         super(props);
         this.state = {
             auctions: [],
-            toAuction : false,
-            auction_id : -1
+            toAuction: false,
+            auction_id: -1
         };
     }
 
@@ -30,22 +30,22 @@ export default class AuctionsList extends Component {
                 this.setState({ auctions: data });
             });
     }
-    
+
     render() {
         const handleSearch = () => {
             console.log("SEARCH CLICKED");
-            <Route path="/" element={ <Navigate to="/" /> } />
+            //  <Route path="/" element={<Navigate to="/" />} />
         };
 
         const handleSelect = (id) => {
             console.log("SELECT CLICKED");
-            this.setState({toAuction : true});
-            this.setState({auction_id : id }) ;
+            this.setState({ toAuction: true });
+            this.setState({ auction_id: id });
         };
 
         const handleUserClick = () => {
             console.log("USER CLICKED");
-            <Route path="/" element={ <Navigate to="/" /> } />
+            //  <Route path="/" element={<Navigate to="/" />} />
         };
 
         var diff;
@@ -89,18 +89,18 @@ export default class AuctionsList extends Component {
                                                 {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
                                                 <ListGroup.Item key='1' className='mb-2 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
                                                 <ListGroup.Item key='2' className='mb-2 text-muted'>Time remaining&nbsp;&nbsp;: &emsp;
-                                                { diff = Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;
-                                                { diff2 = Math.floor( Math.abs( diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 / 60 )} hours&ensp;
-                                                { Math.floor( Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes
+                                                    {diff = Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
+                                                    {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
+                                                    {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
                                                 </ListGroup.Item>
                                             </ListGroup>
                                             {/* Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) */}
-                                            <Card.Footer> 
+                                            <Card.Footer>
                                                 <Row>
                                                     <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>
                                                     <Col> {auction.currently} € </Col>
                                                 </Row>
-                                            
+
                                                 <Row >
                                                     <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>SEE MORE</Button>
                                                 </Row>
@@ -113,8 +113,8 @@ export default class AuctionsList extends Component {
                         ))
                 }
             </Row >
-        </> : <AuctionPage  data_tranfer = {this.state.auction_id} />
-            
-        
+        </> : <AuctionPage data_tranfer={this.state.auction_id} />
+
+
     }
 }

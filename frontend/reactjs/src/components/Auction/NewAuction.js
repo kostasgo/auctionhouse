@@ -19,30 +19,30 @@ export default class NewAuction extends Component {
         super(props);
         console.log(this.props.data_tranfer);
         this.state = {
-            toBack : false
+            toBack: false
         };
     }
 
     componentDidMount() {
-        
+
     }
-    
+
     render() {
 
         const handleBack = () => {
             console.log("BACK CLICKED");
             console.log(this.state.auction.seller);
-            this.setState({toBack:true});
+            this.setState({ toBack: true });
         };
-   
 
-        return (!this.state.toBack) ? 
-        <>
-            <span>HALLO</span>
-        </>
-        : 
-        <>
-            <AuctionsList/>
-        </>
+
+        return (!this.state.toBack) ?
+            <>
+                <span>HALLO</span>
+            </>
+            :
+            <>
+                <AuctionsList />
+            </>
     }
 }
