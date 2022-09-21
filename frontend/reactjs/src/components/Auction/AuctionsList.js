@@ -5,6 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
 import "./AuctionsList.css"
 import AuctionPage from './AuctionPage';
+import AuthService from "../../services/auth.service";
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -19,7 +20,10 @@ export default class AuctionsList extends Component {
         this.state = {
             auctions: [],
             toAuction: false,
-            auction_id: -1
+            auction_id: -1,
+            redirect: null,
+            userReady: false,
+            currentUser: { username: "" }
         };
     }
 
@@ -29,6 +33,10 @@ export default class AuctionsList extends Component {
             .then((data) => {
                 this.setState({ auctions: data });
             });
+
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
+    
     }
 
     render() {
@@ -53,6 +61,8 @@ export default class AuctionsList extends Component {
         var days;
         var hours;
         var minutes;
+
+        
 
         return (!this.state.toAuction) ? <>
             <Container className='search-container'>
@@ -94,7 +104,7 @@ export default class AuctionsList extends Component {
                                                     {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
                                                 </ListGroup.Item>
                                             </ListGroup>
-                                            {/* Math.abs( new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) */}
+                                        
                                             <Card.Footer>
                                                 <Row>
                                                     <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>

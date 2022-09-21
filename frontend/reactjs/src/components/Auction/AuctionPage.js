@@ -10,6 +10,7 @@ import { findAllByTestId } from '@testing-library/react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
+import AuthService from "../../services/auth.service";
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -28,7 +29,10 @@ export default class AuctionPage extends Component {
             user: {},
             categories: [],
             toBack : false,
-            showPopup : false
+            showPopup : false,
+            redirect: null,
+            userReady: false,
+            currentUser: { username: "" }
             
         };
     }
@@ -42,6 +46,9 @@ export default class AuctionPage extends Component {
                                 ,user :data.seller.user
                                 ,categories : data.categories });
             });
+
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
 
     }
     
@@ -190,7 +197,7 @@ export default class AuctionPage extends Component {
                                 <p className='bid-text'>Current bid&emsp;&emsp;&emsp; :&emsp;{this.state.auction.currently} €</p>
                             </Col>
                             <Col className="justify-content-md-center">
-                                {!this.state.loggedIn?
+                                {this.state.userReady?
                                     <>
                                         <Row >
                                             <input id="input" placeholder={firstbid_placeholder} className='bid-button'></input>
@@ -227,7 +234,7 @@ export default class AuctionPage extends Component {
                                 <p className='bid-text'>Amount to buy out&emsp;:&emsp;{this.state.auction.buyPrice} €</p>
                             </Col>
                             <Col>
-                                {!this.state.loggedIn?
+                                {this.state.userReady?
                                     <Button className='buy-out-button' onClick={() => handleBuyOut(this.state.auction.id)}>BUY OUT</Button>
                                 :<></>
                                 }
@@ -237,7 +244,7 @@ export default class AuctionPage extends Component {
                         </Row>
                     </>
     
-                {!this.state.loggedIn ?
+                {!this.state.userReady ?
                 <>
                     <Link to="/login">
                         <Button className='login-button' onClick={() => handleLogIn()}>LOG IN TO PLACE A BID</Button> 

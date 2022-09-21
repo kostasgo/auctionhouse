@@ -18,7 +18,7 @@ export default class Profile extends Component {
         console.log("profile");
         console.log(currentUser);
 
-        //if (!currentUser) this.setState({ redirect: "/home" });
+        if (!currentUser) this.setState({ redirect: "/home" });
         this.setState({ currentUser: currentUser, userReady: true })
     }
 
