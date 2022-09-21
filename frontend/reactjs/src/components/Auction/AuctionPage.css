@@ -39,7 +39,7 @@
     margin-left: 1rem;
 }
 
-.carousel-container{
+.carousel-info-container{
     margin-top: 3rem;
 }
 
@@ -69,4 +69,16 @@
     width: 100%;
     height: 100vh;
     z-index: 1;
+  }
+
+  .register-button{
+    width : auto;
+  }
+
+  .login-button{
+    width : auto;
+  }
+
+  .map{
+    height: 300px;
   }
