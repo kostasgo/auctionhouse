@@ -64,7 +64,7 @@ class App extends Component {
             <Route path="/profile" component={Profile} />
             <Route path="/auctions" component={AuctionsList} />
             <Route path="/auction" component={AuctionPage} />
-            <Route path="/newauction" component={NewAuction} />
+            <Route path="/new-auction" component={NewAuction} />
             <Route path="/manage" component={ManageAuctions} />
             <Route path="/auction-manage" component={AuctionManagePage} />
 

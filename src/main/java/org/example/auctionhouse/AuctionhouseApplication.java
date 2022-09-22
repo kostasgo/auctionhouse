@@ -135,7 +135,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				categories2.add(category2_2);
 
 				List<Category> categories3 = new ArrayList<>();
-				categories2.add(category3);
+				categories3.add(category3);
 
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 

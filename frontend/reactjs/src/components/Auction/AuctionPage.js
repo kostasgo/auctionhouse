@@ -121,7 +121,7 @@ export default class AuctionPage extends Component {
             <Row className='carousel-info-container' xs={1} md={2} xl={2}>
                 <Col>
                     <Carousel variant="dark">
-
+                        {/* {this.state.auction.imgUrl.map((url) => ( */}
                         <Carousel.Item>
                             <img
                             className="d-block w-100"
@@ -133,6 +133,7 @@ export default class AuctionPage extends Component {
                             {/* <h3>First slide label</h3> */}
                             </Carousel.Caption>
                         </Carousel.Item>
+                        {/* ))} */}
                     </Carousel>
                 </Col>
                 <Col>
@@ -220,7 +221,7 @@ export default class AuctionPage extends Component {
                                                 <Modal.Header closeButton>
                                                 <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
                                                 </Modal.Header>
-                                                <Modal.Body>Are you sure? You're new balance will be: if you win the auction.</Modal.Body>
+                                                <Modal.Body>Are you sure? You are bound to be banned for irresponsible bids</Modal.Body>
                                                 <Modal.Footer>
                                                 <Button variant="secondary" onClick={() => handleClose()}>
                                                     Close
