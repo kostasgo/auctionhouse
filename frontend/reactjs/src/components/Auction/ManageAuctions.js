@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
-import "./AuctionsList.css"
-import AuctionPage from './AuctionPage';
+import "./ManageAuctions.css"
+import AuctionManagePage from './AuctionManagePage';
 import AuthService from "../../services/auth.service";
 
 function calcDifference(dt1, dt2) {
@@ -14,12 +14,12 @@ function calcDifference(dt1, dt2) {
 }
 
 
-export default class AuctionsList extends Component {
+export default class ManageAuctions extends Component {
     constructor(props) {
         super(props);
         this.state = {
             auctions: [],
-            toAuction: false,
+            toAuctionManage: false,
             auction_id: -1,
             redirect: null,
             userReady: false,
@@ -28,15 +28,15 @@ export default class AuctionsList extends Component {
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8080/api/v1/auctions?active=true")
+        axios.get("http://localhost:8080/api/v1/auctions")
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
             });
 
         const currentUser = AuthService.getCurrentUser();
-        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
-
+        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
+    
     }
 
     render() {
@@ -47,13 +47,14 @@ export default class AuctionsList extends Component {
 
         const handleSelect = (id) => {
             console.log("SELECT CLICKED");
-            this.setState({ toAuction: true });
+            this.setState({ toAuctionManage: true });
             this.setState({ auction_id: id });
         };
 
-        const handleUserClick = () => {
-            console.log("USER CLICKED");
-            //  <Route path="/" element={<Navigate to="/" />} />
+        const handleUserClick = (id) => {
+            console.log("SELECT CLICKED");
+            this.setState({ toAuctionManage: true });
+            this.setState({ auction_id: id });
         };
 
         var diff;
@@ -62,24 +63,14 @@ export default class AuctionsList extends Component {
         var hours;
         var minutes;
 
+        
 
-
-        return (!this.state.toAuction) ? <>
-            <Container className='search-container'>
-                <Row className='search-input' >
-                    <input
-                        className="auctions-search"
-                        type={"text"}
-                        placeholder="ex. Decorations, Clothes etc."
-                    ></input>
-                    <Button className='search-button' variant="primary" onClick={handleSearch}>SEARCH</Button>
-                </Row>
-            </Container>
-
+        return (!this.state.toAuctionManage) ? <>
+            
             <Row>
                 {
                     this.state.auctions.length === 0 ?
-                        <h3>0 Auctions Available</h3>
+                        <h3>0 Active Auctions Available</h3>
                         :
 
                         this.state.auctions.map((auction) => (
@@ -104,7 +95,7 @@ export default class AuctionsList extends Component {
                                                     {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
                                                 </ListGroup.Item>
                                             </ListGroup>
-
+                                        
                                             <Card.Footer>
                                                 <Row>
                                                     <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>
@@ -112,7 +103,7 @@ export default class AuctionsList extends Component {
                                                 </Row>
 
                                                 <Row >
-                                                    <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>SEE MORE</Button>
+                                                    <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>EDIT   </Button>
                                                 </Row>
                                             </Card.Footer>
 
@@ -123,7 +114,7 @@ export default class AuctionsList extends Component {
                         ))
                 }
             </Row >
-        </> : <AuctionPage data_tranfer={this.state.auction_id} />
+        </> : <AuctionManagePage data_tranfer={this.state.auction_id} />
 
 
     }

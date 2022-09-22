@@ -19,6 +19,10 @@ public class AuctionService {
         return auctionRepository.findAll();
     }
 
+    public List<Auction> findActive(Boolean active) {
+        return auctionRepository.findAllAuctions(active);
+    }
+
     public Auction findById(Long id) {
         return auctionRepository.findById(id).get();
     }

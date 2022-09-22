@@ -89,45 +89,94 @@ public class AuctionhouseApplication implements CommandLineRunner {
 			user2.setEnabled(true);
 			userService.saveOrUpdate(user2);
 
+
+			User user3= new User();
+
+			roles = user3.getRoles();
+			roles.add(roleService.findByName(RoleTypes.ROLE_USER).get());
+			user3.setUsername("tommyg");
+			user3.setEmail("tomcat@website.org");
+			user3.setName("Tom Gray");
+			user3.setPhone("4653648767");
+			user3.setRoles(roles);
+			user3.setPassword(this.passwordEncoder.encode("tommyg"));
+			user3.setEnabled(true);
+			userService.saveOrUpdate(user3);
+
 			if (auctionService.findAll().isEmpty()){
 
 				Seller seller = new Seller(user2);
 				Bidder bidder = new Bidder(user2);
 
-				Category category = new Category("Instruments");
-
-				List<Category> categories = new ArrayList<>();
-				categories.add(category);
-
-				categoryService.saveOrUpdate(category);
+				Seller seller2 = new Seller(user3);
+				Bidder bidder2 = new Bidder(user3);
 
 				sellerService.saveOrUpdate(seller);
 				bidderService.saveOrUpdate(bidder);
 
+				sellerService.saveOrUpdate(seller2);
+				bidderService.saveOrUpdate(bidder2);
+
+				Category category = new Category("Instruments");
+				Category category2_1 = new Category("Cars");
+				Category category2_2 = new Category("Vehicles");
+				Category category3 = new Category("Jewlery");
+
+				categoryService.saveOrUpdate(category);
+				categoryService.saveOrUpdate(category2_1);
+				categoryService.saveOrUpdate(category2_2);
+				categoryService.saveOrUpdate(category3);
+
+				List<Category> categories = new ArrayList<>();
+				categories.add(category);
+
+				List<Category> categories2 = new ArrayList<>();
+				categories2.add(category2_1);
+				categories2.add(category2_2);
+
+				List<Category> categories3 = new ArrayList<>();
+				categories3.add(category3);
+
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
 				LocalDateTime started = LocalDateTime.parse("15-09-2022 10:24:46", formatter);
-				LocalDateTime ends = LocalDateTime.parse("23-09-2022 11:59:32", formatter);
-				LocalDateTime bidTime = LocalDateTime.parse("16-09-2022 08:43:11", formatter);
+				LocalDateTime ends = LocalDateTime.parse("23-09-2022 23:59:59", formatter);
 
-				Auction auction1 = new Auction(seller, "Electric Guitar, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
-				Auction auction2 = new Auction(seller, "Electric Guitar2, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
-				Auction auction3 = new Auction(seller, "Electric Guitar3, slightly used", "I' selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", started, ends, categories, 600.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
+				LocalDateTime started2 = LocalDateTime.parse("17-09-2022 12:20:10", formatter);
+				LocalDateTime ends2 = LocalDateTime.parse("29-09-2022 11:59:59", formatter);
+
+				LocalDateTime started3 = LocalDateTime.parse("25-09-2022 10:24:46", formatter);
+				LocalDateTime ends3 = LocalDateTime.parse("27-09-2022 17:00:00", formatter);
+
+
+				Auction auction1 = new Auction(seller, "Electric Guitar, slightly used", "I'm selling this guitar, since I am buying a new one. It is in pretty good shape.", "Greece", "Athens", 37.983810, 23.727539 , started, ends, categories, 300.00, 125.75, "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg");
+				Auction auction2 = new Auction(seller2, "1965 Ford Mustang GT350 Mustang", "TRYING TO GET RID OF THIS CAR. HAS DECENT MILEAGE BUT STILL WORKS LIKE A BEAUTY. TREAT IT WITH RESPECT", "Greece", "Thessaloniki",40.629269,22.947412, started2, ends2, categories2, 15000.00, 2000.00, "https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg");
+				Auction auction3 = new Auction(seller, "Gold bracelet", "Many many carats. Belonged to my late granny.", "Greece", "Athens",37.983810,23.727539, started3, ends3, categories3, 500.00, 100.00, "https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg");
 
 				auctionService.saveOrUpdate(auction1);
 				auctionService.saveOrUpdate(auction2);
 				auctionService.saveOrUpdate(auction3);
 
 
-
+				LocalDateTime bidTime = LocalDateTime.parse("16-09-2022 08:43:11", formatter);
 				Bid bid = new Bid(bidder, auction1, bidTime, 140.00);
 				bidService.saveOrUpdate(bid);
+
+				LocalDateTime bidTime2 = LocalDateTime.parse("21-09-2022 10:13:05", formatter);
+				Bid bid2 = new Bid(bidder2, auction2, bidTime, 2300.00);
+				bidService.saveOrUpdate(bid2);
+
 
 				Set<Bid> bids = new HashSet<Bid>();
 				bids.add(bid);
 				auction1.setBids(bids);
 
+				Set<Bid> bids2 = new HashSet<Bid>();
+				bids.add(bid2);
+				auction2.setBids(bids);
+
 				auctionService.saveOrUpdate(auction1);
+				auctionService.saveOrUpdate(auction2);
 			}
 
 		}

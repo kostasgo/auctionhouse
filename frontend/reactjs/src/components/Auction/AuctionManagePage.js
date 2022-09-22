@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import { BrowserRouter, Routes, Route, Navigate, json, Router } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import ListGroup from 'react-bootstrap/ListGroup';
 import Carousel from 'react-bootstrap/Carousel';
 import axios from 'axios'
-import "./AuctionPage.css"
-import AuctionsList from './AuctionsList';
+import "./AuctionManagePage.css"
+import ManageAuctions from './ManageAuctions';
+import { findAllByTestId } from '@testing-library/react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
@@ -16,7 +19,7 @@ export function calcDifference(dt1, dt2) {
 }
 
 
-export default class AuctionPage extends Component {
+export default class AuctionManagePage extends Component {
     constructor(props, context) {
         super(props);
         console.log(this.props.data_tranfer);
@@ -25,12 +28,12 @@ export default class AuctionPage extends Component {
             seller: {},
             user: {},
             categories: [],
-            toBack : false,
+            toManage : false,
             showPopup : false,
             redirect: null,
             userReady: false,
-            Loaded : false,
-            currentUser: { username: "" },
+            currentUser: { username: "" }
+            
         };
     }
 
@@ -38,17 +41,11 @@ export default class AuctionPage extends Component {
         axios.get("http://localhost:8080/api/v1/auctions/"+String(this.props.data_tranfer))
             .then(response => response.data)
             .then((data) => {
-                console.log(data);
-                this.setState({ auction: data,
-                                seller :data.seller,
-                                user :data.seller.user,
-                                categories : data.categories,
-                                lat_map : data.latitude,
-                                lng_map : data.longitude,
-                                Loaded : true});
-                                
+                this.setState({ auction: data
+                                ,seller :data.seller
+                                ,user :data.seller.user
+                                ,categories : data.categories });
             });
-        
 
         const currentUser = AuthService.getCurrentUser();
         if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
@@ -60,7 +57,7 @@ export default class AuctionPage extends Component {
         const handleBack = () => {
             console.log("BACK CLICKED");
             // console.log(this.state.auction.seller);
-            this.setState({toBack:true});
+            this.setState({toManage:true});
         };
 
         const handleUserClick = () => {
@@ -87,7 +84,7 @@ export default class AuctionPage extends Component {
         };
 
         const handleClose = () => {
-            console.log("CLOSE CLICKED");
+            console.log("SHOW CLICKED");
             this.setState({showPopup:false});
         };
 
@@ -97,17 +94,12 @@ export default class AuctionPage extends Component {
         var hours;
         var minutes;
         var firstbid_placeholder = "> "+String(this.state.auction.firstBid)
-
-        var lat = this.state.auction.latitude;
-        var lng = this.state.auction.longitude;
-
-        // console.log(lat, lng);
+    
         
 
         
 
-        return (!this.state.toBack) ? 
-            (!this.state.Loaded)?<></>:
+        return (!this.state.toManage) ? 
             <>
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
             integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
@@ -116,12 +108,12 @@ export default class AuctionPage extends Component {
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
             crossorigin=""></script>
 
-            <Button variant="primary" className='back-button' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button>
+            <Button variant="primary" className='back-button' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO ACTIVE AUCTIONS&emsp; </Button>
             
             <Row className='carousel-info-container' xs={1} md={2} xl={2}>
                 <Col>
                     <Carousel variant="dark">
-                        {/* {this.state.auction.imgUrl.map((url) => ( */}
+
                         <Carousel.Item>
                             <img
                             className="d-block w-100"
@@ -133,7 +125,6 @@ export default class AuctionPage extends Component {
                             {/* <h3>First slide label</h3> */}
                             </Carousel.Caption>
                         </Carousel.Item>
-                        {/* ))} */}
                     </Carousel>
                 </Col>
                 <Col>
@@ -162,17 +153,15 @@ export default class AuctionPage extends Component {
                     <Row><p className="desc"><u>DESCRIPTION</u></p></Row>
 
                     <Row><p className='lead'>{this.state.auction.description}</p></Row>
-                    
-                    {lat == undefined ? <></> :
+
                     <div className='map'>
-                        <MapContainer center={[lat, lng]} zoom={7} className='map' >
+                        <MapContainer center={[37.983810, 23.727539]} zoom={5} className='map' >
                             <TileLayer
                                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
                         </MapContainer>
                     </div>
-                    }
                     
                     
                 </Col>
@@ -221,7 +210,7 @@ export default class AuctionPage extends Component {
                                                 <Modal.Header closeButton>
                                                 <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
                                                 </Modal.Header>
-                                                <Modal.Body>Are you sure? You are bound to be banned for irresponsible bids</Modal.Body>
+                                                <Modal.Body>Are you sure? You're new balance will be: if you win the auction.</Modal.Body>
                                                 <Modal.Footer>
                                                 <Button variant="secondary" onClick={() => handleClose()}>
                                                     Close
@@ -276,7 +265,7 @@ export default class AuctionPage extends Component {
         </>
         : 
         <>
-            <AuctionsList/>
+            <ManageAuctions/>
         </>
     }
 }
