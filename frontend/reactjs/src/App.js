@@ -8,8 +8,10 @@ import AuthService from "./services/auth.service";
 import Login from "./components/User/Login";
 import Register from "./components/User/Register";
 import Profile from "./components/User/Profile";
+import ManageAuctions from "./components/Auction/ManageAuctions";
 import AuctionsList from "./components/Auction/AuctionsList";
 import AuctionPage from "./components/Auction/AuctionPage";
+import AuctionManagePage from "./components/Auction/AuctionManagePage";
 import NewAuction from "./components/Auction/NewAuction";
 import NavigationBar from "./components/sharedComponents/NavigationBar";
 import { Container } from "react-bootstrap";
@@ -58,10 +60,13 @@ class App extends Component {
         <Container>
           <Switch>
             <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
             <Route path="/profile" component={Profile} />
             <Route path="/auctions" component={AuctionsList} />
-            <Route path="/auctionpage" component={AuctionPage} />
+            <Route path="/auction" component={AuctionPage} />
             <Route path="/newauction" component={NewAuction} />
+            <Route path="/manage" component={ManageAuctions} />
+            <Route path="/auction-manage" component={AuctionManagePage} />
 
           </Switch>
         </Container>

@@ -43,6 +43,12 @@ public class Auction {
     private String location;
 
     @Column(nullable = false)
+    private Double latitude;
+
+    @Column(nullable = false)
+    private Double longitude;
+
+    @Column(nullable = false)
     private LocalDateTime started;
 
     @Column(nullable = false)
@@ -70,12 +76,18 @@ public class Auction {
     @Column
     private String imgUrl;
 
-    public Auction(Seller seller, String name, String description, String country, String location, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
+    @Column(nullable = false)
+    private Boolean active;
+
+
+    public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
         this.seller = seller;
         this.name = name;
         this.description = description;
         this.country = country;
         this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.started = started;
         this.ends = ends;
         this.categories = categories;
@@ -85,5 +97,7 @@ public class Auction {
         this.numberOfBids = 0;
         this.bids = null;
         this.imgUrl = imgUrl;
+        this.active = started.isBefore(LocalDateTime.now()) && ends.isAfter(LocalDateTime.now());
     }
+
 }
