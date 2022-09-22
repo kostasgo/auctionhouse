@@ -35,8 +35,8 @@ export default class AuctionsList extends Component {
             });
 
         const currentUser = AuthService.getCurrentUser();
-        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
-    
+        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
+
     }
 
     render() {
@@ -62,7 +62,7 @@ export default class AuctionsList extends Component {
         var hours;
         var minutes;
 
-        
+
 
         return (!this.state.toAuction) ? <>
             <Container className='search-container'>
@@ -104,7 +104,7 @@ export default class AuctionsList extends Component {
                                                     {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
                                                 </ListGroup.Item>
                                             </ListGroup>
-                                        
+
                                             <Card.Footer>
                                                 <Row>
                                                     <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>

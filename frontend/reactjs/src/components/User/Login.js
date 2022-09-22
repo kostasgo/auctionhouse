@@ -5,6 +5,11 @@ import CheckButton from "react-validation/build/button";
 
 import AuthService from "../../services/auth.service";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser, faLock, faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+
+import { Row, Col, Card, InputGroup } from "react-bootstrap";
+
 const required = value => {
     if (!value) {
         return (
@@ -81,67 +86,87 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div className="col-md-4">
-                <div className="card card-container">
-
-                    <Form
-                        onSubmit={this.handleLogin}
-                        ref={c => {
-                            this.form = c;
-                        }}
-                    >
-                        <div className="form-group">
-                            <label htmlFor="username">Username</label>
-                            <Input
-                                type="text"
-                                className="form-control"
-                                name="username"
-                                value={this.state.username}
-                                onChange={this.onChangeUsername}
-                                validations={[required]}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <Input
-                                type="password"
-                                className="form-control"
-                                name="password"
-                                value={this.state.password}
-                                onChange={this.onChangePassword}
-                                validations={[required]}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <button
-                                className="btn btn-primary btn-block"
-                                disabled={this.state.loading}
+            <Row className="justify-content-center">
+                <Col md={6} lg={4}>
+                    <Card>
+                        <Card.Header>
+                            Login
+                        </Card.Header>
+                        <Card.Body>
+                            <Form
+                                onSubmit={this.handleLogin}
+                                ref={c => {
+                                    this.form = c;
+                                }}
                             >
-                                {this.state.loading && (
-                                    <span className="spinner-border spinner-border-sm"></span>
+                                {this.state.message && (
+                                    <div className="form-group">
+                                        <div className="alert alert-danger" role="alert">
+                                            {this.state.message}
+                                        </div>
+                                    </div>
                                 )}
-                                <span>Login</span>
-                            </button>
-                        </div>
 
-                        {this.state.message && (
-                            <div className="form-group">
-                                <div className="alert alert-danger" role="alert">
-                                    {this.state.message}
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Text id="user-icon"><FontAwesomeIcon icon={faUser} /></InputGroup.Text>
+                                    <Input
+                                        placeholder="Password"
+                                        type="text"
+                                        className="form-control"
+                                        name="username"
+                                        value={this.state.username}
+                                        onChange={this.onChangeUsername}
+                                        validations={[required]}
+                                        aria-label="username"
+                                        aria-describedby="password-icon"
+                                    />
+                                </InputGroup>
+
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Text id="password-icon"><FontAwesomeIcon icon={faLock} /></InputGroup.Text>
+                                    <Input
+                                        placeholder="Password"
+                                        type="password"
+                                        className="form-control"
+                                        name="password"
+                                        value={this.state.password}
+                                        onChange={this.onChangePassword}
+                                        validations={[required]}
+                                        aria-label="password"
+                                        aria-describedby="password-icon"
+                                    />
+                                </InputGroup>
+
+                                <div className="form-group">
+                                    <button
+                                        className="btn btn-primary btn-block"
+                                        disabled={this.state.loading}
+                                    >
+                                        {this.state.loading && (
+                                            <span className="spinner-border spinner-border-sm"></span>
+                                        )}
+                                        <span><FontAwesomeIcon icon={faSignInAlt} /> Submit</span>
+                                    </button>
                                 </div>
-                            </div>
-                        )}
-                        <CheckButton
-                            style={{ display: "none" }}
-                            ref={c => {
-                                this.checkBtn = c;
-                            }}
-                        />
-                    </Form>
-                </div>
-            </div>
+
+
+
+                                <CheckButton
+                                    style={{ display: "none" }}
+                                    ref={c => {
+                                        this.checkBtn = c;
+                                    }}
+                                />
+
+                            </Form>
+                        </Card.Body>
+                        <Card.Footer>
+                            <p>Don't have an account yet? <a href="/register">Register here</a></p>
+                        </Card.Footer>
+
+                    </Card>
+                </Col>
+            </Row>
         );
     }
 }

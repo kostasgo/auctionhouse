@@ -3,12 +3,25 @@ import React from 'react';
 import { Nav, Navbar, Container, Offcanvas, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import AuthService from "../../services/auth.service";
+
 import '../../css/header.css';
 
 
 class NavigationBar extends React.Component {
 
+  handleLogout() {
+
+
+  }
   render() {
+
+    const handleLogout = () => {
+      console.log("logging");
+      AuthService.logout();
+    };
+
+
     return (
       <>
         {[false].map((expand) => (
@@ -46,7 +59,7 @@ class NavigationBar extends React.Component {
 
 
                       <Nav.Link href="/profile" className="text-danger text-decoration-underline">{this.props.currentUser.username}</Nav.Link>
-                      <Nav.Link href="/login" className="text-danger text-decoration-underline">Logout</Nav.Link>
+                      <Nav.Link href="/login" className="text-danger text-decoration-underline" onClick={handleLogout}>Logout</Nav.Link>
 
                     </Nav>
                   ) : (

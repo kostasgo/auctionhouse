@@ -14,3 +14,7 @@
     --bs-btn-disabled-bg: #568CF0;
     --bs-btn-disabled-border-color: #568CF0;
 }
+
+.input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    width: 88%;
+}

@@ -58,6 +58,7 @@ class App extends Component {
         <Container>
           <Switch>
             <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
             <Route path="/profile" component={Profile} />
             <Route path="/auctions" component={AuctionsList} />
             <Route path="/auctionpage" component={AuctionPage} />
