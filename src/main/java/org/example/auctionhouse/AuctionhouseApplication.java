@@ -86,7 +86,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 			user2.setPhone("1234516367");
 			user2.setRoles(roles);
 			user2.setPassword(this.passwordEncoder.encode("user"));
-			user2.setEnabled(true);
+			user2.setEnabled(false);
 			userService.saveOrUpdate(user2);
 
 
