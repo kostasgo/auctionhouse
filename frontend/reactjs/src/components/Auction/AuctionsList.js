@@ -6,6 +6,7 @@ import axios from 'axios'
 import "./AuctionsList.css"
 import AuctionPage from './AuctionPage';
 import AuthService from "../../services/auth.service";
+import { Form } from 'react-bootstrap';
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -65,15 +66,34 @@ export default class AuctionsList extends Component {
 
 
         return (!this.state.toAuction) ? <>
+
+            <div className='title'>
+                <div className="container d-flex h-100">
+                        <div className="row justify-content-center align-self-center">
+                            <span className='display-3'> <u>BROWSE AUCTIONS</u></span>
+                            <span className='lead'>FIND WHAT YOU'RE LOOKING FOR!</span>
+                        </div>
+                </div>
+            </div>
+
+            <Form className="d-flex">
+                    <Form.Control
+                      type="search"
+                      placeholder="#Anything you desire"
+                      className="me-2"
+                      aria-label="Search"
+                    />
+                    <Button variant="primary">Search</Button>
+                  </Form>
+
             <Container className='search-container'>
-                <Row className='search-input' >
-                    <input
-                        className="auctions-search"
-                        type={"text"}
-                        placeholder="ex. Decorations, Clothes etc."
-                    ></input>
-                    <Button className='search-button' variant="primary" onClick={handleSearch}>SEARCH</Button>
+                <Row xs={4} md={4} xl={4}>
+                    <Col><Button variant="btn btn-success">FILTER1</Button></Col>
+                    <Col><Button variant="btn btn-warning">FILTER2</Button></Col>
+                    <Col><Button variant="btn btn-danger">FILTER3</Button></Col>
+                    <Col><Button variant="btn btn-info">FILTER4</Button></Col>
                 </Row>
+                
             </Container>
 
             <Row>

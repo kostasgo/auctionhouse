@@ -3,102 +3,189 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import Carousel from 'react-bootstrap/Carousel';
 import axios from 'axios'
 import "./NewAuction.css"
-import AuctionsList from './AuctionsList';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { Link } from "react-router-dom";
-import Modal from 'react-bootstrap/Modal';
+
+import Form from "react-validation/build/form";
+import Input from "react-validation/build/input";
+import CheckButton from "react-validation/build/button";
+import { isEmail } from "validator";
+
 import AuthService from "../../services/auth.service";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave } from '@fortawesome/free-solid-svg-icons'
+
+import { InputGroup } from "react-bootstrap";
+import AllCountriesList from "../sharedComponents/AllCountriesList";
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
     diff /= 60;
     return Math.abs(Math.round(diff));
 }
+const required = value => {
+    if (!value) {
+        return (
+            <div className="alert alert-danger m-0" role="alert">
+                This field is required!
+            </div>
+        );
+    }
+};
 
+const email = value => {
+    if (!isEmail(value)) {
+        return (
+            <div className="alert alert-danger m-0" role="alert">
+                This is not a valid email.
+            </div>
+        );
+    }
+};
+
+const vusername = value => {
+    if (value.length < 3 || value.length > 20) {
+        return (
+            <div className="alert alert-danger m-0" role="alert">
+                The username must be between 3 and 20 characters.
+            </div>
+        );
+    }
+};
+
+const vphone = value => {
+    if (value.length !== 10 || !(/^\d+$/.test(value))) {
+        return (
+            <div className="alert alert-danger m-0" role="alert">
+                Phone Number must consist of 10 digits.
+            </div>
+        );
+    }
+}
+
+const vpassword = value => {
+    if (value.length < 6 || value.length > 40) {
+        return (
+            <div className="alert alert-danger m-0" role="alert">
+                The password must be between 6 and 40 characters.
+            </div>
+        );
+    }
+};
 
 export default class NewAuction extends Component {
-    constructor(props, context) {
+    constructor(props) {
         super(props);
-        console.log(this.props.data_tranfer);
+
         this.state = {
-            auction: {},
-            seller: {},
-            user: {},
-            categories: [],
-            toBack : false,
-            showPopup : false,
-            redirect: null,
-            userReady: false,
-            Loaded : false,
-            currentUser: { username: "" },
+            username: "",
+            name: "",
+            country: "",
+      
+            successful: false,
+            message: ""
         };
     }
 
-    componentDidMount() {
-        
-                                
-       
-
-        const currentUser = AuthService.getCurrentUser();
-        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
-
-        this.setState({Loaded:true});
-
+    onChangeName(e) {
+        this.setState({
+            name: e.target.value
+        });
     }
-    
+
+    onChangePhone(e) {
+        this.setState({
+            phone: e.target.value
+        });
+    }
+
+    onChangeLocation(e) {
+        this.setState({
+            location: e.target.value
+        });
+    }
+
+    onChangeUsername(e) {
+        this.setState({
+            username: e.target.value
+        });
+    }
+
+    onChangeEmail(e) {
+        this.setState({
+            email: e.target.value
+        });
+    }
+
+    onChangePassword(e) {
+        this.setState({
+            password: e.target.value
+        });
+    }
+
+    onChangeCountry(e) {
+        this.setState({
+            country: e.target.value
+        });
+    }
+
+    onChangeRoles(e) {
+        if (e.target.value === "ADMIN") {
+            this.setState({
+                roles: ["USER", "ADMIN"]
+            });
+
+        }
+        else if (e.target.value === "ADMIN") {
+            this.setState({
+                roles: ["USER"]
+            });
+        }
+        else {
+            this.setState({
+                roles: []
+            });
+        }
+    }
+
+    handleNewAuction(e) {
+        e.preventDefault();
+
+        this.setState({
+            message: "",
+            successful: false
+        });
+
+        this.form.validateAll();
+
+        if (this.checkBtn.context._errors.length === 0) {
+            AuthService.register(
+                
+            ).then(
+                response => {
+                    this.setState({
+                        message: response.data.message,
+                        successful: true
+                    });
+                },
+                error => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+
+                    this.setState({
+                        successful: false,
+                        message: resMessage
+                    });
+                }
+            );
+        }
+    }
+
     render() {
-
-        const handleBack = () => {
-            console.log("BACK CLICKED");
-            // console.log(this.state.auction.seller);
-            this.setState({toBack:true});
-        };
-
-        const handleUserClick = () => {
-            console.log("USER CLICKED");
-        };
-
-
-        const handleBuyOut = () => {
-            console.log("BUY-OUT CLICKED");
-        };
-
-        const handleLogIn= () => {
-            console.log("LOGIN CLICKED");
-            
-        };
-
-        const handleRegister = () => {
-            console.log("REGISTER CLICKED");
-        };
-
-        const handleBid = () => {
-            console.log("BID CLICKED");
-            this.setState({showPopup:true});
-        };
-
-        const handleClose = () => {
-            console.log("CLOSE CLICKED");
-            this.setState({showPopup:false});
-        };
-
-        var diff;
-        var diff2;
-        var days;
-        var hours;
-        var minutes;
-        var firstbid_placeholder = "> "+String(this.state.auction.firstBid)
-
-        var lat = this.state.auction.latitude;
-        var lng = this.state.auction.longitude;
-
-        // console.log(lat, lng);
-        
-
-        
-
-        return (!this.state.toBack) ? 
-            (!this.state.Loaded)?<></>:
+        return (
             <>
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
             integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
@@ -106,73 +193,126 @@ export default class NewAuction extends Component {
              <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
             crossorigin=""></script>
-
-            {/* <Button variant="primary" className='back-button' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button> */}
-            
-            <Row className='carousel-info-container' xs={1} md={2} xl={2}>
-                <Col>
-                    <Carousel variant="dark">
-                        {/* {this.state.auction.imgUrl.map((url) => ( */}
-                        <Carousel.Item>
-                            <img
-                            className="d-block w-100"
-                            src={"https://hybridglobalpublishing.com/wp-content/uploads/2016/06/Photo-Goes-Here.jpg"}
-                            style={{ objectFit: 'cover' }}
-                            alt="First slide"
-                            />
-                            <Carousel.Caption>
-                            {/* <h3>First slide label</h3> */}
-                            </Carousel.Caption>
-                        </Carousel.Item>
-                        {/* ))} */}
-                    </Carousel>
-                </Col>
-                <Col>
-                    <Row className='display-6'>(name of auction input)</Row>
-
-                    <br></br>
-
-                    <Row>
-                        <div className='text-start'>Categories: (categories input)</div>
-                    </Row>
-
-                    <Row><p className="desc"><u>DESCRIPTION</u></p></Row>
-
-                    <Row><p className='lead'>(description input)</p></Row>
-                    
-                    {lat == undefined ? <></> :
-                    <div className='map'>
-                        <MapContainer center={[0, 0]} zoom={7} className='map' >
-                            <TileLayer
-                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                        </MapContainer>
-                    </div>
-                    }
-                    
-                    
-                </Col>
-            </Row>
-            <Row>
-                <Row className="justify-content-md-center">---</Row>
-            </Row>
-            <Row>
-                <div className='end-time'>
-                    <Row className='display-9'> Location&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;:&emsp;(location city input)), (country input) </Row>
-                    <Row className='display-9'> Starts at&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;(starts datetime input) </Row>
-                    <Row className='display-9'> Ends on&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;(ends datetime input) </Row>
-                    <Row className='display-9'> Starting at&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;(starting at amount input) </Row>
+            <div className='title'>
+                <div className="container d-flex h-100">
+                        <div className="row justify-content-center align-self-center">
+                            <span className='display-3'> <u>MANAGE AUCTIONS</u></span>
+                            <span className='lead'>NEW AUCTION</span>
+                        </div>
                 </div>
+            </div>
+            <Row className="justify-content-center">
+                <Col lg={6}>
+                    <Card>
+                        <Card.Header>
+                            Fill the form below to create a new auction
+                        </Card.Header>
+                        <Card.Body>
+                            <Form
+                                onSubmit={this.handleNewAuction}
+                                ref={c => {
+                                    this.form = c;
+                                }}
+                            >
+                                {this.state.message && (
+                                    <div className="form-group">
+                                        <div
+                                            className={
+                                                this.state.successful
+                                                    ? "alert alert-success"
+                                                    : "alert alert-danger"
+                                            }
+                                            role="alert"
+                                        >
+                                            {this.state.message}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {!this.state.successful && (
+                                    <div>
+
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faSignature} /></InputGroup.Text>
+                                            <Input
+                                                placeholder="Title"
+                                                type="text"
+                                                className="form-control register-input"
+                                                name="title"
+                                                value={this.state.name}
+                                                onChange={this.onChangeName}
+                                                validations={[required]}
+                                                aria-label="title"
+                                                aria-describedby="signature-icon"
+                                            />
+                                        </InputGroup>
+
+
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faSignature} /></InputGroup.Text>
+                                            <textarea
+                                                placeholder="Description"
+                                                size="500"
+                                                type="text"
+                                                className="form-control register-input"
+                                                name="description"
+                                                value={this.state.email}
+                                                onChange={this.onChangeDescription}
+                                                validations={[required, email]}
+                                                aria-label="description"
+                                                aria-describedby="signature-icon"
+                                            />
+                                        </InputGroup>
+
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="password-icon"><FontAwesomeIcon icon={faGlobe} /></InputGroup.Text>
+
+                                            <select
+                                                className="form-select"
+                                                onChange={this.onChangeCountry}
+                                                aria-label="country"
+                                                aria-describedby="password-icon"
+                                            >
+                                                <AllCountriesList />
+                                            </select>
+                                        </InputGroup>
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="location-icon"><FontAwesomeIcon icon={faLocationPin} /></InputGroup.Text>
+                                            <div className='map'>
+                                                <MapContainer center={[37.983810, 23.727539]} zoom={5} className='map' >
+                                                    <TileLayer
+                                                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                    />
+                                                </MapContainer>
+                                            </div>
+                                        </InputGroup>
+
+                                        <div className="form-group">
+                                            <button className="btn btn-primary btn-block"><FontAwesomeIcon icon={faSave} /> Create Auction</button>
+                                        </div>
+                                    </div>
+                                )}
+
+
+                                <CheckButton
+                                    style={{ display: "none" }}
+                                    ref={c => {
+                                        this.checkBtn = c;
+                                    }}
+                                />
+                            </Form>
+                        </Card.Body>
+                        <Card.Footer>
+                                <p className='lead'>*Creating fake auctions will result in account suspension.</p>
+                        </Card.Footer>
+
+                    </Card>
+                </Col>
             </Row>
-            
-            <br></br><br></br>
-                
-        
-        </>
-        : 
-        <>
-            <div>BACK</div>
-        </>
+            </>
+
+        );
     }
 }
+

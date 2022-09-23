@@ -34,4 +34,9 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.findActive(active), HttpStatus.OK);
     }
 
+    @GetMapping(params = "id")
+    ResponseEntity<Collection<Auction>> findUserAuctions(@RequestParam("id") Integer id){
+        return new ResponseEntity<>(auctionService.findUserAuctions(id), HttpStatus.OK);
+    }
+
 }

@@ -5,6 +5,7 @@ import "./App.css";
 
 import AuthService from "./services/auth.service";
 
+import HomePage from "./components/HomePage";
 import Login from "./components/User/Login";
 import Register from "./components/User/Register";
 import Profile from "./components/User/Profile";
@@ -59,6 +60,7 @@ class App extends Component {
         <NavigationBar currentUser={this.state.currentUser} />
         <Container>
           <Switch>
+            <Route exact path="/" component={HomePage} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route path="/profile" component={Profile} />

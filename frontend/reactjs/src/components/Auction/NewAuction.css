@@ -83,3 +83,7 @@
   .map{
     height: 300px;
   }
+  
+  .title{
+    margin : 1.5rem;
+}

@@ -1,9 +1,9 @@
 .search-container{
     align-self: center;
-    margin-top : 5rem;
+    margin-top : 0.2rem;
     margin-bottom : 5rem;
-    padding-left: 10%;
-    padding-right: 10%;
+
+    
 }
 
 .search-input{
@@ -31,4 +31,8 @@
 
 .text-left{
     padding: 0.5rem;
+}
+
+.title{
+    margin : 1.5rem;
 }

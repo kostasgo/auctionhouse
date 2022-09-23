@@ -109,6 +109,15 @@ export default class AuctionPage extends Component {
         return (!this.state.toBack) ? 
             (!this.state.Loaded)?<></>:
             <>
+            <div className='title'>
+                <div className="container d-flex h-100">
+                        <div className="row justify-content-center align-self-center">
+                            <span className='display-3'> <u>BROWSE AUCTIONS</u></span>
+                            <span className='lead'>FIND WHAT YOU'RE LOOKING FOR!</span>
+                        </div>
+                </div>
+            </div>
+
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
             integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
             crossorigin=""/>
@@ -183,6 +192,7 @@ export default class AuctionPage extends Component {
             <Row>
                 <div className='end-time'>
                     <Row className='display-9'> Location&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;:&emsp;{String(this.state.auction.location)}, {String(this.state.auction.country)} </Row>
+                    <Row className='display-9'> Started on&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;{String(this.state.auction.started).replace('T', ' ')} </Row>
                     <Row className='display-9'> Ends on&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;{String(this.state.auction.ends).replace('T', ' ')} </Row>
                     <Row className='display-9'> Time remaining&nbsp;&nbsp;&emsp;:&emsp;
                                             { diff = Math.floor( Math.abs( new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;

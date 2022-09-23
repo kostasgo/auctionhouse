@@ -20,7 +20,11 @@ public class AuctionService {
     }
 
     public List<Auction> findActive(Boolean active) {
-        return auctionRepository.findAllAuctions(active);
+        return auctionRepository.findAllActiveAuctions(active);
+    }
+
+    public List<Auction> findUserAuctions(Integer id) {
+        return auctionRepository.findUserAuctions(id);
     }
 
     public Auction findById(Long id) {
