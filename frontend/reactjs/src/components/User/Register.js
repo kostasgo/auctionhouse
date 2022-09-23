@@ -77,7 +77,7 @@ export default class Register extends Component {
             username: "",
             name: "",
             email: "",
-            roles: [],
+            role: [],
             password: "",
             phone: "",
             country: "",
@@ -130,20 +130,20 @@ export default class Register extends Component {
     }
 
     onChangeRoles(e) {
-        if (e.target.value === "ADMIN") {
+        if (e.target.value === "admin") {
             this.setState({
-                roles: ["USER", "ADMIN"]
+                role: ["user", "admin"]
             });
 
         }
-        else if (e.target.value === "ADMIN") {
+        else if (e.target.value === "user") {
             this.setState({
-                roles: ["USER"]
+                role: ["user"]
             });
         }
         else {
             this.setState({
-                roles: []
+                role: []
             });
         }
     }
@@ -159,11 +159,12 @@ export default class Register extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
+            console.log(this.state);
             AuthService.register(
                 this.state.username,
                 this.state.name,
                 this.state.email,
-                this.state.roles,
+                this.state.role,
                 this.state.password,
                 this.state.phone,
                 this.state.country,
@@ -339,8 +340,8 @@ export default class Register extends Component {
                                                 aria-describedby="password-icon"
                                             >
                                                 <option>Role</option>
-                                                <option value="ADMIN">ADMIN</option>
-                                                <option value="USER">USER</option>
+                                                <option value="admin">ADMIN</option>
+                                                <option value="user">USER</option>
                                             </select>
                                         </InputGroup>
 
