@@ -78,7 +78,7 @@ export default class ManageAuctions extends Component {
             <div className='title'>
                 <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">
-                            <span className='display-3'> <u>MANAGE AUCTIONS</u></span>
+                            <span className='display-3'> <u>Manage Auctions</u></span>
                             <span className='lead'>YOUR AUCTIONS</span>
                         </div>
                 </div>

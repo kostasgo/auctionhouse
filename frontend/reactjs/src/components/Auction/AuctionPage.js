@@ -112,8 +112,8 @@ export default class AuctionPage extends Component {
             <div className='title'>
                 <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">
-                            <span className='display-3'> <u>BROWSE AUCTIONS</u></span>
-                            <span className='lead'>FIND WHAT YOU'RE LOOKING FOR!</span>
+                            <span className='display-3'> <u>Browse Auctions</u></span>
+                            <span className='lead'>AUCTION DETAILS</span>
                         </div>
                 </div>
             </div>

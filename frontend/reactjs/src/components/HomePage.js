@@ -47,20 +47,23 @@ export default class HomePage extends Component {
         return(
             <>
 
-               
-            {(this.state.userReady)?
-            <>
-            <span>Hallo user</span>
-            </>
-            :
-            <>
-            <span>Hallostranger</span>
-            </>
-            }
-                
-            </>
-            
-            )
+            <div className='title'>
+                <div className="container d-flex h-100">
+                        <div className="row justify-content-center align-self-center">
+                            <span className='display-4'>{(this.state.userReady)?<> Welcome back {this.state.currentUser.username}! </>: <> Welcome to AuctionHouse!</>}</span>
+                            <span className='lead'>Find what you need!</span>
+                        </div>
+                </div>
+            </div>
+
+            <Container>
+                <Row>
+                    <Col> </Col>
+                </Row>
+            </Container>
+
+
+            </>)
 
     }
 }
