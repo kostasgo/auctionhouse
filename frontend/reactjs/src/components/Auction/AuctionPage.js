@@ -35,6 +35,8 @@ export default class AuctionPage extends Component {
     }
 
     componentDidMount() {
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
         axios.get("http://localhost:8080/api/v1/auctions/"+String(this.props.data_tranfer))
             .then(response => response.data)
             .then((data) => {
@@ -48,11 +50,6 @@ export default class AuctionPage extends Component {
                                 Loaded : true});
                                 
             });
-        
-
-        const currentUser = AuthService.getCurrentUser();
-        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
-
     }
     
     render() {
