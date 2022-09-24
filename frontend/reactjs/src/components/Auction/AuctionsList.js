@@ -29,14 +29,13 @@ export default class AuctionsList extends Component {
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8080/api/v1/auctions?active=true")
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
+        axios.get("http://localhost:8080/api/v1/auctions?active=true&id="+String(currentUser.id))
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
             });
-
-        const currentUser = AuthService.getCurrentUser();
-        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
 
     }
 
@@ -105,14 +104,14 @@ export default class AuctionsList extends Component {
                         this.state.auctions.map((auction) => (
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
-                                    <Card key={auction.id}>
-                                        <Card.Img variant="top" src={auction.imgUrl} style={{ objectFit: 'cover', maxHeight: '350px' }} />
+                                    <Card key={auction.id} className="card" >
+                                        <Card.Img variant="top" src={auction.imgUrl[0]} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
-                                            <Card.Title className="text-left"><span className='display-6'>{auction.name}</span></Card.Title>
+                                            <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
-                                            <Card.Text className="text-left">
+                                            {/* <Card.Text className="text-left">
                                                 {auction.description}
-                                            </Card.Text>
+                                            </Card.Text> */}
 
                                             <ListGroup variant="flush">
                                                 {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}

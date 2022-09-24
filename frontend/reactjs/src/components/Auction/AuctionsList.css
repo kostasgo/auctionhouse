@@ -36,3 +36,18 @@
 .title{
     margin : 1.5rem;
 }
+
+.card-title{
+    min-height: 3rem;
+    max-height: 3rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.title-text{
+    font-size: match-parent;
+}
+
+.card{
+    margin-bottom: 1rem;
+}

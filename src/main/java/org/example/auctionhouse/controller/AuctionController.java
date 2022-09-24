@@ -29,9 +29,9 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping(params = "active")
-    ResponseEntity<Collection<Auction>> findActive(@RequestParam("active") Boolean active){
-        return new ResponseEntity<>(auctionService.findActive(active), HttpStatus.OK);
+    @GetMapping(params = {"active", "id"})
+    ResponseEntity<Collection<Auction>> findActive(@RequestParam("active") Boolean active, @RequestParam("id") Integer id){
+        return new ResponseEntity<>(auctionService.findActive(active,id), HttpStatus.OK);
     }
 
     @GetMapping(params = "id")

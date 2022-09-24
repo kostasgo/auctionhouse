@@ -6,6 +6,7 @@ import org.example.auctionhouse.repository.AuctionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +20,8 @@ public class AuctionService {
         return auctionRepository.findAll();
     }
 
-    public List<Auction> findActive(Boolean active) {
-        return auctionRepository.findAllActiveAuctions(active);
+    public List<Auction> findActive(Boolean active, Integer id) {
+        return auctionRepository.findAllActiveAuctions(active, id);
     }
 
     public List<Auction> findUserAuctions(Integer id) {

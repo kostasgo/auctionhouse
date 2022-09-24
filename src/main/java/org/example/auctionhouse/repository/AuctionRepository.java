@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
-    final static String GET_ALL_ACTIVE_AUCTIONS = "SELECT * FROM auction auc WHERE auc.active = :active";
+    final static String GET_ALL_ACTIVE_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE auc.active = :active AND sel.user_id != :id";
     @Query(value = GET_ALL_ACTIVE_AUCTIONS, nativeQuery = true)
-    List<Auction> findAllActiveAuctions(@Param("active") Boolean active);
+    List<Auction> findAllActiveAuctions(@Param("active") Boolean active, @Param("id") Integer id);
 
 
     final static String GET_USER_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE sel.user_id = :id";

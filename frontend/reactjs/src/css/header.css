@@ -5,3 +5,28 @@
 body {
     background-color: #ebebeb;
   }
+
+.category{
+    margin : 0.1rem;
+    width: fit-content;
+    border-radius: 2rem;
+}
+.Instruments{
+    background-color: rgb(255, 160, 160);
+}
+
+.Vehicles{
+    background-color: rgb(160, 255, 171);
+}
+
+.Cars{
+    background-color: rgb(160, 255, 171);
+}
+
+.Jewlery{
+    background-color: rgb(222, 255, 160);
+}
+
+.Shoes{
+    background-color: rgb(160, 244, 255);
+}

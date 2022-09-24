@@ -94,8 +94,8 @@ export default class ManageAuctions extends Component {
                                     <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
                                         <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg"  style={{ objectFit: 'cover', maxHeight: '350px' }} />
                                         <Card.Body>
-                                            <Card.Title className="text-left"><span className='display-6'>NEW AUCTION</span></Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">Create a new auction </Card.Subtitle>
+                                            <Row><Card.Title className="card-title"><span className='title-text'>NEW AUCTION</span></Card.Title></Row>
+                                            <Row><Card.Subtitle className="card-title text-muted"> Create a new auction </Card.Subtitle></Row>
                                         </Card.Body>
                                     </Card>
                                 </Link>
@@ -104,14 +104,14 @@ export default class ManageAuctions extends Component {
                         {this.state.auctions.map((auction) => (
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
-                                    <Card key={auction.id}>
-                                        <Card.Img variant="top" src={auction.imgUrl} style={{ objectFit: 'cover', maxHeight: '350px' }} />
+                                    <Card key={auction.id} className="card">
+                                        <Card.Img variant="top" src={auction.imgUrl[0]} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
-                                            <Card.Title className="text-left"><span className='display-6'>{auction.name}</span></Card.Title>
+                                            <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <ListGroup variant="flush">
                                                 {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
                                                 {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
-                                                <ListGroup.Item key='1' className='mb-2 text-muted'>{!auction.active?<>Starts at</>:<>Started at</>}:&emsp;&emsp;&emsp;: &emsp;{auction.started.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
+                                                <ListGroup.Item key='1' className='mb-2 text-muted'>{!auction.active?<>Starts at</>:<>Started at</>}:&emsp;&emsp;&emsp;: &emsp;{auction.starts.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
                                                 <ListGroup.Item key='1' className='mb-2 text-muted'>{Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')))> 0 ? <>Ends on</>:<>Ended on</>}&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
                                                 {Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')))> 0 ?
                                                 <>

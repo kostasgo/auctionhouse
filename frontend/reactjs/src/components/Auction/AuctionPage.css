@@ -56,11 +56,6 @@
     font-size: x-large;
 }
 
-.category[data-status="Instruments"]:after{
-    background-color: aqua;
-    color:black;
-}
-
 .bidding-section{
     margin-top: 3rem;
 }
@@ -85,4 +80,13 @@
 
   .title{
     margin : 1.5rem;
+}
+
+.loginregister{
+    justify-content: center;
+}
+
+.carousel{
+    min-height: auto;
+    max-height: auto;
 }

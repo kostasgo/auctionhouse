@@ -49,7 +49,7 @@ public class Auction {
     private Double longitude;
 
     @Column(nullable = false)
-    private LocalDateTime started;
+    private LocalDateTime starts;
 
     @Column(nullable = false)
     private LocalDateTime ends;
@@ -67,20 +67,17 @@ public class Auction {
     @Column(name="first_bid", nullable = false)
     private Double firstBid;
 
-    @Column(name="number_of_bids")
-    private Integer numberOfBids;
-
     @OneToMany(targetEntity = Bid.class, mappedBy = "auction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Bid> bids;
 
     @Column
-    private String imgUrl;
+    private String[] imgUrl;
 
     @Column(nullable = false)
     private Boolean active;
 
 
-    public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime started, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
+    public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime starts, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String[] imgUrl) {
         this.seller = seller;
         this.name = name;
         this.description = description;
@@ -88,16 +85,15 @@ public class Auction {
         this.location = location;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.started = started;
+        this.starts = starts;
         this.ends = ends;
         this.categories = categories;
         this.currently = firstBid;
         this.buyPrice = buyPrice;
         this.firstBid = firstBid;
-        this.numberOfBids = 0;
         this.bids = null;
         this.imgUrl = imgUrl;
-        this.active = started.isBefore(LocalDateTime.now()) && ends.isAfter(LocalDateTime.now());
+        this.active = starts.isBefore(LocalDateTime.now()) && ends.isAfter(LocalDateTime.now());
     }
 
 }

@@ -12,7 +12,7 @@ import { isEmail } from "validator";
 
 import AuthService from "../../services/auth.service";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
 
 import { InputGroup } from "react-bootstrap";
 import AllCountriesList from "../sharedComponents/AllCountriesList";
@@ -231,13 +231,13 @@ export default class NewAuction extends Component {
 
                                 {!this.state.successful && (
                                     <div>
-
+                                        {/* TITLE */}
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faSignature} /></InputGroup.Text>
                                             <Input
                                                 placeholder="Title"
                                                 type="text"
-                                                className="form-control register-input"
+                                                className="form-control newAuction-input"
                                                 name="title"
                                                 value={this.state.name}
                                                 onChange={this.onChangeName}
@@ -247,14 +247,14 @@ export default class NewAuction extends Component {
                                             />
                                         </InputGroup>
 
-
+                                        {/* DESCRIPTION */}
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faSignature} /></InputGroup.Text>
                                             <textarea
                                                 placeholder="Description"
                                                 size="500"
                                                 type="text"
-                                                className="form-control register-input"
+                                                className="form-control newAuction-input"
                                                 name="description"
                                                 value={this.state.email}
                                                 onChange={this.onChangeDescription}
@@ -264,18 +264,85 @@ export default class NewAuction extends Component {
                                             />
                                         </InputGroup>
 
+                                        {/* CATEGORY */}
                                         <InputGroup className="mb-3">
-                                            <InputGroup.Text id="password-icon"><FontAwesomeIcon icon={faGlobe} /></InputGroup.Text>
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarCheck} /></InputGroup.Text>
+                                            <select
+                                                className="form-select"
+                                                onChange={this.onAddCategory}
+                                                validations={[required]}
+                                                aria-label="role"
+                                                aria-describedby="password-icon"
+                                            >
+                                                <option>Category</option>
+                                                <option value="admin">Jewlery</option>
+                                                <option value="user">Vehicles</option>
+                                                <option value="admin">Instruments</option>
+                                                <option value="user">Cars</option>
+                                            </select>
+                                        </InputGroup>
+
+
+                                        {/* STARTING DATE */}
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarCheck} /></InputGroup.Text>
+                                            <Input
+                                                placeholder="Date start"
+                                                size="500"
+                                                type="datetime-local"
+                                                className="form-control newAuction-input"
+                                                name="description"
+                                                onChange={this.onChangeDateStart}
+                                            />
+                                        </InputGroup>
+
+                    
+                                        {/* ENDING DATE */}
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarCheck} /></InputGroup.Text>
+                                            <Input
+                                                placeholder="Date end"
+                                                size="500"
+                                                type="datetime-local"
+                                                className="form-control newAuction-input"
+                                                name="description"
+                                                onChange={this.onChangeDateStart}
+                                            />
+                                        </InputGroup>
+
+                                        
+                                        {/* COUNTRY */}
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="country-icon"><FontAwesomeIcon icon={faGlobe} /></InputGroup.Text>
 
                                             <select
                                                 className="form-select"
                                                 onChange={this.onChangeCountry}
                                                 aria-label="country"
-                                                aria-describedby="password-icon"
+                                                aria-describedby="country-icon"
                                             >
                                                 <AllCountriesList />
                                             </select>
                                         </InputGroup>
+
+
+                                        {/* CITY */}
+                                        <InputGroup className="mb-3">
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faSignature} /></InputGroup.Text>
+                                            <Input
+                                                placeholder="City"
+                                                type="text"
+                                                className="form-control newAuction-input"
+                                                name="title"
+                                                onChange={this.onChangeName}
+                                                validations={[required]}
+                                                aria-label="title"
+                                                aria-describedby="signature-icon"
+                                            />
+                                        </InputGroup>
+
+
+                                        {/* MAP */}
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="location-icon"><FontAwesomeIcon icon={faLocationPin} /></InputGroup.Text>
                                             <div className='map'>
@@ -288,6 +355,8 @@ export default class NewAuction extends Component {
                                             </div>
                                         </InputGroup>
 
+
+                                        {/* SAVE BUTTON */}
                                         <div className="form-group">
                                             <button className="btn btn-primary btn-block"><FontAwesomeIcon icon={faSave} /> Create Auction</button>
                                         </div>
