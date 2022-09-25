@@ -172,6 +172,7 @@ export default class Login extends Component {
                         </Card.Body>
                         <Card.Footer>
                             <p>Don't have an account yet? <a href="/register">Register here</a></p>
+                            <p>Otherwise, <a href="/auctions" onClick={setGuest}>continue as guest</a>.</p>
                         </Card.Footer>
 
                     </Card>

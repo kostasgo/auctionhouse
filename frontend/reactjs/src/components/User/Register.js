@@ -194,6 +194,9 @@ export default class Register extends Component {
     }
 
     render() {
+        const setGuest = () => {
+            AuthService.setGuest();
+        };
         return (
             <Row className="justify-content-center">
                 <Col lg={6}>
@@ -368,7 +371,7 @@ export default class Register extends Component {
                                 <p>Please try again.</p>
                             )}
                             {!this.state.message && !this.state.successful && (
-                                <p>Already have an account? You can <a href="/login">Login here</a>. Otherwise, <a href="/auctions">continue as guest</a>.</p>
+                                <p>Already have an account? You can <a href="/login">Login here</a>. Otherwise, <a href="/auctions" onClick={setGuest}>continue as guest</a>.</p>
                             )}
                         </Card.Footer>
 

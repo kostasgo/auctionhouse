@@ -19,7 +19,8 @@ export default class AdminBoard extends Component {
             message: "",
             successful: false,
             redirect: null,
-            currentUser: null
+            currentUser: null,
+            allAuctions: []
         };
     }
 
@@ -48,6 +49,15 @@ export default class AdminBoard extends Component {
         const currentUser = AuthService.getCurrentUser();
         if (!currentUser) this.setState({ redirect: "/" });
         this.setState({ currentUser: currentUser })
+
+        AuctionService.getAllAuctions()
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({
+                    allAuctions: data
+                })
+                //console.log(JSON.stringify(this.state.allAuctions));
+            });
     }
 
 
@@ -94,20 +104,15 @@ export default class AdminBoard extends Component {
                 successful: false,
                 message: ""
             })
-            if (type === 'JSON') {
-                var allAuctions = [];
-                AuctionService.getAllAuctions()
-                    .then(response => response.data)
-                    .then((data) => {
-                        allAuctions = data;
-                    });
 
+            if (type === 'JSON') {
                 const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-                    JSON.stringify(allAuctions)
+                    this.state.allAuctions
                 )}`;
+                console.log(JSON.stringify(this.state.allAuctions));
                 const link = document.createElement("a");
                 link.href = jsonString;
-                link.download = "data.json";
+                link.download = "auctions.json";
 
                 link.click();
 
