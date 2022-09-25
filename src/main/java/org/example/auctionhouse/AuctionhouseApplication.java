@@ -197,10 +197,12 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				Set<Bid> bids = new HashSet<Bid>();
 				bids.add(bid);
 				auction1.setBids(bids);
+				auction1.setCurrently(140.00);
 
 				Set<Bid> bids2 = new HashSet<Bid>();
 				bids2.add(bid2);
 				auction2.setBids(bids2);
+				auction2.setCurrently(2300.00);
 
 				auctionService.saveOrUpdate(auction1);
 				auctionService.saveOrUpdate(auction2);
