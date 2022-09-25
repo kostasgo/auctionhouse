@@ -21,7 +21,8 @@ class AuthService {
 
     logout() {
         localStorage.removeItem("user");
-        this.setGuest();
+        localStorage.removeItem("guest");
+        // this.setGuest();
     }
 
     register(username, name, email, roles, password, phone, country, location) {

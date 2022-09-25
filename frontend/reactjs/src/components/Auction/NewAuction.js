@@ -32,15 +32,6 @@ const required = value => {
     }
 };
 
-const email = value => {
-    if (!isEmail(value)) {
-        return (
-            <div className="alert alert-danger m-0" role="alert">
-                This is not a valid email.
-            </div>
-        );
-    }
-};
 
 const vusername = value => {
     if (value.length < 3 || value.length > 20) {
@@ -52,34 +43,18 @@ const vusername = value => {
     }
 };
 
-const vphone = value => {
-    if (value.length !== 10 || !(/^\d+$/.test(value))) {
-        return (
-            <div className="alert alert-danger m-0" role="alert">
-                Phone Number must consist of 10 digits.
-            </div>
-        );
-    }
-}
 
-const vpassword = value => {
-    if (value.length < 6 || value.length > 40) {
-        return (
-            <div className="alert alert-danger m-0" role="alert">
-                The password must be between 6 and 40 characters.
-            </div>
-        );
-    }
-};
 
 export default class NewAuction extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            username: "",
-            name: "",
+            title: "",
+            description: "",
             country: "",
+            city : "",
+
       
             successful: false,
             message: ""
@@ -104,17 +79,6 @@ export default class NewAuction extends Component {
         });
     }
 
-    onChangeUsername(e) {
-        this.setState({
-            username: e.target.value
-        });
-    }
-
-    onChangeEmail(e) {
-        this.setState({
-            email: e.target.value
-        });
-    }
 
     onChangePassword(e) {
         this.setState({
@@ -258,7 +222,7 @@ export default class NewAuction extends Component {
                                                 name="description"
                                                 value={this.state.email}
                                                 onChange={this.onChangeDescription}
-                                                validations={[required, email]}
+                                                validations={[required]}
                                                 aria-label="description"
                                                 aria-describedby="signature-icon"
                                             />
