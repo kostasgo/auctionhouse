@@ -84,22 +84,23 @@ export default class ManageAuctions extends Component {
                 </div>
             </div>
             <Row>
+                <Col xs={12} md={6} xl={4}>
+                        <Link to="/new-auction" className="new">
+                            <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
+                                <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg"  style={{ objectFit: 'cover', maxHeight: '350px' }} />
+                                <Card.Body>
+                                    <Row><Card.Title className="card-title"><span className='title-text'>NEW AUCTION</span></Card.Title></Row>
+                                    <Row><Card.Subtitle className="card-title text-muted"> Create a new auction </Card.Subtitle></Row>
+                                </Card.Body>
+                            </Card>
+                        </Link>
+                </Col>
                 {
                     this.state.auctions.length === 0 ?
                         <h3>No auctions made yet...</h3>
                         :
                         
-                        <Col xs={12} md={6} xl={4}>
-                                <Link to="/new-auction" className="new">
-                                    <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
-                                        <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg"  style={{ objectFit: 'cover', maxHeight: '350px' }} />
-                                        <Card.Body>
-                                            <Row><Card.Title className="card-title"><span className='title-text'>NEW AUCTION</span></Card.Title></Row>
-                                            <Row><Card.Subtitle className="card-title text-muted"> Create a new auction </Card.Subtitle></Row>
-                                        </Card.Body>
-                                    </Card>
-                                </Link>
-                        </Col>}
+                        <></>}
 
                         {this.state.auctions.map((auction) => (
                             <Col xs={12} md={6} xl={4}>

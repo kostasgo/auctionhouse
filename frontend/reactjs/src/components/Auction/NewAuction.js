@@ -33,7 +33,17 @@ const required = value => {
 };
 
 
-const vusername = value => {
+const vtext = value => {
+    if (value.length < 3 || value.length > 20) {
+        return (
+            <div className="alert alert-danger m-0" role="alert">
+                The username must be between 3 and 20 characters.
+            </div>
+        );
+    }
+};
+
+const vdate = value => {
     if (value.length < 3 || value.length > 20) {
         return (
             <div className="alert alert-danger m-0" role="alert">
@@ -54,6 +64,9 @@ export default class NewAuction extends Component {
             description: "",
             country: "",
             city : "",
+            longitude: 0,
+            latitude: 0,
+
 
       
             successful: false,
@@ -61,28 +74,22 @@ export default class NewAuction extends Component {
         };
     }
 
-    onChangeName(e) {
+    onChangeTitle(e) {
         this.setState({
-            name: e.target.value
+            title: e.target.value
         });
     }
 
-    onChangePhone(e) {
+    onChangeDescription(e) {
         this.setState({
-            phone: e.target.value
+            description: e.target.value
         });
     }
 
-    onChangeLocation(e) {
+    onChangeDate(e) {
         this.setState({
-            location: e.target.value
-        });
-    }
-
-
-    onChangePassword(e) {
-        this.setState({
-            password: e.target.value
+            // startDate: e.target.value
+            // endDate:
         });
     }
 
@@ -92,24 +99,14 @@ export default class NewAuction extends Component {
         });
     }
 
-    onChangeRoles(e) {
-        if (e.target.value === "ADMIN") {
-            this.setState({
-                roles: ["USER", "ADMIN"]
-            });
-
-        }
-        else if (e.target.value === "ADMIN") {
-            this.setState({
-                roles: ["USER"]
-            });
-        }
-        else {
-            this.setState({
-                roles: []
-            });
-        }
+    onChangeLocation(e) {
+        this.setState({
+            // latitude: e.latitude;
+            // longitude: e.longitude;
+        });
     }
+
+
 
     handleNewAuction(e) {
         e.preventDefault();
