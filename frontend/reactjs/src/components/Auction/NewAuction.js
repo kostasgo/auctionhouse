@@ -222,7 +222,7 @@ export default class NewAuction extends Component {
                                                 name="description"
                                                 value={this.state.email}
                                                 onChange={this.onChangeDescription}
-                                                validations={[required, email]}
+                                                validations={[required]}
                                                 aria-label="description"
                                                 aria-describedby="signature-icon"
                                             />
