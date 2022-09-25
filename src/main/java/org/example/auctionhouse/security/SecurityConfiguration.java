@@ -60,9 +60,7 @@ public class SecurityConfiguration {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/v1/auth/**").permitAll()
-                .antMatchers("/api/v1/users/**").permitAll()
-                .antMatchers("/api/v1/auctions/**").permitAll()
+                .authorizeRequests().antMatchers("/api/v1/**").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());
