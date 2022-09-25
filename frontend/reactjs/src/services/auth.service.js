@@ -11,6 +11,7 @@ class AuthService {
             })
             .then(response => {
                 if (response.data.token) {
+                    this.removeGuest();
                     localStorage.setItem("user", JSON.stringify(response.data));
                 }
 
@@ -20,6 +21,7 @@ class AuthService {
 
     logout() {
         localStorage.removeItem("user");
+        this.setGuest();
     }
 
     register(username, name, email, roles, password, phone, country, location) {
@@ -33,6 +35,18 @@ class AuthService {
             country,
             location
         });
+    }
+
+    setGuest() {
+        localStorage.setItem("guest", "guest");
+    }
+
+    getGuest() {
+        return localStorage.getItem("guest");
+    }
+
+    removeGuest() {
+        localStorage.removeItem("guest");
     }
 
     getCurrentUser() {

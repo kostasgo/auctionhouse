@@ -17,7 +17,6 @@ class NavigationBar extends React.Component {
   render() {
 
     const handleLogout = () => {
-      console.log("logging");
       AuthService.logout();
     };
 
@@ -42,15 +41,18 @@ class NavigationBar extends React.Component {
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
                     <Nav.Link href="/">Home</Nav.Link>
-                    {this.props.currentUser?<Nav.Link href="/manage">My Auctions</Nav.Link>:null}
+                    {this.props.showAdminBoard && (
+                      <Nav.Link href="/admin">Admin Board</Nav.Link>
+                    )}
+                    {this.props.currentUser ? <Nav.Link href="/manage">My Auctions</Nav.Link> : null}
                     <Nav.Link href="#"><br></br></Nav.Link>
                     <Nav.Link href="/auctions">Browse Auctions</Nav.Link>
+
                   </Nav>
-                  
+
 
                   {this.props.currentUser ? (
                     <Nav className="justify-content-end mt-5">
-
 
                       <Nav.Link href="/profile" className="text-danger text-decoration-underline">{this.props.currentUser.username}</Nav.Link>
                       <Nav.Link href="/login" className="text-danger text-decoration-underline" onClick={handleLogout}>Logout</Nav.Link>

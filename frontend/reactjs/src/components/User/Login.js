@@ -59,8 +59,14 @@ export default class Login extends Component {
 
         if (this.checkBtn.context._errors.length === 0) {
             AuthService.login(this.state.username, this.state.password).then(
-                () => {
-                    this.props.history.push("/");
+                response => {
+                    if (response.roles.includes("ROLE_ADMIN")) {
+                        this.props.history.push("/admin");
+
+                    }
+                    else {
+                        this.props.history.push("/");
+                    }
                     window.location.reload();
                 },
                 error => {
@@ -85,6 +91,10 @@ export default class Login extends Component {
     }
 
     render() {
+        const setGuest = () => {
+            AuthService.setGuest();
+        };
+
         return (
             <Row className="justify-content-center">
                 <Col md={6} lg={4}>

@@ -5,7 +5,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
 import "./HomePage.css"
 import AuthService from "../services/auth.service";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 
 
@@ -16,17 +16,25 @@ export default class HomePage extends Component {
         this.state = {
             redirect: null,
             userReady: false,
+
+            redirect: null,
             currentUser: { username: "" }
         };
     }
 
     componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
-        if (currentUser)this.setState({ currentUser: currentUser, userReady: true });
-        // console.log(currentUser);
+        const guest = AuthService.getGuest();
+        console.log(guest);
+        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
+        if (!guest && !currentUser) this.setState({ redirect: "/login" });
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
+
         const handleSearch = () => {
             console.log("SEARCH CLICKED");
             //  <Route path="/" element={<Navigate to="/" />} />
@@ -42,25 +50,25 @@ export default class HomePage extends Component {
             console.log("USER CLICKED");
         };
 
-     
 
-        return(
+
+        return (
             <>
 
-            <div className='title'>
-                <div className="container d-flex h-100">
+                <div className='title'>
+                    <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">
-                            <span className='display-4'>{(this.state.userReady)?<> Welcome back {this.state.currentUser.username}! </>: <> Welcome to AuctionHouse!</>}</span>
+                            <span className='display-4'>{(this.state.userReady) ? <> Welcome back {this.state.currentUser.username}! </> : <> Welcome to AuctionHouse!</>}</span>
                             <span className='lead'>Find what you need!</span>
                         </div>
+                    </div>
                 </div>
-            </div>
 
-            <Container>
-                <Row>
-                    <Col> </Col>
-                </Row>
-            </Container>
+                <Container>
+                    <Row>
+                        <Col> </Col>
+                    </Row>
+                </Container>
 
 
             </>)

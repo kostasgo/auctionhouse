@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
@@ -29,17 +29,24 @@ export default class AuctionsList extends Component {
     }
 
     componentDidMount() {
-        const currentUser = AuthService.getCurrentUser();
-        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
-        axios.get("http://localhost:8080/api/v1/auctions?active=true&id="+String(currentUser.id))
+        axios.get("http://localhost:8080/api/v1/auctions?active=true")
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
             });
 
+        const currentUser = AuthService.getCurrentUser();
+        const guest = AuthService.getGuest();
+        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
+        if (!guest && !currentUser) this.setState({ redirect: "/login" });
+
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to={this.state.redirect} />
+        }
+
         const handleSearch = () => {
             console.log("SEARCH CLICKED");
             //  <Route path="/" element={<Navigate to="/" />} />
@@ -68,22 +75,22 @@ export default class AuctionsList extends Component {
 
             <div className='title'>
                 <div className="container d-flex h-100">
-                        <div className="row justify-content-center align-self-center">
-                            <span className='display-3'> <u>Browse Auctions</u></span>
-                            <span className='lead'>Find what you need!</span>
-                        </div>
+                    <div className="row justify-content-center align-self-center">
+                        <span className='display-3'> <u>Browse Auctions</u></span>
+                        <span className='lead'>Find what you need!</span>
+                    </div>
                 </div>
             </div>
 
             <Form className="d-flex">
-                    <Form.Control
-                      type="search"
-                      placeholder="#Anything you desire"
-                      className="me-2"
-                      aria-label="Search"
-                    />
-                    <Button variant="primary">Search</Button>
-                  </Form>
+                <Form.Control
+                    type="search"
+                    placeholder="#Anything you desire"
+                    className="me-2"
+                    aria-label="Search"
+                />
+                <Button variant="primary">Search</Button>
+            </Form>
 
             <Container className='search-container'>
                 <Row xs={4} md={4} xl={4}>
