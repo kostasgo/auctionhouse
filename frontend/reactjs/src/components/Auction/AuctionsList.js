@@ -7,6 +7,7 @@ import "./AuctionsList.css"
 import AuctionPage from './AuctionPage';
 import AuthService from "../../services/auth.service";
 import { Form } from 'react-bootstrap';
+import auctionService from '../../services/auction.service';
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -29,16 +30,19 @@ export default class AuctionsList extends Component {
     }
 
     componentDidMount() {
-        axios.get("http://localhost:8080/api/v1/auctions?active=true")
+        const currentUser = AuthService.getCurrentUser();
+        const guest = AuthService.getGuest();
+        
+        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
+        if (!guest && !currentUser) this.setState({ redirect: "/login" });
+
+
+        if (currentUser)auctionService.getActiveNonUserAuctions(currentUser.id)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
             });
 
-        const currentUser = AuthService.getCurrentUser();
-        const guest = AuthService.getGuest();
-        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
-        if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
     }
 
