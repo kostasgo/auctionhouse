@@ -32,12 +32,16 @@ export default class AuctionsList extends Component {
     componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
+        var activeId = -1;
         
-        if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
+        if (currentUser){
+            this.setState({ currentUser: currentUser, userReady: true });
+            activeId = currentUser.id;
+        } 
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
 
-        if (currentUser)auctionService.getActiveNonUserAuctions(currentUser.id)
+        auctionService.getActiveNonUserAuctions(activeId)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
