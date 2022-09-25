@@ -8,14 +8,19 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
+
 
 import AuthService from "../../services/auth.service";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck, faCalendarDays, faList } from '@fortawesome/free-solid-svg-icons'
 
 import { InputGroup } from "react-bootstrap";
 import AllCountriesList from "../sharedComponents/AllCountriesList";
+import AllCategoriesList from "../sharedComponents/AllCategoriesList";
+import auctionService from '../../services/auction.service';
+import { LeafletContext, LeafletProvider } from '@react-leaflet/core';
+import { Map, map } from 'leaflet';
+
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -58,6 +63,16 @@ const vdate = value => {
 export default class NewAuction extends Component {
     constructor(props) {
         super(props);
+        this.handleNewAuction = this.handleNewAuction.bind(this);
+        this.onChangeTitle = this.onChangeTitle.bind(this);
+        this.onChangeDescription = this.onChangeDescription.bind(this);
+        this.onAddCategory = this.onAddCategory.bind(this);
+        this.onChangeCountry = this.onChangeCountry.bind(this);
+        this.onChangeCity = this.onChangeCity.bind(this);
+        this.handleMapClick = this.handleMapClick.bind(this);
+
+
+    
 
         this.state = {
             title: "",
@@ -67,6 +82,8 @@ export default class NewAuction extends Component {
             longitude: 0,
             latitude: 0,
 
+            countryLocation : [],
+            cityLocation : [],
 
       
             successful: false,
@@ -97,13 +114,42 @@ export default class NewAuction extends Component {
         this.setState({
             country: e.target.value
         });
+      
+
+        axios.get("https://nominatim.openstreetmap.org/search.php?q="+ String(e.target.value)  +"&format=jsonv2")
+        .then(response => response.data)
+        .then((data) => {
+            // console.log(data[0]);
+            this.setState({ countryLocation : data});  
+            this.map.flyTo([data[0].lat,data[0].lon],7);              
+        });
     }
 
-    onChangeLocation(e) {
+    onChangeCity(e) {
         this.setState({
-            // latitude: e.latitude;
-            // longitude: e.longitude;
+            city: e.target.value
         });
+        axios.get("https://nominatim.openstreetmap.org/search.php?q="+ String(e.target.value)  +"&format=jsonv2")
+        .then(response => response.data)
+        .then((data) => {
+            // console.log(data[0]);
+            this.setState({ cityLocation : data});  
+            this.map.flyTo([data[0].lat,data[0].lon],7);              
+        });
+    }
+
+    onAddCategory(e) {
+        this.setState({
+        });
+    }
+
+    onChangeEndDate(e) {
+        this.setState({   
+        });
+    }
+
+    handleMapClick(e) {
+        console.log(e.coordinate);
     }
 
 
@@ -119,7 +165,7 @@ export default class NewAuction extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            AuthService.register(
+            auctionService.createNewAuction(
                 
             ).then(
                 response => {
@@ -143,17 +189,28 @@ export default class NewAuction extends Component {
                 }
             );
         }
+
+        
     }
 
+    
+
     render() {
+
+        
+
         return (
             <>
+
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
             integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
             crossorigin=""/>
              <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
             integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
             crossorigin=""></script>
+
+            <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+
             <div className='title'>
                 <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">
@@ -200,8 +257,8 @@ export default class NewAuction extends Component {
                                                 type="text"
                                                 className="form-control newAuction-input"
                                                 name="title"
-                                                value={this.state.name}
-                                                onChange={this.onChangeName}
+                                                value={this.state.title}
+                                                onChange={this.onChangeTitle}
                                                 validations={[required]}
                                                 aria-label="title"
                                                 aria-describedby="signature-icon"
@@ -217,7 +274,7 @@ export default class NewAuction extends Component {
                                                 type="text"
                                                 className="form-control newAuction-input"
                                                 name="description"
-                                                value={this.state.email}
+                                                value={this.state.description}
                                                 onChange={this.onChangeDescription}
                                                 validations={[required]}
                                                 aria-label="description"
@@ -227,47 +284,38 @@ export default class NewAuction extends Component {
 
                                         {/* CATEGORY */}
                                         <InputGroup className="mb-3">
-                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarCheck} /></InputGroup.Text>
-                                            <select
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faList} /></InputGroup.Text>
+
+                                            <span className="text-muted">
+                                            &nbsp;&nbsp; Categories (Windows: ctrl+click - Mac: command+click)
+                                            </span>
+                                        
+                                            <select multiple 
+                                                size = "3"
                                                 className="form-select"
                                                 onChange={this.onAddCategory}
                                                 validations={[required]}
                                                 aria-label="role"
                                                 aria-describedby="password-icon"
                                             >
-                                                <option>Category</option>
-                                                <option value="admin">Jewlery</option>
-                                                <option value="user">Vehicles</option>
-                                                <option value="admin">Instruments</option>
-                                                <option value="user">Cars</option>
+                                                <AllCategoriesList />
                                             </select>
-                                        </InputGroup>
-
-
-                                        {/* STARTING DATE */}
-                                        <InputGroup className="mb-3">
-                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarCheck} /></InputGroup.Text>
-                                            <Input
-                                                placeholder="Date start"
-                                                size="500"
-                                                type="datetime-local"
-                                                className="form-control newAuction-input"
-                                                name="description"
-                                                onChange={this.onChangeDateStart}
-                                            />
                                         </InputGroup>
 
                     
                                         {/* ENDING DATE */}
                                         <InputGroup className="mb-3">
-                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarCheck} /></InputGroup.Text>
+
+                                            <InputGroup.Text id="signature-icon"><FontAwesomeIcon icon={faCalendarDays} /></InputGroup.Text>
+                                            <InputGroup.Text id="signature-icon"><span className="text-muted">&nbsp;&nbsp;Ending date and time</span></InputGroup.Text>
+                                
                                             <Input
-                                                placeholder="Date end"
+                                                id="datefield"
                                                 size="500"
                                                 type="datetime-local"
                                                 className="form-control newAuction-input"
-                                                name="description"
-                                                onChange={this.onChangeDateStart}
+                                                name="endDate"
+                                                onChange={this.onChangeEndDate}
                                             />
                                         </InputGroup>
 
@@ -295,7 +343,7 @@ export default class NewAuction extends Component {
                                                 type="text"
                                                 className="form-control newAuction-input"
                                                 name="title"
-                                                onChange={this.onChangeName}
+                                                onBlur={this.onChangeCity}
                                                 validations={[required]}
                                                 aria-label="title"
                                                 aria-describedby="signature-icon"
@@ -306,8 +354,8 @@ export default class NewAuction extends Component {
                                         {/* MAP */}
                                         <InputGroup className="mb-3">
                                             <InputGroup.Text id="location-icon"><FontAwesomeIcon icon={faLocationPin} /></InputGroup.Text>
-                                            <div className='map'>
-                                                <MapContainer center={[37.983810, 23.727539]} zoom={5} className='map' >
+                                            <div id='map'>
+                                                <MapContainer ondblclick={this.handleMapClick} ref={(e) => { this.map = e; }} id='map' className='map' center={[37.983810, 23.727539]} zoom={5}>
                                                     <TileLayer
                                                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                                                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -315,6 +363,11 @@ export default class NewAuction extends Component {
                                                 </MapContainer>
                                             </div>
                                         </InputGroup>
+
+                                        {/* {this.map.on('dblclick', event => {console.log(event.coordinate);})} */}
+                        
+
+                               
 
 
                                         {/* SAVE BUTTON */}

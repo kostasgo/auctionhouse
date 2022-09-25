@@ -86,7 +86,7 @@ export default class AuctionPage extends Component {
         const handleBidConfirm = () => {
             console.log("BID CONFIRM CLICKED");
             // CREATE THE POST REQUEST FOR BID
-            this.setState({showPopup:true});
+            this.setState({showPopup:false});
         };
 
         const handleClose = () => {
