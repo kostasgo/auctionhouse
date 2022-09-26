@@ -107,7 +107,7 @@ public class AuctionController {
         else{
             System.out.println("existed");
         }
-        for (int i = 0; i<strImages.length; i++){
+        for (int i = 0; i < strImages.length; i++){
             String base64String = strImages[i];
             String[] parts = base64String.split(",");
             //convert base64 string to binary data

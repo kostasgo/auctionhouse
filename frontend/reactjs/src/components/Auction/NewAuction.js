@@ -82,10 +82,10 @@ export default class NewAuction extends Component {
             endDate : "",
             country: "",
             city : "",
-            longitude: 0,
-            latitude: 0,
-            firstBid : 0,
-            buyPrice: 0,
+            longitude: 0.0,
+            latitude: 0.0,
+            firstBid : 0.0,
+            buyPrice: 0.0,
 
             selectedFiles : [],
             selectedFileNames : [],
@@ -145,8 +145,8 @@ export default class NewAuction extends Component {
         .then((data) => {
             // console.log(data[0]);
             this.setState({ 
-                            latitude : data[0].lat,
-                            longitude : data[0].lon
+                            latitude : parseFloat(data[0].lat),
+                            longitude : parseFloat(data[0].lon)
             });  
             this.map.flyTo([data[0].lat,data[0].lon],7);              
         });
@@ -161,7 +161,7 @@ export default class NewAuction extends Component {
                 </div>
             );
         }
-        else this.state.firstBid = e.target.value;
+        else this.state.firstBid = parseFloat(e.target.value);
     }
 
     onChangeBuyPrice(e) {
@@ -172,7 +172,7 @@ export default class NewAuction extends Component {
                 </div>
             );
         }
-        else this.state.buyPrice = e.target.value;
+        else this.state.buyPrice = parseFloat(e.target.value);
     }
 
     onAddCategory(e) {
@@ -259,8 +259,8 @@ export default class NewAuction extends Component {
             this.state.city,
             this.state.latitude,
             this.state.longitude,
-            imageNames,
-            imageData
+            imageData,
+            imageNames
         )
         if (this.checkBtn.context._errors.length === 0) {
             auctionService.createNewAuction(
@@ -275,8 +275,8 @@ export default class NewAuction extends Component {
                 this.state.city,
                 this.state.latitude,
                 this.state.longitude,
-                imageNames,
-                imageData
+                imageData,
+                imageNames
             ).then(
                 response => {
                     this.setState({

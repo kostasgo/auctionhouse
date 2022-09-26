@@ -125,7 +125,7 @@ export default class AuctionManagePage extends Component {
                         <Carousel.Item>
                             <img
                             className="d-block w-100"
-                            src={this.state.auction.imgUrl}
+                            src={this.state.auction.imgUrl!=null?this.state.auction.imgUrl:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"}
                             style={{ objectFit: 'cover' }}
                             alt="First slide"
                             />

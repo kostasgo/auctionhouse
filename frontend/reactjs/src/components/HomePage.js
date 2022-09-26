@@ -30,21 +30,21 @@ export default class HomePage extends Component {
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
     }
 
-    fileSelectedHandler = event => {
-        this.setState({
-            selectedFiles: event.target.files[0]
-        });
-    }
+    // fileSelectedHandler = event => {
+    //     this.setState({
+    //         selectedFiles: event.target.files[0]
+    //     });
+    // }
 
-    fileUploadHandler = () => {
-        const fd = new FormData();
-        fd.append("images", this.state.selectedFiles);
-        axios.post("http://localhost:8080/api/v1/auctions/images", this.state.selectedFiles, {
-            headers: {
-                'Content-Type': 'multipart/form-data;'
-            }
-        })
-    }
+    // fileUploadHandler = () => {
+    //     const fd = new FormData();
+    //     fd.append("images", this.state.selectedFiles);
+    //     axios.post("http://localhost:8080/api/v1/auctions/images", this.state.selectedFiles, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data;'
+    //         }
+    //     })
+    // }
 
     render() {
         if (this.state.redirect) {
@@ -81,7 +81,7 @@ export default class HomePage extends Component {
                     </div>
                 </div>
 
-                <Container>
+                {/* <Container>
                     <Row>
                         <Col>
                             <input onChange={this.fileSelectedHandler} type="file" />
@@ -89,7 +89,7 @@ export default class HomePage extends Component {
 
                         </Col>
                     </Row>
-                </Container>
+                </Container> */}
 
 
             </>)
