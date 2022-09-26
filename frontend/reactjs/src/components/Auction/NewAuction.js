@@ -74,10 +74,6 @@ export default class NewAuction extends Component {
         this.onImageRemoveAll = this.onImageRemoveAll.bind(this);
         this.onChangeFirstBid = this.onChangeFirstBid.bind(this);
         this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this);
-        
-
-
-    
 
         this.state = {
             title: "",
@@ -93,10 +89,27 @@ export default class NewAuction extends Component {
 
             selectedFiles : [],
             selectedFileNames : [],
+
+
+            userReady: false,
+            currentUser: { username: "" },
       
             successful: false,
             message: ""
         };
+    }
+
+    componentDidMount(){
+        const currentUser = AuthService.getCurrentUser();
+        const guest = AuthService.getGuest();
+        var activeId = -1;
+        
+        if (currentUser){
+            this.setState({ currentUser: currentUser, userReady: true });
+            activeId = currentUser.id;
+        } 
+        if (!guest && !currentUser) this.setState({ redirect: "/login" });
+
     }
 
     onChangeTitle(e) {
@@ -235,6 +248,7 @@ export default class NewAuction extends Component {
 
 
         console.log(
+            this.state.currentUser.username,
             this.state.title,
             this.state.description,
             this.state.categories,
@@ -250,6 +264,7 @@ export default class NewAuction extends Component {
         )
         if (this.checkBtn.context._errors.length === 0) {
             auctionService.createNewAuction(
+                this.state.currentUser.username,
                 this.state.title,
                 this.state.description,
                 this.state.categories,

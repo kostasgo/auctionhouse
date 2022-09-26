@@ -17,11 +17,11 @@ import javax.validation.constraints.*;
 @Setter
 public class AuctionRequest {
     @NotBlank
-    private Seller seller;
+    private String username;
 
     @NotBlank
     @Size(max = 100)
-    private String name;
+    private String title;
 
     @Size(max = 1000)
     private String description;
@@ -31,26 +31,22 @@ public class AuctionRequest {
     private String country;
 
     @NotBlank
-    private Double latitude;
+    private String latitude;
 
     @NotBlank
-    private Double longitude;
+    private String longitude;
 
     @NotBlank
-    private Date starts;
+    private String endDate;
+
+
+    private String[] categories;
 
     @NotBlank
-    private Date ends;
+    private String buyPrice;
 
     @NotBlank
-    private List<Category> categories;
-
-
-    @NotBlank
-    private Double buyPrice;
-
-    @NotBlank
-    private Double firstBid;
+    private String firstBid;
 
     private String[] imgData;
     private String[] imgNames;

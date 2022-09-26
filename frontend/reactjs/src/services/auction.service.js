@@ -4,13 +4,14 @@ import authHeader from './authHeader';
 const API_URL = 'http://localhost:8080/api/v1/auctions';
 
 class AuctionService {
-    createNewAuction(title, description, categories, firstbid, buyprice, endDate, country, city, latitude, longitude, imgnames, imgdata) {
+    createNewAuction(username, title, description, categories, firstBid, buyPrice, endDate, country, city, latitude, longitude, imgnames, imgdata) {
         return axios.post(API_URL, {
+            username,
             title,
             description,
             categories,
-            firstbid,
-            buyprice,
+            firstBid,
+            buyPrice,
             endDate,
             country,
             city,
