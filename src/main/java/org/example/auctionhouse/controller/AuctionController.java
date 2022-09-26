@@ -88,36 +88,43 @@ public class AuctionController {
 
         Auction auction = new Auction(seller, auctionRequest.getName(), auctionRequest.getDescription(), auctionRequest.getCountry(),
                 auctionRequest.getLocation() , auctionRequest.getLatitude(), auctionRequest.getLongitude() , LocalDateTime.now(), ends, categories,
-                auctionRequest.getBuyPrice(), auctionRequest.getFirstBid(), null);
-
-        auctionService.saveOrUpdate(auction);
+                auctionRequest.getBuyPrice(), auctionRequest.getFirstBid(), "");
 
         String[] strImages = auctionRequest.getImages();
         String[] imageNames = auctionRequest.getImageNames();
         char first = auctionRequest.getName().charAt(0);
-        String path = userDirectory+"\\media\\auction\\"+Character.toString(Character.toLowerCase(first));
+        String staticPath = userDirectory+"\\src\\main\\resources\\static\\media\\auction\\"+Character.toString(Character.toLowerCase(first));
+        String targetPath = userDirectory+"\\target\\classes\\static\\media\\auction\\"+Character.toString(Character.toLowerCase(first));
 
         String urls = "";
 
-        File directory = new File(path);
+        File directory = new File(staticPath);
+        File targetDirectory = new File(targetPath);
         if (!directory.exists()){
             directory.mkdirs();
-            System.out.println("created");
+            targetDirectory.mkdirs();
         }
-        else{
-            System.out.println("existed");
-        }
+
         for (int i = 0; i < strImages.length; i++){
+
             String base64String = strImages[i];
             String[] parts = base64String.split(",");
             //convert base64 string to binary data
             byte[] data = DatatypeConverter.parseBase64Binary(parts[1]);
 
-            String fileName = path + "\\" + imageNames[i];
+            String fileName = staticPath + "\\" + imageNames[i];
+            String targetName = targetPath + "\\" + imageNames[i];
             File file = new File(fileName);
-            if(urls!="") urls += ",";
-            urls +=fileName;
+            File target = new File(targetName);
+            if (urls != "") urls += ",";
+            String finalUrl = "http://localhost:8080/media/auction/"+Character.toString(Character.toLowerCase(first))+"/"+imageNames[i];
+            urls += finalUrl;
             try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+                outputStream.write(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(target))) {
                 outputStream.write(data);
             } catch (IOException e) {
                 e.printStackTrace();
