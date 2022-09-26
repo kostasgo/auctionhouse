@@ -50,8 +50,16 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.findById(id), HttpStatus.OK);
     }
 
+    @GetMapping(params = {"search", "active", "id"})
+    ResponseEntity<Collection<Auction>> searchActive(@RequestParam("search") String search,@RequestParam("active") Boolean active, @RequestParam("id") Integer id){
+        System.out.print("in search (non-user) active in controller");
+        return new ResponseEntity<>(auctionService.searchActive(search,active,id), HttpStatus.OK);
+    }
+
+
     @GetMapping(params = {"active", "id"})
     ResponseEntity<Collection<Auction>> findActive(@RequestParam("active") Boolean active, @RequestParam("id") Integer id){
+        System.out.print("in all (non-user) active in controller");
         return new ResponseEntity<>(auctionService.findActive(active,id), HttpStatus.OK);
     }
 

@@ -105,7 +105,7 @@ export default class ManageAuctions extends Component {
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
                                     <Card key={auction.id} className="card">
-                                        <Card.Img variant="top" src={(auction.imgUrl.split(",").length!=0)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
+                                        <Card.Img variant="top" src={(auction.imgUrl.length!=0)?auction.imgUrl[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <ListGroup variant="flush">

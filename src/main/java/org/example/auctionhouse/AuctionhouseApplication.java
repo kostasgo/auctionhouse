@@ -42,7 +42,10 @@ public class AuctionhouseApplication implements CommandLineRunner {
 	private BidService bidService;
 
 	@Autowired
-	private  CategoryService categoryService;
+	private CategoryService categoryService;
+
+//	@Autowired
+//	private MessageService messageService;
 
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -197,7 +200,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				bidService.saveOrUpdate(bid);
 
 				LocalDateTime bidTime2 = LocalDateTime.parse("21-09-2022 10:13:05", formatter);
-				Bid bid2 = new Bid(bidder2, auction2, bidTime, 2300.00);
+				Bid bid2 = new Bid(bidder2, auction3, bidTime, 500.00);
 				bidService.saveOrUpdate(bid2);
 
 

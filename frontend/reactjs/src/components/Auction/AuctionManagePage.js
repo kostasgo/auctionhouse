@@ -28,6 +28,7 @@ export default class AuctionManagePage extends Component {
             seller: {},
             user: {},
             categories: [],
+            images: [],
             toManage : false,
             showPopup : false,
             redirect: null,
@@ -44,7 +45,8 @@ export default class AuctionManagePage extends Component {
                 this.setState({ auction: data
                                 ,seller :data.seller
                                 ,user :data.seller.user
-                                ,categories : data.categories });
+                                ,categories : data.categories
+                                ,images : data.imgUrl });
             });
 
         const currentUser = AuthService.getCurrentUser();
@@ -121,11 +123,11 @@ export default class AuctionManagePage extends Component {
             <Row className='carousel-info-container' xs={1} md={2} xl={2}>
                 <Col>
                     <Carousel variant="dark">
-
+                    {this.state.images.map((url) => (
                         <Carousel.Item>
                             <img
                             className="d-block w-100"
-                            src={this.state.auction.imgUrl!=null?this.state.auction.imgUrl:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"}
+                            src={url!=null?url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"}
                             style={{ objectFit: 'cover' }}
                             alt="First slide"
                             />
@@ -133,6 +135,7 @@ export default class AuctionManagePage extends Component {
                             {/* <h3>First slide label</h3> */}
                             </Carousel.Caption>
                         </Carousel.Item>
+                    ))}
                     </Carousel>
                 </Col>
                 <Col>
