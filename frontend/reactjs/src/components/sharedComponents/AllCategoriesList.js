@@ -14,7 +14,7 @@ export default class AllCategoriesList extends Component {
         axios.get("http://localhost:8080/api/v1/categories")
             .then(response => response.data)
             .then((data) => {
-                this.setState({ categories_given : data});               
+                this.setState({ categories_given : data});
             });
     }
     render() {

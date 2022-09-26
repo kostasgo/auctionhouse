@@ -160,15 +160,15 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				LocalDateTime ends5 = LocalDateTime.parse("07-10-2022 19:00:00", formatter);
 
 
-				String[] images = {"https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg", "https://i.ebayimg.com/images/g/n68AAOSwEkVhU~uU/s-l500.jpg"};
+				String images = "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg,https://i.ebayimg.com/images/g/n68AAOSwEkVhU~uU/s-l500.jpg";
 
-				String[] images2 = {"https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg"};
+				String images2 = "https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg";
 
-				String[] images3 = {"https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg"};
+				String images3 = "https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg";
 
-				String[] images4 = {"https://cdn.flightclub.com/TEMPLATE/172524/1.jpg"};
+				String images4 = "https://cdn.flightclub.com/TEMPLATE/172524/1.jpg";
 
-				String[] images5 = {"https://m.media-amazon.com/images/S/aplus-media/sc/6370189a-1b3b-4e92-a91b-7c0dfbe5a1b6.__CR0,0,1280,1280_PT0_SX300_V1___.jpg"};
+				String images5 = "https://m.media-amazon.com/images/S/aplus-media/sc/6370189a-1b3b-4e92-a91b-7c0dfbe5a1b6.__CR0,0,1280,1280_PT0_SX300_V1___.jpg";
 
 
 

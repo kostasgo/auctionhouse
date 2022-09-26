@@ -97,7 +97,7 @@ public class AuctionController {
         char first = auctionRequest.getName().charAt(0);
         String path = userDirectory+"\\media\\auction\\"+Character.toString(Character.toLowerCase(first));
 
-        String[] urls = new String[strImages.length];
+        String urls = "";
 
         File directory = new File(path);
         if (!directory.exists()){
@@ -115,7 +115,8 @@ public class AuctionController {
 
             String fileName = path + "\\" + imageNames[i];
             File file = new File(fileName);
-            urls[i] = fileName;
+            if(urls=="") urls += ",";
+            urls +=fileName;
             try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
                 outputStream.write(data);
             } catch (IOException e) {
