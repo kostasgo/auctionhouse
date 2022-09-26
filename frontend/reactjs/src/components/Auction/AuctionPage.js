@@ -325,7 +325,7 @@ export default class AuctionPage extends Component {
                                         {isHighestBidder() && this.state.auction.bids.length != 0 &&
                                             <p className='text-success'>You are the highest bidder</p>}
                                         {!isHighestBidder() && this.state.auction.bids.length != 0 &&
-                                            <p className='text-danger'>You not are the highest bidder</p>}
+                                            <p className='text-danger'>You are not the highest bidder</p>}
 
                                     </Col>
                                     <Col className="justify-content-md-center">
