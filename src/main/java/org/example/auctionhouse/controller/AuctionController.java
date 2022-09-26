@@ -115,7 +115,7 @@ public class AuctionController {
 
             String fileName = path + "\\" + imageNames[i];
             File file = new File(fileName);
-            if(urls=="") urls += ",";
+            if(urls!="") urls += ",";
             urls +=fileName;
             try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
                 outputStream.write(data);

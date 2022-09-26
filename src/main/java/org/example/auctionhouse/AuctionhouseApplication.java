@@ -168,7 +168,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 				String images4 = "https://cdn.flightclub.com/TEMPLATE/172524/1.jpg";
 
-				String images5 = "https://m.media-amazon.com/images/S/aplus-media/sc/6370189a-1b3b-4e92-a91b-7c0dfbe5a1b6.__CR0,0,1280,1280_PT0_SX300_V1___.jpg";
+				String images5 = "https://5.imimg.com/data5/SELLER/Default/2021/7/BD/CB/AC/12194828/marquise-diamond-earrings-500x500.jpeg";
 
 
 
@@ -177,6 +177,13 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				Auction auction3 = new Auction(seller, "Gold bracelet", "Many many carats. Belonged to my late granny.", "Greece", "Athens",37.983810,23.727539, started3, ends3, categories3, 500.00, 100.00, images3);
 				Auction auction4 = new Auction(seller, "Nike Jordans", "Never worn. Number 44 (EU)", "Greece", "Athens",37.983810,23.727539, started4, ends4, categories4, 200.00, 80.00, images4);
 				Auction auction5 = new Auction(seller2, "Diamond earrings", "12 Carats, originally bought 2.000 euros", "Greece", "Athens",37.983810,23.727539, started5, ends5, categories3, 2000.00, 500.00, images5);
+
+
+				auction1.setActive(true);
+				auction2.setActive(true);
+				auction3.setActive(true);
+				auction4.setActive(true);
+				auction5.setActive(true);
 
 				auctionService.saveOrUpdate(auction1);
 				auctionService.saveOrUpdate(auction2);

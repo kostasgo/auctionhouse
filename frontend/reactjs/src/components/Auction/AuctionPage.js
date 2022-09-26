@@ -233,7 +233,7 @@ export default class AuctionPage extends Component {
                     <Row className='carousel-info-container' xs={1} md={2} xl={2}>
                         <Col>
                             <Carousel variant="dark" className='carousel'>
-                                {this.state.auction.imgUrl.map((url) => (
+                                {this.state.auction.imgUrl.split(",").map((url) => (
                                     <Carousel.Item>
                                         <img
                                             className="d-block w-100"
