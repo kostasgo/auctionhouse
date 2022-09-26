@@ -160,15 +160,15 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				LocalDateTime ends5 = LocalDateTime.parse("07-10-2022 19:00:00", formatter);
 
 
-				String images = "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg,https://i.ebayimg.com/images/g/n68AAOSwEkVhU~uU/s-l500.jpg";
+				String[] images = {"https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg","https://i.ebayimg.com/images/g/n68AAOSwEkVhU~uU/s-l500.jpg"};
 
-				String images2 = "https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg";
+				String[] images2 = {"https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg"};
 
-				String images3 = "https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg";
+				String[] images3 = {"https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg"};
 
-				String images4 = "https://cdn.flightclub.com/TEMPLATE/172524/1.jpg";
+				String[] images4 = {"https://cdn.flightclub.com/TEMPLATE/172524/1.jpg"};
 
-				String images5 = "https://5.imimg.com/data5/SELLER/Default/2021/7/BD/CB/AC/12194828/marquise-diamond-earrings-500x500.jpeg";
+				String[] images5 = {"https://5.imimg.com/data5/SELLER/Default/2021/7/BD/CB/AC/12194828/marquise-diamond-earrings-500x500.jpeg"};
 
 
 
