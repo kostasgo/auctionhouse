@@ -1,4 +1,4 @@
-package org.example.auctionhouse.controller;
+package org.example.auctionhouse.runnable;
 
 
 class AuctionExpirationRunnable implements Runnable {
