@@ -7,6 +7,7 @@ import "./ManageAuctions.css"
 import AuctionManagePage from './AuctionManagePage';
 import AuthService from "../../services/auth.service";
 import { Link } from "react-router-dom";
+import NewAuction from './NewAuction';
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -21,11 +22,14 @@ export default class ManageAuctions extends Component {
         this.state = {
             auctions: [],
             toAuctionManage: false,
+            toNewAuction: false,
             auction_id: -1,
             redirect: null,
             userReady: false,
             currentUser: { username: "" }
         };
+        this.handleToNewAuction = this.handleToNewAuction.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
     componentDidMount() {
@@ -44,6 +48,16 @@ export default class ManageAuctions extends Component {
         }
     }
 
+    handleSelect(id){
+        console.log("SELECT CLICKED");
+        this.setState({ toAuctionManage: true });
+        this.setState({ auction_id: id });
+    };
+
+    handleToNewAuction(){
+        this.setState({ toNewAuction: true });
+    }
+
     render() {
     
 
@@ -52,11 +66,6 @@ export default class ManageAuctions extends Component {
             //  <Route path="/" element={<Navigate to="/" />} />
         };
 
-        const handleSelect = (id) => {
-            console.log("SELECT CLICKED");
-            this.setState({ toAuctionManage: true });
-            this.setState({ auction_id: id });
-        };
 
         const handleUserClick = (id) => {
             console.log("USER CLICKED");
@@ -70,10 +79,11 @@ export default class ManageAuctions extends Component {
         
         
 
-        return (
-        this.state.currentUser!="redirect"?
+        return (this.state.currentUser!="redirect"?
         <>
         {!this.state.toAuctionManage ? 
+            <>
+            {!this.state.toNewAuction?
             <>
             <div className='title'>
                 <div className="container d-flex h-100">
@@ -85,7 +95,7 @@ export default class ManageAuctions extends Component {
             </div>
             <Row>
                 <Col xs={12} md={6} xl={4}>
-                        <Link to="/new-auction" className="new">
+                        <div onClick={this.handleToNewAuction} className="options">
                             <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
                                 <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg"  style={{ objectFit: 'cover', maxHeight: '350px' }} />
                                 <Card.Body>
@@ -93,7 +103,7 @@ export default class ManageAuctions extends Component {
                                     <Row><Card.Subtitle className="card-title text-muted"> Create a new auction </Card.Subtitle></Row>
                                 </Card.Body>
                             </Card>
-                        </Link>
+                        </div>
                 </Col>
                 {
                     this.state.auctions.length === 0 ?
@@ -104,8 +114,9 @@ export default class ManageAuctions extends Component {
                         {this.state.auctions.map((auction) => (
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
+                                    <div className="options">
                                     <Card key={auction.id} className="card">
-                                        <Card.Img variant="top" src={(auction.imgUrl.length!=0)?auction.imgUrl[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
+                                        <Card.Img variant="top" src={(auction.imgUrl.length!=0)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <ListGroup variant="flush">
@@ -131,22 +142,25 @@ export default class ManageAuctions extends Component {
 
                                                 {(!auction.active)?
                                                     <Row >
-                                                        <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>EDIT   </Button>
+                                                        <Button variant="primary" className='select-button' onClick={() => this.handleSelect(auction.id)}>EDIT   </Button>
                                                     </Row>
                                                     :
                                                     <Row >
-                                                        <Button variant="secondary" className='select-button' onClick={() => handleSelect(auction.id)}>VIEW   </Button>
+                                                        <Button variant="secondary" className='select-button' onClick={() => this.handleSelect(auction.id)}>VIEW   </Button>
                                                     </Row>
                                                 }
                                             </Card.Footer>
 
                                         </Card.Body>
                                     </Card>
+                                    </div>
                                 </div>
                             </Col>
                         ))}
                         
             </Row >
+            </>
+            :<NewAuction/>}
         </>
         : <AuctionManagePage data_tranfer={this.state.auction_id} />}
         </>

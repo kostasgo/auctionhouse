@@ -16,3 +16,11 @@
 .card{
     margin-bottom: 1rem;
 }
+
+.options{
+    transition: transform 250ms;
+}
+.options:hover {
+    transform: scale(1.2);
+    transform: translateY(-10px);
+  }

@@ -7,6 +7,7 @@ import "./HomePage.css"
 import AuthService from "../services/auth.service";
 import { Redirect } from "react-router-dom";
 import Chat from "./sharedComponents/Chat"
+import { Link } from "react-router-dom";
 
 
 
@@ -31,21 +32,6 @@ export default class HomePage extends Component {
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
     }
 
-    // fileSelectedHandler = event => {
-    //     this.setState({
-    //         selectedFiles: event.target.files[0]
-    //     });
-    // }
-
-    // fileUploadHandler = () => {
-    //     const fd = new FormData();
-    //     fd.append("images", this.state.selectedFiles);
-    //     axios.post("http://localhost:8080/api/v1/auctions/images", this.state.selectedFiles, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data;'
-    //         }
-    //     })
-    // }
 
     render() {
         if (this.state.redirect) {
@@ -82,17 +68,11 @@ export default class HomePage extends Component {
                     </div>
                 </div>
 
+                <Link to="/auctions"><Button >BROWSE AUCTIONS</Button></Link>
+
                 <Chat/>
 
-                {/* <Container>
-                    <Row>
-                        <Col>
-                            <input onChange={this.fileSelectedHandler} type="file" />
-                            <button onClick={this.fileUploadHandler} > Upload </button>
-
-                        </Col>
-                    </Row>
-                </Container> */}
+                
 
 
             </>)

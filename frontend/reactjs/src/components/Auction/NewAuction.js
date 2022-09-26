@@ -4,7 +4,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import axios from 'axios'
 import "./NewAuction.css"
 import { MapContainer, TileLayer } from 'react-leaflet';
-
+import ManageAuctions from './ManageAuctions';
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
@@ -74,6 +74,7 @@ export default class NewAuction extends Component {
         this.onImageRemoveAll = this.onImageRemoveAll.bind(this);
         this.onChangeFirstBid = this.onChangeFirstBid.bind(this);
         this.onChangeBuyPrice = this.onChangeBuyPrice.bind(this);
+        this.handleBack2 = this.handleBack2.bind(this);
 
         this.state = {
             title: "",
@@ -89,8 +90,8 @@ export default class NewAuction extends Component {
 
             selectedFiles : [],
             selectedFileNames : [],
-
-
+        
+            toManage2 : false,
             userReady: false,
             currentUser: { username: "" },
       
@@ -303,13 +304,19 @@ export default class NewAuction extends Component {
         
     }
 
+    handleBack2(){
+        console.log("BACK CLICKED");
+        // console.log(this.state.auction.seller);
+        this.setState({toManage2:true});
+    };
+
     
 
     render() {
-
+       
         
 
-        return (
+        return (!this.state.toManage2) ?
             <>
 
             <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
@@ -329,6 +336,9 @@ export default class NewAuction extends Component {
                         </div>
                 </div>
             </div>
+
+            <Button variant="primary" className='back-button' onClick={this.handleBack2}> &emsp;BACK TO YOUR AUCTIONS&emsp; </Button>
+
             <Row className="justify-content-center">
                 <Col lg={6}>
                     <Card>
@@ -597,7 +607,10 @@ export default class NewAuction extends Component {
             </Row>
             </>
 
-        );
+            :
+            <>
+                <ManageAuctions/>
+            </>
     }
 }
 

@@ -62,29 +62,6 @@ export default class AuctionManagePage extends Component {
             this.setState({toManage:true});
         };
 
-        const handleUserClick = () => {
-            console.log("USER CLICKED");
-        };
-
-
-        const handleBuyOut = () => {
-            console.log("BUY-OUT CLICKED");
-        };
-
-        const handleLogIn= () => {
-            console.log("LOGIN CLICKED");
-            
-        };
-
-        const handleRegister = () => {
-            console.log("REGISTER CLICKED");
-        };
-
-        const handleBid = () => {
-            console.log("BID CLICKED");
-            this.setState({showPopup:true});
-        };
-
         const handleClose = () => {
             console.log("SHOW CLICKED");
             this.setState({showPopup:false});
@@ -124,7 +101,7 @@ export default class AuctionManagePage extends Component {
                 <Col>
                     <Carousel variant="dark">
                     {this.state.images.map((url) => (
-                        <Carousel.Item>
+                        <Carousel.Item key="{url}">
                             <img
                             className="d-block w-100"
                             src={url!=null?url:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"}

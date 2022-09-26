@@ -9,8 +9,9 @@ import AuthService from "../../services/auth.service";
 import { Form } from 'react-bootstrap';
 import auctionService from '../../services/auction.service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck, faCalendarDays, faList, faImage, faDollarSign } from '@fortawesome/free-solid-svg-icons'
+import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck, faCalendarDays, faList, faImage, faDollarSign, faDollar } from '@fortawesome/free-solid-svg-icons'
 import AllCategoriesList from '../sharedComponents/AllCategoriesList';
+import AllCountriesList from '../sharedComponents/AllCountriesList';
 
 
 function calcDifference(dt1, dt2) {
@@ -31,7 +32,7 @@ export default class AuctionsList extends Component {
             userReady: false,
             currentUser: { username: "" },
 
-            filter1value : ""
+            filter1value : 100000
         };
 
         this.handleSearch = this.handleSearch.bind(this);
@@ -89,7 +90,7 @@ export default class AuctionsList extends Component {
 
     handleSlider(e){
         this.filter1value = e.target.value;
-        window.getElementById("num1").value = this.filter1value;
+        document.getElementById("num1").innerHTML = this.filter1value;
         console.log(this.filter1value);
     }
 
@@ -121,7 +122,7 @@ export default class AuctionsList extends Component {
         var coll;
         var i;
 
-
+    
 
         
         
@@ -153,26 +154,35 @@ export default class AuctionsList extends Component {
             <Container className='search-container'>
                 <Row xs={3} md={3} xl={3}>
                     <Col>
-                        <Button type="button" className="collapsible" variant="btn btn-success">€ PRICE RANGE</Button>
+                        <Button type="button" className="collapsible" variant="btn btn-success"><FontAwesomeIcon icon={faDollar}/> PRICE RANGE</Button>
                         <div class="content">
                             <label for="customRange1" class="form-label">Set maximum amount</label>
-                            <input type="range" min="0" max="100000" currently="50000" class="form-range" id="customRange1" onChange={this.handleSlider}/>
-                            <div >0 € - <span id="num1">{this.filter1value}</span> €</div>
+                            <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={this.handleSlider}/>
+                            <div className='lead'>from 0   to  <span id="num1">100000</span> €</div>
                         </div>
                     </Col>
                     <Col>
                         <Button type="button" className="collapsible" variant="btn btn-warning"><FontAwesomeIcon icon={faList}/> CATEGORY</Button>
                         <div class="content">
+                        <label for="sel1">Select category:</label>
+                            <select class="form-control" id="sel1">
+                            <option key="" value="">ALL</option>
                             <AllCategoriesList/>
+                            </select>
                         </div>
                     </Col>
                     <Col>
                         <Button type="button" className="collapsible" variant="btn btn-danger"><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
                         <div class="content">
-                            <p>Lorem ipsum...</p>
+                        <label for="sel1">Select country:</label>
+                        <select class="form-control" id="sel1">
+                            <option key="" value="">ALL</option>
+                            <AllCountriesList/>
+                            </select>
                         </div>
                     </Col>
                 </Row>
+               
                 
                 
             </Container>
@@ -186,8 +196,9 @@ export default class AuctionsList extends Component {
                         this.state.auctions.map((auction) => (
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
+                                    <div className="options">
                                     <Card key={auction.id} className="card" >
-                                        <Card.Img variant="top" src={(auction.imgUrl!=null)?auction.imgUrl[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
+                                        <Card.Img variant="top" src={(auction.imgUrl!=null)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
@@ -219,6 +230,7 @@ export default class AuctionsList extends Component {
 
                                         </Card.Body>
                                     </Card>
+                                    </div>
                                 </div>
                             </Col>
                         ))
@@ -226,6 +238,7 @@ export default class AuctionsList extends Component {
             </Row >
         </> : <AuctionPage data_tranfer={this.state.auction_id} />
 
-
     }
+
+    
 }
