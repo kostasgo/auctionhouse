@@ -18,6 +18,11 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     List<Auction> findAllActiveAuctions(@Param("active") Boolean active, @Param("id") Integer id);
 
 
+    final static String SEARCH_ALL_ACTIVE_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE auc.active = :active AND sel.user_id != :id AND auc.name LIKE %:search% ";
+    @Query(value = SEARCH_ALL_ACTIVE_AUCTIONS, nativeQuery = true)
+    List<Auction> searchActiveAuctions(@Param("search") String search,@Param("active") Boolean active, @Param("id") Integer id);
+
+
     final static String GET_USER_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE sel.user_id = :id";
     @Query(value = GET_USER_AUCTIONS, nativeQuery = true)
     List<Auction> findUserAuctions(@Param("id") Integer id);

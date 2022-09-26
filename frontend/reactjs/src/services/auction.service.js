@@ -29,6 +29,10 @@ class AuctionService {
     getActiveNonUserAuctions(id = -1) {
         return axios.get(API_URL+"?active=true&id="+id);
     }
+
+    searchActiveNonUserAuctions(searchInput = "",active = true , id = -1){
+        return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id);
+    }
 }
 
 export default new AuctionService();

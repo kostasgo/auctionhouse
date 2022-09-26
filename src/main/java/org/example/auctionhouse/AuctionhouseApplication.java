@@ -42,7 +42,10 @@ public class AuctionhouseApplication implements CommandLineRunner {
 	private BidService bidService;
 
 	@Autowired
-	private  CategoryService categoryService;
+	private CategoryService categoryService;
+
+//	@Autowired
+//	private MessageService messageService;
 
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -160,15 +163,15 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				LocalDateTime ends5 = LocalDateTime.parse("07-10-2022 19:00:00", formatter);
 
 
-				String images = "https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg,https://i.ebayimg.com/images/g/n68AAOSwEkVhU~uU/s-l500.jpg";
+				String[] images = {"https://i.ebayimg.com/images/g/R1QAAOSwgGRjHJy5/s-l1600.jpg","https://i.ebayimg.com/images/g/n68AAOSwEkVhU~uU/s-l500.jpg"};
 
-				String images2 = "https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg";
+				String[] images2 = {"https://i.ebayimg.com/images/g/SmEAAOSwyU9iSNw1/s-l1600.jpg"};
 
-				String images3 = "https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg";
+				String[] images3 = {"https://i.ebayimg.com/images/g/eYoAAOSwBSljLDQm/s-l500.jpg"};
 
-				String images4 = "https://cdn.flightclub.com/TEMPLATE/172524/1.jpg";
+				String[] images4 = {"https://cdn.flightclub.com/TEMPLATE/172524/1.jpg"};
 
-				String images5 = "https://5.imimg.com/data5/SELLER/Default/2021/7/BD/CB/AC/12194828/marquise-diamond-earrings-500x500.jpeg";
+				String[] images5 = {"https://5.imimg.com/data5/SELLER/Default/2021/7/BD/CB/AC/12194828/marquise-diamond-earrings-500x500.jpeg"};
 
 
 
@@ -197,7 +200,7 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				bidService.saveOrUpdate(bid);
 
 				LocalDateTime bidTime2 = LocalDateTime.parse("21-09-2022 10:13:05", formatter);
-				Bid bid2 = new Bid(bidder2, auction2, bidTime, 2300.00);
+				Bid bid2 = new Bid(bidder2, auction3, bidTime, 500.00);
 				bidService.saveOrUpdate(bid2);
 
 

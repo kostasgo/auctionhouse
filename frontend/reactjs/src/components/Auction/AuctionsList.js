@@ -8,6 +8,10 @@ import AuctionPage from './AuctionPage';
 import AuthService from "../../services/auth.service";
 import { Form } from 'react-bootstrap';
 import auctionService from '../../services/auction.service';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck, faCalendarDays, faList, faImage, faDollarSign } from '@fortawesome/free-solid-svg-icons'
+import AllCategoriesList from '../sharedComponents/AllCategoriesList';
+
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -25,8 +29,13 @@ export default class AuctionsList extends Component {
             auction_id: -1,
             redirect: null,
             userReady: false,
-            currentUser: { username: "" }
+            currentUser: { username: "" },
+
+            filter1value : ""
         };
+
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleSlider = this.handleSlider.bind(this);
     }
 
     componentDidMount() {
@@ -48,17 +57,46 @@ export default class AuctionsList extends Component {
             });
 
 
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+            content.style.display = "none";
+            } else {
+            content.style.display = "block";
+            }
+        });
+        }
+
+
+    }
+
+    handleSearch(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        } 
+        auctionService.searchActiveNonUserAuctions(String(document.getElementById("search_input").value) ,true ,activeId)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({ auctions: data });
+            });
+    }
+
+    handleSlider(e){
+        this.filter1value = e.target.value;
+        window.getElementById("num1").value = this.filter1value;
+        console.log(this.filter1value);
     }
 
     render() {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
         }
-
-        const handleSearch = () => {
-            console.log("SEARCH CLICKED");
-            //  <Route path="/" element={<Navigate to="/" />} />
-        };
 
         const handleSelect = (id) => {
             console.log("SELECT CLICKED");
@@ -71,11 +109,22 @@ export default class AuctionsList extends Component {
             //  <Route path="/" element={<Navigate to="/" />} />
         };
 
+        // CLACULATING REMAINING TIME
         var diff;
         var diff2;
         var days;
         var hours;
         var minutes;
+
+
+        // FILTERS
+        var coll;
+        var i;
+
+
+
+        
+        
 
 
 
@@ -92,21 +141,39 @@ export default class AuctionsList extends Component {
 
             <Form className="d-flex">
                 <Form.Control
+                    id='search_input'
                     type="search"
                     placeholder="#Anything you desire"
                     className="me-2"
                     aria-label="Search"
                 />
-                <Button variant="primary">Search</Button>
+                <Button variant="primary" onClick={this.handleSearch}>Search</Button>
             </Form>
 
             <Container className='search-container'>
-                <Row xs={4} md={4} xl={4}>
-                    <Col><Button variant="btn btn-success">FILTER1</Button></Col>
-                    <Col><Button variant="btn btn-warning">FILTER2</Button></Col>
-                    <Col><Button variant="btn btn-danger">FILTER3</Button></Col>
-                    <Col><Button variant="btn btn-info">FILTER4</Button></Col>
+                <Row xs={3} md={3} xl={3}>
+                    <Col>
+                        <Button type="button" className="collapsible" variant="btn btn-success">€ PRICE RANGE</Button>
+                        <div class="content">
+                            <label for="customRange1" class="form-label">Set maximum amount</label>
+                            <input type="range" min="0" max="100000" currently="50000" class="form-range" id="customRange1" onChange={this.handleSlider}/>
+                            <div >0 € - <span id="num1">{this.filter1value}</span> €</div>
+                        </div>
+                    </Col>
+                    <Col>
+                        <Button type="button" className="collapsible" variant="btn btn-warning"><FontAwesomeIcon icon={faList}/> CATEGORY</Button>
+                        <div class="content">
+                            <AllCategoriesList/>
+                        </div>
+                    </Col>
+                    <Col>
+                        <Button type="button" className="collapsible" variant="btn btn-danger"><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
+                        <div class="content">
+                            <p>Lorem ipsum...</p>
+                        </div>
+                    </Col>
                 </Row>
+                
                 
             </Container>
 
@@ -120,7 +187,7 @@ export default class AuctionsList extends Component {
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
                                     <Card key={auction.id} className="card" >
-                                        <Card.Img variant="top" src={(auction.imgUrl.split(",")!=null)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
+                                        <Card.Img variant="top" src={(auction.imgUrl!=null)?auction.imgUrl[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
