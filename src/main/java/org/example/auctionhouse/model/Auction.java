@@ -71,13 +71,13 @@ public class Auction {
     private Set<Bid> bids;
 
     @Column
-    private String[] imgUrl;
+    private String imgUrl;
 
     @Column(nullable = false)
     private Boolean active;
 
 
-    public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime starts, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String[] imgUrl) {
+    public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime starts, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
         this.seller = seller;
         this.name = name;
         this.description = description;
