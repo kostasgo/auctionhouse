@@ -87,3 +87,8 @@
   .title{
     margin : 1.5rem;
 }
+
+.imgprev{
+    max-height: 10rem;
+    max-width: 10rem;
+}

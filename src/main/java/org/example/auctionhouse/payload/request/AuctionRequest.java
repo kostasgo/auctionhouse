@@ -52,6 +52,7 @@ public class AuctionRequest {
     @NotBlank
     private Double firstBid;
 
-    private Set<String> imgUrl;
+    private String[] imgData;
+    private String[] imgNames;
 }
 

@@ -21,7 +21,7 @@ export default class AllCategoriesList extends Component {
         return (
 
             this.state.categories.map((category) => (
-                <option value="{category.name}">{category.name}</option>
+                <option value={category.name}>{category.name}</option>
             ))
         )
     }
