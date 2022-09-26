@@ -512,7 +512,7 @@ export default class NewAuction extends Component {
 
                                         {/* IMAGES */}
                                         <InputGroup className="mb-3">
-                                        <InputGroup.Text id="location-icon"><FontAwesomeIcon icon={faImage} /><span>&nbsp; Images </span></InputGroup.Text>
+                                        <InputGroup.Text id="location-icon"><FontAwesomeIcon icon={faImage} /><span>&nbsp; Images (max 5) </span></InputGroup.Text>
                                         <ImageUploading
                                                 multiple
                                                 value={this.state.images}
