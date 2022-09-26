@@ -88,44 +88,45 @@ public class AuctionController {
 
         Auction auction = new Auction(seller, auctionRequest.getName(), auctionRequest.getDescription(), auctionRequest.getCountry(),
                 auctionRequest.getLocation() , auctionRequest.getLatitude(), auctionRequest.getLongitude() , LocalDateTime.now(), ends, categories,
-                auctionRequest.getBuyPrice(), auctionRequest.getFirstBid(), null);
+                auctionRequest.getBuyPrice(), auctionRequest.getFirstBid(), auctionRequest.getImages());
 
         auctionService.saveOrUpdate(auction);
 
-        String[] strImages = auctionRequest.getImages();
-        String[] imageNames = auctionRequest.getImageNames();
-        char first = auctionRequest.getName().charAt(0);
-        String path = userDirectory+"\\media\\auction\\"+Character.toString(Character.toLowerCase(first));
+      //  String[] strImages = auctionRequest.getImages();
+      //  String[] imageNames = auctionRequest.getImageNames();
+      //  char first = auctionRequest.getName().charAt(0);
+      //  String path = userDirectory+"\\media\\auction\\"+Character.toString(Character.toLowerCase(first));
 
-        String urls = "";
+     //   String[] imagesRet = new String[strImages.length];
 
-        File directory = new File(path);
-        if (!directory.exists()){
-            directory.mkdirs();
-            System.out.println("created");
-        }
-        else{
-            System.out.println("existed");
-        }
-        for (int i = 0; i < strImages.length; i++){
-            String base64String = strImages[i];
-            String[] parts = base64String.split(",");
-            //convert base64 string to binary data
-            byte[] data = DatatypeConverter.parseBase64Binary(parts[1]);
+//        File directory = new File(path);
+//        if (!directory.exists()){
+//            directory.mkdirs();
+//            System.out.println("created");
+//        }
+//        else{
+//            System.out.println("existed");
+//        }
+   //     for (int i = 0; i < strImages.length; i++){
 
-            String fileName = path + "\\" + imageNames[i];
-            File file = new File(fileName);
-            if(urls!="") urls += ",";
-            urls +=fileName;
-            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-                outputStream.write(data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        auction.setImgUrl(urls);
+//            String base64String = strImages[i];
+//            String[] parts = base64String.split(",");
+//            //convert base64 string to binary data
+//            byte[] data = DatatypeConverter.parseBase64Binary(parts[1]);
+//
+//            String fileName = path + "\\" + imageNames[i];
+//            File file = new File(fileName);
+//            if(urls!="") urls += ",";
+//            urls +=fileName;
+//            try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+//                outputStream.write(data);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+     //   }
+        //auction.setImgUrl(urls);
 
-        auctionService.saveOrUpdate(auction);
+      //  auctionService.saveOrUpdate(auction);
         return ResponseEntity.ok(auction);
     }
 
