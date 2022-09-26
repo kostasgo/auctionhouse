@@ -16,8 +16,9 @@ import javax.validation.constraints.*;
 @Getter
 @Setter
 public class AuctionRequest {
+
     @NotBlank
-    private Seller seller;
+    private String username;
 
     @NotBlank
     @Size(max = 100)
@@ -30,28 +31,24 @@ public class AuctionRequest {
     @Size(max = 50)
     private String country;
 
-    @NotBlank
+    @Size(max = 50)
+    private String location;
+
     private Double latitude;
 
-    @NotBlank
     private Double longitude;
 
     @NotBlank
-    private Date starts;
+    private String ends;
 
-    @NotBlank
-    private Date ends;
+    private Set<String> categories;
 
-    @NotBlank
-    private List<Category> categories;
-
-
-    @NotBlank
     private Double buyPrice;
 
-    @NotBlank
     private Double firstBid;
 
-    private Set<String> imgUrl;
+    private String[] images;
+
+    private String[] imageNames;
 }
 

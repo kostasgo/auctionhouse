@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, Router } from 'react-router-dom';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { Container, Row, Col, Card, Button, NavItem } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
 import axios from 'axios'
 import "./HomePage.css"
@@ -16,7 +16,7 @@ export default class HomePage extends Component {
         this.state = {
             redirect: null,
             userReady: false,
-
+            selectedFiles: null,
             redirect: null,
             currentUser: { username: "" }
         };
@@ -28,6 +28,22 @@ export default class HomePage extends Component {
         console.log(guest);
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
+    }
+
+    fileSelectedHandler = event => {
+        this.setState({
+            selectedFiles: event.target.files[0]
+        });
+    }
+
+    fileUploadHandler = () => {
+        const fd = new FormData();
+        fd.append("images", this.state.selectedFiles);
+        axios.post("http://localhost:8080/api/v1/auctions/images", this.state.selectedFiles, {
+            headers: {
+                'Content-Type': 'multipart/form-data;'
+            }
+        })
     }
 
     render() {
@@ -52,6 +68,7 @@ export default class HomePage extends Component {
 
 
 
+
         return (
             <>
 
@@ -66,7 +83,11 @@ export default class HomePage extends Component {
 
                 <Container>
                     <Row>
-                        <Col> </Col>
+                        <Col>
+                            <input onChange={this.fileSelectedHandler} type="file" />
+                            <button onClick={this.fileUploadHandler} > Upload </button>
+
+                        </Col>
                     </Row>
                 </Container>
 

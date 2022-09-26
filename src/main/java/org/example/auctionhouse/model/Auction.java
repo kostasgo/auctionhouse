@@ -48,7 +48,7 @@ public class Auction {
     @Column(nullable = false)
     private Double longitude;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime starts;
 
     @Column(nullable = false)
@@ -93,7 +93,7 @@ public class Auction {
         this.firstBid = firstBid;
         this.bids = null;
         this.imgUrl = imgUrl;
-        this.active = starts.isBefore(LocalDateTime.now()) && ends.isAfter(LocalDateTime.now());
+        this.active = false;
     }
 
 }
