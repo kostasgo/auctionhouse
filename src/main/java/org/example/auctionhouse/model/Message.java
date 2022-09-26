@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -28,11 +31,13 @@ public class Message {
     @Column(nullable = false)
     private Long recieverId;
 
+    @Column
+    private LocalDateTime time;
 
-
-
-
-    public Message(String name) {
+    public Message(String text, Long senderId, Long recieverId) {
         this.text = text;
+        this.senderId = senderId;
+        this.recieverId = recieverId;
+        this.time = LocalDateTime.now();
     }
 }

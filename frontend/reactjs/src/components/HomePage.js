@@ -6,6 +6,7 @@ import axios from 'axios'
 import "./HomePage.css"
 import AuthService from "../services/auth.service";
 import { Redirect } from "react-router-dom";
+import Chat from "./sharedComponents/Chat"
 
 
 
@@ -80,6 +81,8 @@ export default class HomePage extends Component {
                         </div>
                     </div>
                 </div>
+
+                <Chat/>
 
                 {/* <Container>
                     <Row>
