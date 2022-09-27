@@ -325,7 +325,7 @@ export default class AuctionPage extends Component {
                             <div class="form-group row">
                                 <label for="staticBids" class="col-sm-2 col-form-label">Total bids</label>
                                 <div class="col-10">
-                                <input type="text" readonly class="form-control-plaintext lead" id="staticBids" value={this.state.numberOfBids}/>
+                                <input type="text" readonly class="form-control-plaintext lead" id="staticBids" value={this.state.auction.numberOfBids}/>
                                 </div>
                             </div>
                             <div class="form-group row">

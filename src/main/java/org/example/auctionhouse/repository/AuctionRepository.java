@@ -12,10 +12,13 @@ import java.util.List;
 
 @Repository
 public interface AuctionRepository extends JpaRepository<Auction, Long> {
-
-    final static String GET_ALL_ACTIVE_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE auc.active = :active AND sel.user_id != :id";
+    final static String GET_ALL_ACTIVE_AUCTIONS = "SELECT * FROM auction auc WHERE auc.active = true";
     @Query(value = GET_ALL_ACTIVE_AUCTIONS, nativeQuery = true)
-    List<Auction> findAllActiveAuctions(@Param("active") Boolean active, @Param("id") Integer id);
+    List<Auction> findAllActiveAuctions();
+
+    final static String GET_ACTIVE_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE auc.active = :active AND sel.user_id != :id";
+    @Query(value = GET_ACTIVE_AUCTIONS, nativeQuery = true)
+    List<Auction> findActiveAuctions(@Param("active") Boolean active, @Param("id") Integer id);
 
 
     final static String SEARCH_ALL_ACTIVE_AUCTIONS = "SELECT * FROM auction auc INNER JOIN seller sel ON auc.seller_id=sel.id WHERE auc.active = :active AND sel.user_id != :id AND auc.name LIKE %:search% ";

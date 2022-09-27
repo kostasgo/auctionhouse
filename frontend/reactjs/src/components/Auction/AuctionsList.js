@@ -174,9 +174,9 @@ export default class AuctionsList extends Component {
                     <Col>
                         <Button className="shadow collapsible" variant="btn btn-danger"><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
                         <div class="shadow content">
-                        <label for="sel1" class="form-label">Select country / countries:</label>
-                        <select multiple size="2" class="shadow-sm form-control" id="sel1">
-                            <option key="" value="">ALL</option>
+                        <label for="sel2" class="form-label">Select country:</label>
+                        <select class="shadow-sm form-control form-bottom2" id="sel2">
+                            {/* <option key="" value="">ALL</option> */}
                             <AllCountriesList/>
                             </select>
                         </div>

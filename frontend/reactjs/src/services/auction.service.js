@@ -26,6 +26,10 @@ class AuctionService {
         return axios.get(API_URL);
     }
 
+    getAllActiveAuctions() {
+        return axios.get(API_URL+"?active=true");
+    }
+
     getActiveNonUserAuctions(id = -1) {
         return axios.get(API_URL+"?active=true&id="+id);
     }

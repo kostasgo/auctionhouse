@@ -74,7 +74,7 @@ public class Auction {
     private String imgUrl;
 
     @Column
-    private String numOf;
+    private Integer numberOfBids;
 
     @Column(nullable = false)
     private Boolean active;
@@ -97,6 +97,7 @@ public class Auction {
         this.bids = null;
         this.imgUrl = imgUrl;
         this.active = false;
+        this.numberOfBids=0;
     }
 
 }

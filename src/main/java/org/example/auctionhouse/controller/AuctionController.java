@@ -68,6 +68,11 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.findUserAuctions(id), HttpStatus.OK);
     }
 
+    @GetMapping(params = "active")
+    ResponseEntity<Collection<Auction>> findUserAuctions(@RequestParam("active") Boolean active){
+        return new ResponseEntity<>(auctionService.findAllActive(), HttpStatus.OK);
+    }
+
 
     @PostMapping("/new_auction")
     //@PreAuthorize("hasRole('ROLE_USER')")
