@@ -26,16 +26,15 @@ export default class AuctionsList extends Component {
         super(props);
         this.state = {
             auctions: [],
-            auctionsCount: 0,
             toAuction: false,
             auction_id: -1,
             redirect: null,
             userReady: false,
             currentUser: { username: "" },
-            search_string: "",
 
             filter1value : 100000,
 
+            search_string: "",
             pageOffset : 0,
             totalResults : 0
         };
@@ -60,7 +59,7 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctionsCount(this.state.search_string,true, activeId, true)
         .then(response => response.data)
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             this.setState({ auctionsCount: data });
         });
         
@@ -75,15 +74,21 @@ export default class AuctionsList extends Component {
         var i;
 
         for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-            content.style.display = "none";
-            } else {
-            content.style.display = "block";
-            }
-        });
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                content.style.display = "none";
+                } else {
+                content.style.display = "block";
+                }
+            });
+        }
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+        
+        if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
+            document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
 
 
@@ -98,7 +103,7 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
         .then(response => response.data)
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             this.setState({ totalResults: data });
         });
         
@@ -124,18 +129,9 @@ export default class AuctionsList extends Component {
         this.state.pageOffset++;
         document.getElementById("prev-page").setAttribute("class","page-link");
 
-        console.log("before");
         if (this.state.pageOffset >= Math.ceil(this.state.totalResults / 3)){
-            console.log("in");
-            document.getElementById("next-page").setAttribute("class","page-link inactive")
+            document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
-        console.log("after");
-        auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
-        .then(response => response.data)
-        .then((data) => {
-            console.log(data);
-            this.setState({ totalResults: data });
-        });
         
         auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
         .then(response => response.data)
@@ -156,15 +152,9 @@ export default class AuctionsList extends Component {
         document.getElementById("next-page").setAttribute("class","page-link");
 
         if (this.state.pageOffset-1 <= 0 ){
-            document.getElementById("prev-page").setAttribute("class","page-link inactive")
+            document.getElementById("prev-page").setAttribute("class","page-link disabled")
         }
-        auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
-        .then(response => response.data)
-        .then((data) => {
-            console.log(data);
-            this.setState({ totalResults: data });
-        });
-        
+
         auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
@@ -180,13 +170,13 @@ export default class AuctionsList extends Component {
         }
 
         const handleSelect = (id) => {
-            console.log("SELECT CLICKED");
+            // console.log("SELECT CLICKED");
             this.setState({ toAuction: true });
             this.setState({ auction_id: id });
         };
 
         const handleUserClick = () => {
-            console.log("USER CLICKED");
+            // console.log("USER CLICKED");
             //  <Route path="/" element={<Navigate to="/" />} />
         };
 
@@ -270,13 +260,13 @@ export default class AuctionsList extends Component {
             <nav aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
                     <li class="page-item">
-                        <a class="page-link disabled" onClick={this.handlePagePrev} href="#" aria-label="Previous" id='prev-page'>
+                        <a class="page-link disabled" onClick={this.handlePagePrev} aria-label="Previous" id='prev-page'>
                             <span aria-hidden="true">&laquo;</span>
                             <span class="sr-only">Previous</span>
                         </a>
                     </li>
                     <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
-                    <p className='page-link disabled'> out of { String(Math.ceil(this.state.auctionsCount / 3) ) } </p>
+                    <p className='page-link disabled'> out of { Math.ceil(this.state.totalResults / 3)==0?1:Math.ceil(this.state.totalResults / 3) } </p>
                     <li class="page-item">
                         <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
                             <span aria-hidden="true">&raquo;</span>

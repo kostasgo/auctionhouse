@@ -27,18 +27,38 @@ export default class ManageAuctions extends Component {
             auction_id: -1,
             redirect: null,
             userReady: false,
-            currentUser: { username: "" }
+            currentUser: { username: "" },
+
+            search_string: "",
+            pageOffset : 0,
+            totalResults : 0
         };
         this.handleToNewAuction = this.handleToNewAuction.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.handlePageNext = this.handlePageNext.bind(this);
+        this.handlePagePrev = this.handlePagePrev.bind(this);
     }
 
     componentDidMount() {
+        
         const currentUser = AuthService.getCurrentUser();
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = currentUser.id;
+        } 
+
         if (currentUser!= null){
             this.setState({ currentUser: currentUser, userReady: true });
-            console.log(currentUser.id);
-            auctionService.getAllUserAuctions( currentUser.id )
+            // console.log(currentUser.id);
+
+            auctionService.getAllUserAuctionsCount(activeId, true)
+            .then(response => response.data)
+            .then((data) => {
+                // console.log(data);
+                this.setState({ totalResults: data });
+            });
+
+            auctionService.getAllUserAuctions( activeId ,this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
@@ -47,6 +67,10 @@ export default class ManageAuctions extends Component {
         }
         else{
             this.setState({ currentUser: "redirect"});
+        }
+
+        if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
+            document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
     }
 
@@ -60,18 +84,52 @@ export default class ManageAuctions extends Component {
         this.setState({ toNewAuction: true });
     }
 
+    handlePageNext(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        } 
+
+        this.state.pageOffset++;
+        document.getElementById("prev-page").setAttribute("class","page-link");
+
+
+        if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
+            document.getElementById("next-page").setAttribute("class","page-link disabled")
+        }
+
+        auctionService.getAllUserAuctions(true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+    }
+
+    handlePagePrev(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        } 
+
+        this.state.pageOffset--;
+        document.getElementById("next-page").setAttribute("class","page-link");
+
+        if (this.state.pageOffset-1 <= 0 ){
+            document.getElementById("prev-page").setAttribute("class","page-link disabled")
+        }
+        
+        auctionService.getAllUserAuctions(true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+    }
+
     render() {
-    
-
-        const handleSearch = () => {
-            console.log("SEARCH CLICKED");
-            //  <Route path="/" element={<Navigate to="/" />} />
-        };
-
-
-        const handleUserClick = (id) => {
-            console.log("USER CLICKED");
-        };
 
         var diff;
         var diff2;
@@ -95,6 +153,26 @@ export default class ManageAuctions extends Component {
                         </div>
                 </div>
             </div>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item">
+                        <a class="page-link disabled" onClick={this.handlePagePrev} aria-label="Previous" id='prev-page'>
+                            <span aria-hidden="true">&laquo;</span>
+                            {/* <span class="sr-only">Previous</span> */}
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
+                    <p className='page-link disabled'> out of { Math.ceil(this.state.totalResults / 3)==0?1:Math.ceil(this.state.totalResults / 3)  } </p>
+                    <li class="page-item">
+                        <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
+                            <span aria-hidden="true">&raquo;</span>
+                            {/* <span class="sr-only">Next</span> */}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
             <Row>
                 <Col xs={12} md={6} xl={4}>
                         <div onClick={this.handleToNewAuction} className="options">
