@@ -68,7 +68,7 @@ export default class HomePage extends Component {
                     </div>
                 </div>
 
-                <Link to="/auctions"><Button >BROWSE AUCTIONS</Button></Link>
+                <Link to="/auctions"><Button className='shadow' >BROWSE AUCTIONS</Button></Link>
 
                 <Chat/>
 

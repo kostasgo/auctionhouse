@@ -228,7 +228,7 @@ export default class AuctionPage extends Component {
                         integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
                         crossorigin=""></script>
 
-                    <Button variant="primary" className='back-button' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button>
+                    <Button variant="primary" className='back-button shadow' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button>
 
                     <Row className='carousel-info-container' xs={1} md={2} xl={2}>
                         <Col>
@@ -292,43 +292,67 @@ export default class AuctionPage extends Component {
                     <Row>
                         <Row className="justify-content-md-center">---</Row>
                     </Row>
-                    <div className='details'>
-                        <Row>
-                            <div className='end-time'>
-                                <Row className='display-9'> Location&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;:&emsp;{String(this.state.auction.location)}, {String(this.state.auction.country)} </Row>
-                                <Row className='display-9'> Started on&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;{String(this.state.auction.starts).replace('T', ' ')} </Row>
-                                <Row className='display-9'> Ends on&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&emsp;{String(this.state.auction.ends).replace('T', ' ')} </Row>
-                                <Row className='display-9'> Time remaining&nbsp;&nbsp;&emsp;:&emsp;
-                                    {diff = Math.floor(Math.abs(new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
-                                    {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
-                                    {Math.floor(Math.abs(new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
-                                </Row>
+
+                    <Row>
+                        <div className='info'>
+                            <div class="form-group row">
+                                <label for="staticLocation" class="col-sm-2 col-form-label">Location</label>
+                                <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext lead" id="staticLocation" value={String(this.state.auction.location)}/>
+                                </div>
                             </div>
-                        </Row>
-
-                        <div className='bidding-section'>
-                            <Row className='text-start'>
-                                <span className='display-9'>Total bids&emsp;&emsp;&emsp;&emsp;:&emsp;{this.state.auction.bids.length} </span>
-                            </Row>
-                            <Row className='display-9'>
-                                <span className='display-9'>Auction started at :&emsp;{this.state.auction.firstBid} €</span>
-                            </Row>
+                            <div class="form-group row">
+                                <label for="staticEnds" class="col-sm-2 col-form-label">Ends on</label>
+                                <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext lead" id="staticEnds" value={String(this.state.auction.ends).replace('T', ' ')}/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticTime%" class="col-sm-2 col-form-label">Time remaining</label>
+                                <div class="col-sm-10">   
+                                    <Row className='display-9 lead'>&nbsp;&nbsp;
+                                        { diff = Math.floor( Math.abs( new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;
+                                        { diff2 = Math.floor( Math.abs( diff2 = new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 / 60 )} hours&ensp;
+                                        { Math.floor( Math.abs( new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes
+                                    </Row>
+                                </div>
+                            </div>
                         </div>
+                    </Row>
 
-                        <Row>
-                            <>
-                                <Row className='bid' xs={1} md={2} xl={2}>
-                                    <Col className='text-start' >
-                                        <p className='bid-text'>Current bid&emsp;&emsp;&emsp; :&emsp;{this.state.auction.currently} €</p>
-                                        {(this.state.auction.bids.length == 0) &&
-                                            <p className='text-danger'>There are no bids at the moment</p>}
-                                        {isHighestBidder() && this.state.auction.bids.length != 0 &&
-                                            <p className='text-success'>You are the highest bidder</p>}
-                                        {!isHighestBidder() && this.state.auction.bids.length != 0 &&
-                                            <p className='text-danger'>You are not the highest bidder</p>}
-
-                                    </Col>
-                                    <Col className="justify-content-md-center">
+                    <Row>
+                    <div className='bidding'>
+                            <div class="form-group row">
+                                <label for="staticBids" class="col-sm-2 col-form-label">Total bids</label>
+                                <div class="col-10">
+                                <input type="text" readonly class="form-control-plaintext lead" id="staticBids" value={this.state.numberOfBids}/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="staticStarted" class="col-sm-2 col-form-label">Auction started at</label>
+                                <div class="col-10">
+                                <input type="text" readonly class="form-control-plaintext lead" id="staticStarted" value={String(this.state.auction.firstBid) + " €"}/>
+                                </div>
+                            </div>
+                            <Row>
+                                <Row className="justify-content-md-center m-t-6">---</Row>
+                            </Row>
+                            <Row className='bid' xs={1} md={2} xl={2}>
+                                <Col className='text-start' >
+                                    <div class="form-group row">
+                                        <label for="staticBid" class="col-sm-2 col-form-label">Current bid</label>
+                                        <div class="col-10">
+                                        <input type="text" readonly class="form-control-plaintext lead" id="staticBid" value={String(this.state.auction.currently) + " €"}/>
+                                        </div>
+                                    </div>
+                                    {(this.state.auction.bids.length == 0) &&
+                                                    <p className='text-danger'>There are no bids at the moment</p>}
+                                                {isHighestBidder() && this.state.auction.bids.length != 0 &&
+                                                    <p className='text-success'>You are the highest bidder</p>}
+                                                {!isHighestBidder() && this.state.auction.bids.length != 0 &&
+                                                    <p className='text-danger'>You are not the highest bidder</p>}
+                                </Col>
+                                <Col className="justify-content-md-center">
                                         {this.state.userReady ?
                                             <>
                                                 <Row >
@@ -379,40 +403,42 @@ export default class AuctionPage extends Component {
                                         }
 
                                     </Col>
-
-                                </Row>
-                                <Row className='buy-out' xs={1} md={2} xl={2}>
-                                    <Col className='text-start'>
-                                        <p className='bid-text'>Amount to buy out&emsp;:&emsp;{this.state.auction.buyPrice} €</p>
-                                    </Col>
-                                    <Col>
+                            </Row>
+                            <Row className='bid' xs={1} md={2} xl={2}>
+                                <Col className='text-start' >
+                                    <div class="form-group row">
+                                        <label for="staticBuy" class="col-sm-2 col-form-label">Amount to buy out</label>
+                                        <div class="col-10">
+                                        <input type="text" readonly class="form-control-plaintext lead" id="staticBuy" value={String(this.state.auction.buyPrice) + " €"}/>
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col>
                                         {this.state.userReady ?
                                             <Button className='buy-out-button' onClick={() => handleBuyOut(this.state.auction.id)}>BUY OUT</Button>
                                             : <></>
                                         }
 
                                     </Col>
-
-                                </Row>
-                            </>
-
-                            {!this.state.userReady ?
-                                <div className='loginregister'>
-                                    <Link to="/login">
-                                        <Button className='login-button'>LOG IN TO PLACE A BID</Button>
-                                    </Link>
-                                    <span> OR </span>
-
-                                    <Link to="/register">
-                                        <Button className='register-button'>REGISTER</Button>
-                                    </Link>
-                                </div>
-                                : <></>
-                            }
-
-                        </Row>
+                            </Row>
+                            
                     </div>
+                    {!this.state.userReady ?
+                        <div className='loginregister'>
+                            <Link to="/login">
+                                <Button className='login-button'>LOG IN TO PLACE A BID</Button>
+                            </Link>
+                            <span> OR </span>
+
+                            <Link to="/register">
+                                <Button className='register-button'>REGISTER</Button>
+                            </Link>
+                        </div>
+                        : <></>
+                    }
                     <br></br><br></br>
+
+                    </Row>
 
 
                 </>

@@ -96,7 +96,7 @@ export default class ManageAuctions extends Component {
             <Row>
                 <Col xs={12} md={6} xl={4}>
                         <div onClick={this.handleToNewAuction} className="options">
-                            <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
+                            <Card className="card shadow-lg" key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
                                 <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg"  style={{ objectFit: 'cover', maxHeight: '350px' }} />
                                 <Card.Body>
                                     <Row><Card.Title className="card-title"><span className='title-text'>NEW AUCTION</span></Card.Title></Row>
@@ -115,7 +115,7 @@ export default class ManageAuctions extends Component {
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
                                     <div className="options">
-                                    <Card key={auction.id} className="card">
+                                    <Card key={auction.id} className="card shadow">
                                         <Card.Img variant="top" src={(auction.imgUrl.length!=0)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
                                         <Card.Body>
                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>

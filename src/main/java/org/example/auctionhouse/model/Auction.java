@@ -73,6 +73,9 @@ public class Auction {
     @Column
     private String imgUrl;
 
+    @Column
+    private String numOf;
+
     @Column(nullable = false)
     private Boolean active;
 

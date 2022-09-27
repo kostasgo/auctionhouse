@@ -337,11 +337,11 @@ export default class NewAuction extends Component {
                 </div>
             </div>
 
-            <Button variant="primary" className='back-button' onClick={this.handleBack2}> &emsp;BACK TO YOUR AUCTIONS&emsp; </Button>
+            <Button variant="primary" className='back-button shadow' onClick={this.handleBack2}> &emsp;BACK TO YOUR AUCTIONS&emsp; </Button>
 
             <Row className="justify-content-center">
                 <Col lg={6}>
-                    <Card>
+                    <Card className='shadow-lg' >
                         <Card.Header>
                             Fill the form below to create a new auction
                         </Card.Header>

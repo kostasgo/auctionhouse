@@ -56,18 +56,20 @@
 /* Style the button that is used to open and close the collapsible content */
 .collapsible {
     transition: transform 250ms;
-    background-color: #eee;
-    color: #444;
+    /* background-color: #eee; */
+    background-color: #fafafa;
+    color: rgb(46, 46, 46);
     cursor: pointer;
     padding: 18px;
     width: 100%;
     border: none;
     text-align: left;
+
     outline: none;
     font-size: 15px;
     transition: transform 250ms;
 }
-
+.collapsing
 
   
   /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
@@ -83,3 +85,17 @@
     background-color: #f1f1f1;
     transition: transform 250ms;
   }
+
+.searchbutton{
+    height: auto;
+}
+
+.form-label{
+    margin-top: 1rem;
+}
+
+.form-bottom{
+    margin-bottom: 1rem;
+}
+
+  
