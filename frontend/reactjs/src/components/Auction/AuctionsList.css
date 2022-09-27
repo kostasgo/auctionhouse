@@ -44,6 +44,19 @@
     justify-content: center;
 }
 
+.remaining{
+    min-height: 3rem;
+    max-height: 3rem;
+}
+
+.cardimg{
+    height: 15rem;
+}
+
+.cardbod{
+    height: 15rem;
+}
+
 .title-text{
     font-size: match-parent;
 }

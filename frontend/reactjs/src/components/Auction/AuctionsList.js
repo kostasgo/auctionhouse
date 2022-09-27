@@ -26,17 +26,24 @@ export default class AuctionsList extends Component {
         super(props);
         this.state = {
             auctions: [],
+            auctionsCount: 0,
             toAuction: false,
             auction_id: -1,
             redirect: null,
             userReady: false,
             currentUser: { username: "" },
+            search_string: "",
 
-            filter1value : 100000
+            filter1value : 100000,
+
+            pageOffset : 0,
+            totalResults : 0
         };
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
+        this.handlePageNext = this.handlePageNext.bind(this);
+        this.handlePagePrev = this.handlePagePrev.bind(this);
     }
 
     componentDidMount() {
@@ -50,12 +57,18 @@ export default class AuctionsList extends Component {
         } 
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
-
-        auctionService.getActiveNonUserAuctions(activeId)
-            .then(response => response.data)
-            .then((data) => {
-                this.setState({ auctions: data });
-            });
+        auctionService.searchAuctionsCount(this.state.search_string,true, activeId)
+        .then(response => response.data)
+        .then((data) => {
+            console.log(data);
+            this.setState({ auctionsCount: data });
+        });
+        
+        auctionService.searchAuctions(this.state.search_string,true, activeId, this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
 
 
         var coll = document.getElementsByClassName("collapsible");
@@ -77,21 +90,88 @@ export default class AuctionsList extends Component {
     }
 
     handleSearch(){
+        this.state.search_string = document.getElementById("search-input").value;
         var activeId = -1;
         if (this.state.currentUser){
             activeId = this.state.currentUser.id;
         } 
-        auctionService.searchActiveNonUserAuctions(String(document.getElementById("search_input").value) ,true ,activeId)
-            .then(response => response.data)
-            .then((data) => {
-                this.setState({ auctions: data });
-            });
+        auctionService.searchAuctionsCount(this.state.search_string,true,activeId)
+        .then(response => response.data)
+        .then((data) => {
+            console.log(data);
+            this.setState({ totalResults: data });
+        });
+        
+        auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
     }
 
     handleSlider(e){
         this.filter1value = e.target.value;
         document.getElementById("num1").innerHTML = this.filter1value;
         // console.log(this.filter1value);
+    }
+
+    handlePageNext(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        } 
+
+        this.state.pageOffset++;
+        document.getElementById("prev-page").setAttribute("class","page-link");
+
+        console.log("before");
+        if (this.state.pageOffset >= Math.ceil(this.state.totalResults / 3)){
+            console.log("in");
+            document.getElementById("next-page").setAttribute("class","page-link inactive")
+        }
+        console.log("after");
+        auctionService.searchAuctionsCount(this.state.search_string,true,activeId)
+        .then(response => response.data)
+        .then((data) => {
+            console.log(data);
+            this.setState({ totalResults: data });
+        });
+        
+        auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+    }
+
+    handlePagePrev(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        } 
+
+        this.state.pageOffset--;
+        document.getElementById("next-page").setAttribute("class","page-link");
+
+        if (this.state.pageOffset-1 <= 0 ){
+            document.getElementById("prev-page").setAttribute("class","page-link inactive")
+        }
+        auctionService.searchAuctionsCount(this.state.search_string,true,activeId)
+        .then(response => response.data)
+        .then((data) => {
+            console.log(data);
+            this.setState({ totalResults: data });
+        });
+        
+        auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
     }
 
     render() {
@@ -142,7 +222,7 @@ export default class AuctionsList extends Component {
 
             <Form className="d-flex">
                 <Form.Control
-                    id='search_input'
+                    id='search-input'
                     type="search"
                     placeholder="#Anything you desire"
                     className="shadow me-2"
@@ -187,6 +267,25 @@ export default class AuctionsList extends Component {
                 
             </Container>
 
+            <nav aria-label="Page navigation example">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item">
+                        <a class="page-link disabled" onClick={this.handlePagePrev} href="#" aria-label="Previous" id='prev-page'>
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
+                    <p className='page-link disabled'> out of { String(Math.ceil(this.state.auctionsCount / 3) ) } </p>
+                    <li class="page-item">
+                        <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
             <Row>
                 {
                     this.state.auctions.length === 0 ?
@@ -198,8 +297,8 @@ export default class AuctionsList extends Component {
                                 <div className="auctionItem">
                                     <div className="options">
                                     <Card key={auction.id} className="shadow card" >
-                                        <Card.Img variant="top" src={(auction.imgUrl!=null)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
-                                        <Card.Body>
+                                        <Card.Img className='cardimg' variant="top" src={(auction.imgUrl!=null)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover'}} />
+                                        <Card.Body className='cardbod'>
                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                             <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
                                             {/* <Card.Text className="text-left">
@@ -210,7 +309,7 @@ export default class AuctionsList extends Component {
                                                 {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
                                                 {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
                                                 <ListGroup.Item key='1' className='mb-2 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
-                                                <ListGroup.Item key='2' className='mb-2 text-muted'>Time remaining&nbsp;&nbsp;: &emsp;
+                                                <ListGroup.Item key='2' className='mb-2 text-muted remaining'>Time remaining&nbsp;&nbsp;: &emsp;
                                                     {diff = Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
                                                     {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
                                                     {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes

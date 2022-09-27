@@ -50,27 +50,26 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.findById(id), HttpStatus.OK);
     }
 
-    @GetMapping(params = {"search", "active", "id"})
-    ResponseEntity<Collection<Auction>> searchActive(@RequestParam("search") String search,@RequestParam("active") Boolean active, @RequestParam("id") Integer id){
+    @GetMapping(params = {"id", "offset"})
+    ResponseEntity<Collection<Auction>> findAllUserAuctions(@RequestParam("id") Integer id, @RequestParam("offset") Integer offset){
+        return new ResponseEntity<>(auctionService.findAllUserAuctions(id, offset), HttpStatus.OK);
+    }
+    @GetMapping(params = {"id", "count"})
+    ResponseEntity<Integer> findAllUserAuctionsCount(@RequestParam("id") Integer id, @RequestParam("count") Boolean count){
+        return new ResponseEntity<>(auctionService.findAllUserAuctionsCount(id), HttpStatus.OK);
+    }
+
+    @GetMapping(params = {"search", "active", "id", "offset"})
+    ResponseEntity<Collection<Auction>> searchAuctions(@RequestParam("search") Optional<String> search,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id, @RequestParam("offset") Optional<Integer> offset){
         System.out.print("in search (non-user) active in controller");
-        return new ResponseEntity<>(auctionService.searchActive(search,active,id), HttpStatus.OK);
+        return new ResponseEntity<>(auctionService.searchAuctions(search.orElse("*"),active.orElse(true),id.orElse(-1), offset.orElse(0)), HttpStatus.OK);
     }
 
-
-    @GetMapping(params = {"active", "id"})
-    ResponseEntity<Collection<Auction>> findActive(@RequestParam("active") Boolean active, @RequestParam("id") Integer id){
-        System.out.print("in all (non-user) active in controller");
-        return new ResponseEntity<>(auctionService.findActive(active,id), HttpStatus.OK);
-    }
-
-    @GetMapping(params = "id")
-    ResponseEntity<Collection<Auction>> findUserAuctions(@RequestParam("id") Integer id){
-        return new ResponseEntity<>(auctionService.findUserAuctions(id), HttpStatus.OK);
-    }
-
-    @GetMapping(params = "active")
-    ResponseEntity<Collection<Auction>> findUserAuctions(@RequestParam("active") Boolean active){
-        return new ResponseEntity<>(auctionService.findAllActive(), HttpStatus.OK);
+    @GetMapping(params = {"search", "active", "id"})
+    ResponseEntity<Integer> searchAuctionsCount(@RequestParam("search") Optional<String> search,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id){
+        System.out.print(active.orElse(true));
+        System.out.print(id.orElse(-1));
+        return new ResponseEntity<>(auctionService.searchAuctionsCount(search.orElse(""),active.orElse(true),id.orElse(-1)), HttpStatus.OK);
     }
 
 

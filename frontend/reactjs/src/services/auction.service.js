@@ -30,11 +30,15 @@ class AuctionService {
         return axios.get(API_URL+"?active=true");
     }
 
-    getActiveNonUserAuctions(id = -1) {
-        return axios.get(API_URL+"?active=true&id="+id);
+    getAllActiveAuctionsCount() {
+        return axios.get(API_URL+"?active=true&count=true");
     }
 
-    searchActiveNonUserAuctions(searchInput = "",active = true , id = -1){
+    searchAuctions(searchInput = "",active = true , id = -1, offset=0){
+        return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id+"&offset="+offset);
+    }
+
+    searchAuctionsCount(searchInput = "",active = true , id = -1){
         return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id);
     }
 }

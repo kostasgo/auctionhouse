@@ -22,20 +22,22 @@ public class AuctionService {
         return auctionRepository.findAll();
     }
 
-    public List<Auction> findAllActive() {
-        return auctionRepository.findAllActiveAuctions();
+    public List<Auction> searchAuctions(String search,Boolean active, Integer id,Integer offset) {
+        offset*=3;
+        return auctionRepository.searchAuctions(search,active, id, offset);
     }
 
-    public List<Auction> findActive(Boolean active, Integer id) {
-        return auctionRepository.findActiveAuctions(active, id);
+    public Integer searchAuctionsCount(String search,Boolean active, Integer id) {
+        return auctionRepository.searchAuctionsCount(search,active, id);
     }
 
-    public List<Auction> searchActive(String search,Boolean active, Integer id) {
-        return auctionRepository.searchActiveAuctions(search,active, id);
+    public List<Auction> findAllUserAuctions(Integer id ,Integer offset) {
+        offset*=3;
+        return auctionRepository.findAllUserAuctions(id, offset);
     }
 
-    public List<Auction> findUserAuctions(Integer id) {
-        return auctionRepository.findUserAuctions(id);
+    public Integer findAllUserAuctionsCount(Integer id) {
+        return auctionRepository.findAllUserAuctionsCount(id);
     }
 
     public Auction findById(Long id) {
