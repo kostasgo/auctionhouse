@@ -25,7 +25,7 @@ class NavigationBar extends React.Component {
       <>
         {[false].map((expand) => (
           <Navbar key={expand} bg="light" expand={expand} className="mb-3">
-            <Container fluid>
+            <Container fluid className='shadow'>
               <Navbar.Brand href="/"><img className='logo_navbar' src={require('./../../media/logo/500x500.png')} alt="logo" /></Navbar.Brand>
               <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
               <Navbar.Offcanvas

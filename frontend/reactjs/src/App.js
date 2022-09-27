@@ -7,6 +7,7 @@ import AuthService from "./services/auth.service";
 
 import HomePage from "./components/HomePage";
 import Login from "./components/User/Login";
+import ChatPage from "./components/ChatPage";
 import Register from "./components/User/Register";
 import AdminBoard from "./components/User/AdminBoard";
 import Profile from "./components/User/Profile";
@@ -68,6 +69,7 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route path="/profile" component={Profile} />
+            <Route path="/chat" component={ChatPage} />
             <Route path="/auctions" component={AuctionsList} />
             <Route path="/auction" component={AuctionPage} />
             <Route path="/new-auction" component={NewAuction} />

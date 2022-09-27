@@ -46,8 +46,8 @@ public class AuctionhouseApplication implements CommandLineRunner {
 	@Autowired
 	private CategoryService categoryService;
 
-//	@Autowired
-//	private MessageService messageService;
+	@Autowired
+	private MessageService messageService;
 
 
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -218,6 +218,13 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 				auctionService.saveOrUpdate(auction1);
 				auctionService.saveOrUpdate(auction2);
+
+
+				Message message1 = new Message("hallo! i won an auction and would love some more info on the prize", 3,2);
+				Message message2 = new Message("hallo! sure lets talk more", 2,3);
+
+				messageService.saveOrUpdate(message1);
+				messageService.saveOrUpdate(message2);
 			}
 
 		}

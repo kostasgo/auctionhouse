@@ -70,7 +70,7 @@ export default class HomePage extends Component {
 
                 <Link to="/auctions"><Button className='shadow' >BROWSE AUCTIONS</Button></Link>
 
-                <Chat/>
+                
 
                 
 

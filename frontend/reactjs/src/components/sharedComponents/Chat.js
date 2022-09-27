@@ -26,10 +26,12 @@ export default class Chat extends Component {
     }
     render() {
         return (
+            <Container className='overlay'>
+            
+    
+            </Container>
 
-            this.state.conversations.map((conversation) => (
-                <Row value={conversation.name}>{conversation.name}</Row>
-            ))
+
         )
     }
 }
