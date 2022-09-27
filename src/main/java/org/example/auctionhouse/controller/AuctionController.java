@@ -46,7 +46,7 @@ public class AuctionController {
     }
 
     @GetMapping("{id}")
-    ResponseEntity<Auction> findById(@PathVariable Long id){
+    ResponseEntity<Auction> findById(@PathVariable("id") Long id){
         return new ResponseEntity<>(auctionService.findById(id), HttpStatus.OK);
     }
 
@@ -65,8 +65,8 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.searchAuctions(search.orElse("*"),active.orElse(true),id.orElse(-1), offset.orElse(0)), HttpStatus.OK);
     }
 
-    @GetMapping(params = {"search", "active", "id"})
-    ResponseEntity<Integer> searchAuctionsCount(@RequestParam("search") Optional<String> search,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id){
+    @GetMapping(params = {"search", "active", "id", "count"})
+    ResponseEntity<Integer> searchAuctionsCount(@RequestParam("search") Optional<String> search,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id, @RequestParam("count") Optional<Boolean> count){
         System.out.print(active.orElse(true));
         System.out.print(id.orElse(-1));
         return new ResponseEntity<>(auctionService.searchAuctionsCount(search.orElse(""),active.orElse(true),id.orElse(-1)), HttpStatus.OK);

@@ -57,7 +57,7 @@ export default class AuctionsList extends Component {
         } 
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
-        auctionService.searchAuctionsCount(this.state.search_string,true, activeId)
+        auctionService.searchAuctionsCount(this.state.search_string,true, activeId, true)
         .then(response => response.data)
         .then((data) => {
             console.log(data);
@@ -95,7 +95,7 @@ export default class AuctionsList extends Component {
         if (this.state.currentUser){
             activeId = this.state.currentUser.id;
         } 
-        auctionService.searchAuctionsCount(this.state.search_string,true,activeId)
+        auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
         .then(response => response.data)
         .then((data) => {
             console.log(data);
@@ -130,7 +130,7 @@ export default class AuctionsList extends Component {
             document.getElementById("next-page").setAttribute("class","page-link inactive")
         }
         console.log("after");
-        auctionService.searchAuctionsCount(this.state.search_string,true,activeId)
+        auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
         .then(response => response.data)
         .then((data) => {
             console.log(data);
@@ -158,7 +158,7 @@ export default class AuctionsList extends Component {
         if (this.state.pageOffset-1 <= 0 ){
             document.getElementById("prev-page").setAttribute("class","page-link inactive")
         }
-        auctionService.searchAuctionsCount(this.state.search_string,true,activeId)
+        auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
         .then(response => response.data)
         .then((data) => {
             console.log(data);

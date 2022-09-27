@@ -22,6 +22,10 @@ public class AuctionService {
         return auctionRepository.findAll();
     }
 
+    public List<Auction> findAllActiveAuctions(Boolean active) {
+        return auctionRepository.findAllActiveAuctions(active);
+    }
+
     public List<Auction> searchAuctions(String search,Boolean active, Integer id,Integer offset) {
         offset*=3;
         return auctionRepository.searchAuctions(search,active, id, offset);

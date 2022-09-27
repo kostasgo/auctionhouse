@@ -17,7 +17,7 @@ public class Scheduler {
 
     @Scheduled(fixedRate = 1000)
     public void manageAuctionsExpiration(){
-        List<Auction> auctions = auctionService.findAllActive();
+        List<Auction> auctions = auctionService.findAllActiveAuctions(true);
         for(Auction auction : auctions) {
             auctionService.checkIfCompleted(auction);
         }

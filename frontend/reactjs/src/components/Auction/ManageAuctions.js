@@ -8,6 +8,7 @@ import AuctionManagePage from './AuctionManagePage';
 import AuthService from "../../services/auth.service";
 import { Link } from "react-router-dom";
 import NewAuction from './NewAuction';
+import auctionService from '../../services/auction.service';
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -36,7 +37,8 @@ export default class ManageAuctions extends Component {
         const currentUser = AuthService.getCurrentUser();
         if (currentUser!= null){
             this.setState({ currentUser: currentUser, userReady: true });
-            axios.get("http://localhost:8080/api/v1/auctions?id="+String(currentUser.id))
+            console.log(currentUser.id);
+            auctionService.getAllUserAuctions( currentUser.id )
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });

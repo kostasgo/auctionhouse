@@ -44,6 +44,7 @@ export default class AuctionManagePage extends Component {
         axios.get("http://localhost:8080/api/v1/auctions/"+String(this.props.data_tranfer))
             .then(response => response.data)
             .then((data) => {
+                console.log(data);
                 this.setState({ auction: data
                                 ,seller :data.seller
                                 ,user :data.seller.user

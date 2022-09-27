@@ -38,8 +38,16 @@ class AuctionService {
         return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id+"&offset="+offset);
     }
 
-    searchAuctionsCount(searchInput = "",active = true , id = -1){
-        return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id);
+    searchAuctionsCount(searchInput = "",active = true , id = -1, count=true){
+        return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id+"&count="+count);
+    }
+
+    getAllUserAuctions(id = -1, offset=0){
+        return axios.get(API_URL+"?id="+id+"&offset="+offset);
+    }
+
+    getAllUserAuctionsCount(id = -1, count=true){
+        return axios.get(API_URL+"?id="+id+"&count="+count);
     }
 }
 
