@@ -100,7 +100,7 @@ export default class ChatPage extends Component {
                 </Row>
 
                 <Row>
-                    <Button type="button" variant="secondary" class='btn-lg' onClick={this.handleToSent}>OUTGOING</Button>
+                    <Button type="button" variant="secondary" class='btn-lg' onClick={this.handleToSent}>SENT</Button>
                 </Row>
             </>
             :
