@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
-import axios from 'axios'
-import "./AuctionsList.css"
+import "../../css/AuctionsList.css"
 import AuctionPage from './AuctionPage';
 import AuthService from "../../services/auth.service";
 import { Form } from 'react-bootstrap';
 import auctionService from '../../services/auction.service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faLock, faEnvelope, faGlobe, faSignature, faPhone, faLocationPin, faKey, faSignInAlt, faSave, faCalendarCheck, faCalendarDays, faList, faImage, faDollarSign, faDollar } from '@fortawesome/free-solid-svg-icons'
+import { faLocationPin, faList, faDollar } from '@fortawesome/free-solid-svg-icons'
 import AllCategoriesList from '../sharedComponents/AllCategoriesList';
 import AllCountriesList from '../sharedComponents/AllCountriesList';
 
@@ -86,7 +85,7 @@ export default class AuctionsList extends Component {
         }
 
         document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
-        
+
         if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
             document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
@@ -132,7 +131,7 @@ export default class AuctionsList extends Component {
         if (this.state.pageOffset >= Math.ceil(this.state.totalResults / 3)){
             document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
-        
+
         auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {

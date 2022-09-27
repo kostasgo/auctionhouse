@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'
+import { Table, Row, Col, Button } from 'react-bootstrap'
 import Carousel from 'react-bootstrap/Carousel';
 import axios from 'axios'
-import "./AuctionPage.css"
+import "../../css/AuctionPage.css"
 import AuctionsList from './AuctionsList';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { Link } from "react-router-dom";
@@ -36,7 +36,8 @@ export default class AuctionPage extends Component {
             message: "",
             bidMessage: "",
             successful: false,
-            isHighestBidder: false
+            isHighestBidder: false,
+            numberOfBids: 0
         };
     }
 
@@ -46,12 +47,13 @@ export default class AuctionPage extends Component {
         axios.get("http://localhost:8080/api/v1/auctions/" + String(this.props.data_tranfer))
             .then(response => response.data)
             .then((data) => {
-                //console.log(data);
+                console.log(data);
                 this.setState({
                     auction: data,
                     seller: data.seller,
                     user: data.seller.user,
                     bids: data.bids,
+                    numberOfBids: data.numberOfBids,
                     categories: data.categories,
                     lat_map: data.latitude,
                     lng_map: data.longitude,
@@ -145,6 +147,7 @@ export default class AuctionPage extends Component {
                     response => {
                         let bid = response.data;
                         let bids = this.state.auction.bids.push(bid);
+                        let numberOfBids = this.state.numberOfBids + 1;
                         this.setState({
                             message: "Bid submitted succesfully!",
                             successful: true,
@@ -152,7 +155,8 @@ export default class AuctionPage extends Component {
                                 ...this.state.auction,
                                 currently: amount,
                                 bids: bids
-                            }
+                            },
+                            numberOfBids: numberOfBids
                         });
                     },
                     error => {
@@ -182,7 +186,7 @@ export default class AuctionPage extends Component {
         var days;
         var hours;
         var minutes;
-        var firstbid_placeholder = "> " + String(this.state.auction.firstBid)
+        var firstbid_placeholder = "> " + String(this.state.auction.currently)
 
         var lat = this.state.auction.latitude;
         var lng = this.state.auction.longitude;
@@ -230,8 +234,8 @@ export default class AuctionPage extends Component {
 
                     <Button variant="primary" className='back-button shadow' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button>
 
-                    <Row className='carousel-info-container' xs={1} md={2} xl={2}>
-                        <Col>
+                    <Row className="my-4">
+                        <Col className='carousel-info-container mt-0' xs={12} md={6} >
                             <Carousel variant="dark" className='carousel'>
                                 {this.state.auction.imgUrl.split(",").map((url) => (
                                     <Carousel.Item>
@@ -248,33 +252,170 @@ export default class AuctionPage extends Component {
                                 ))}
                             </Carousel>
                         </Col>
-                        <Col>
-                            <Row className='display-6'>{this.state.auction.name}</Row>
+                        <Col xs={12} md={6}>
+                            <div className='display-6 mb-3'>{this.state.auction.name}</div>
 
-                            <Row>
-                                <Col className='text-start'> Auctioned by
-                                    <Button variant='secondary' className='user-button'>{this.state.user.username}</Button>
-                                    <div className='rating-text'>
-                                        <span className='lead' > Seller Rating : {this.state.seller.rating} / 5 <span className='votecount'> ( {this.state.seller.rating_count} votes ) </span>
-                                        </span>
-                                    </div>
+
+                            <div className='align-items-center d-flex'> Auctioned by :
+                                <Button variant='secondary' className='user-button'>{this.state.user.username}</Button>
+                                <div className='rating-text'>
+                                    <span className='lead' > Seller Rating : {this.state.seller.rating} / 5 <span className='votecount'> ( {this.state.seller.rating_count} votes ) </span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <p className="desc"><u>DESCRIPTION</u></p>
+
+                            <p className='lead'>{this.state.auction.description}</p>
+                            <hr />
+                            <Row className='bid'>
+
+
+                                <Col className='text-start' xs={6} >
+                                    <Table borderless>
+                                        <tbody>
+
+                                            <tr>
+                                                <th scope="row">Current bid</th>
+                                                <td>{String(this.state.auction.currently) + " €"}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Amount to buy out</th>
+                                                <td>{String(this.state.auction.buyPrice) + " €"}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Total bids</th>
+                                                <td>{this.state.numberOfBids}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Auction started at</th>
+                                                <td>{String(this.state.auction.firstBid) + " €"}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    {(this.state.userReady && this.state.numberOfBids == 0) &&
+                                                        <p className='text-danger'>There are no bids at the moment</p>}
+                                                    {isHighestBidder() && this.state.numberOfBids != 0 &&
+                                                        <p className='text-success'>You are the highest bidder</p>}
+                                                    {this.state.userReady && !isHighestBidder() && this.state.numberOfBids != 0 &&
+                                                        <p className='text-danger'>You are not the highest bidder</p>}
+                                                </th>
+                                            </tr>
+
+                                        </tbody>
+                                    </Table>
+
+
+                                </Col>
+                                <Col className="justify-content-md-center pt-2" xs={6}>
+                                    {this.state.userReady ?
+                                        <>
+
+                                            <input id="bid_amount" placeholder={firstbid_placeholder} className='bid-button'></input>
+
+
+
+                                            <Button className='bid-button mb-2' onClick={() => handleBid()}>BID</Button>
+
+
+
+                                            <Modal show={this.state.showPopup} onHide={() => handleClose()}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>Are you sure? You are bound to be banned for irresponsible bids</Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={() => handleClose()}>
+                                                        Back
+                                                    </Button>
+                                                    <Button variant="primary" onClick={() => handleBidConfirm()}>
+                                                        I understand, bid
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
+
+
+                                            {
+                                                this.state.bidMessage && (
+
+                                                    <div className="form-group bid-button">
+                                                        <div
+                                                            className={
+                                                                this.state.successful
+                                                                    ? "alert alert-success"
+                                                                    : "alert alert-danger"
+                                                            }
+                                                            role="alert"
+                                                        >
+                                                            {this.state.bidMessage}
+                                                        </div>
+                                                    </div>
+
+                                                )
+                                            }
+                                        </>
+                                        : <></>
+                                    }
+                                    {this.state.userReady ?
+                                        <Button className='buy-out-button' onClick={() => handleBuyOut(this.state.auction.id)}>BUY OUT</Button>
+                                        : <></>
+                                    }
+                                    {!this.state.userReady ?
+                                        <div className='d-grid'>
+                                            <Link to="/login">
+                                                <Button className='login-button'>LOG IN TO PLACE A BID</Button>
+                                            </Link>
+                                            <span> OR </span>
+
+                                            <Link to="/register">
+                                                <Button className='register-button'>REGISTER</Button>
+                                            </Link>
+                                        </div>
+                                        : <></>
+                                    }
+
                                 </Col>
                             </Row>
 
-                            <br></br>
 
-                            <Row>
-                                <div className='text-start'>Categories: {this.state.categories.map((category) => (
 
-                                    <div className={`category ${category.name}`}>&nbsp;{category.name}&nbsp;</div>
+                        </Col>
+                    </Row >
+                    <hr />
 
-                                ))}</div>
-                            </Row>
+                    <Row>
+                        <Col className='info' xs={12} md={6}>
+                            <Table borderless>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Categories</th>
+                                        <td><div className="d-flex">{this.state.categories.map((category) => (
 
-                            <Row><p className="desc"><u>DESCRIPTION</u></p></Row>
+                                            <div className={`category ${category.name}`}>&nbsp;{category.name}&nbsp;</div>
 
-                            <Row><p className='lead'>{this.state.auction.description}</p></Row>
+                                        ))}</div></td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Location</th>
+                                        <td>{String(this.state.auction.location)}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Ends on</th>
+                                        <td>{String(this.state.auction.ends).replace('T', ' ')}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Time remaining</th>
+                                        <td>
+                                            {diff = Math.floor(Math.abs(new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
+                                            {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
+                                            {Math.floor(Math.abs(new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
 
+                        </Col>
+                        <Col xs={12} md={6}>
                             {lat == undefined ? <></> :
                                 <div className='map'>
                                     <MapContainer center={[lat, lng]} zoom={7} className='map' >
@@ -285,160 +426,10 @@ export default class AuctionPage extends Component {
                                     </MapContainer>
                                 </div>
                             }
-
-
                         </Col>
                     </Row>
-                    <Row>
-                        <Row className="justify-content-md-center">---</Row>
-                    </Row>
-
-                    <Row>
-                        <div className='info'>
-                            <div class="form-group row">
-                                <label for="staticLocation" class="col-sm-2 col-form-label">Location</label>
-                                <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext lead" id="staticLocation" value={String(this.state.auction.location)}/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="staticEnds" class="col-sm-2 col-form-label">Ends on</label>
-                                <div class="col-sm-10">
-                                <input type="text" readonly class="form-control-plaintext lead" id="staticEnds" value={String(this.state.auction.ends).replace('T', ' ')}/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="staticTime%" class="col-sm-2 col-form-label">Time remaining</label>
-                                <div class="col-sm-10">   
-                                    <Row className='display-9 lead'>&nbsp;&nbsp;
-                                        { diff = Math.floor( Math.abs( new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) ) / 1000 / 60 / 60 / 24 )} days&ensp;
-                                        { diff2 = Math.floor( Math.abs( diff2 = new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/') ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 / 60 )} hours&ensp;
-                                        { Math.floor( Math.abs( new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g,'/')) + (diff2* 1000 * 60 * 60 ) + (diff * 1000 * 60 * 60 * 24) ) / 1000 / 60 )} minutes
-                                    </Row>
-                                </div>
-                            </div>
-                        </div>
-                    </Row>
-
-                    <Row>
-                    <div className='bidding'>
-                            <div class="form-group row">
-                                <label for="staticBids" class="col-sm-2 col-form-label">Total bids</label>
-                                <div class="col-10">
-                                <input type="text" readonly class="form-control-plaintext lead" id="staticBids" value={this.state.auction.numberOfBids}/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="staticStarted" class="col-sm-2 col-form-label">Auction started at</label>
-                                <div class="col-10">
-                                <input type="text" readonly class="form-control-plaintext lead" id="staticStarted" value={String(this.state.auction.firstBid) + " €"}/>
-                                </div>
-                            </div>
-                            <Row>
-                                <Row className="justify-content-md-center m-t-6">---</Row>
-                            </Row>
-                            <Row className='bid' xs={1} md={2} xl={2}>
-                                <Col className='text-start' >
-                                    <div class="form-group row">
-                                        <label for="staticBid" class="col-sm-2 col-form-label">Current bid</label>
-                                        <div class="col-10">
-                                        <input type="text" readonly class="form-control-plaintext lead" id="staticBid" value={String(this.state.auction.currently) + " €"}/>
-                                        </div>
-                                    </div>
-                                    {(this.state.auction.bids.length == 0) &&
-                                                    <p className='text-danger'>There are no bids at the moment</p>}
-                                                {isHighestBidder() && this.state.auction.bids.length != 0 &&
-                                                    <p className='text-success'>You are the highest bidder</p>}
-                                                {!isHighestBidder() && this.state.auction.bids.length != 0 &&
-                                                    <p className='text-danger'>You are not the highest bidder</p>}
-                                </Col>
-                                <Col className="justify-content-md-center">
-                                        {this.state.userReady ?
-                                            <>
-                                                <Row >
-                                                    <input id="bid_amount" placeholder={firstbid_placeholder} className='bid-button'></input>
-                                                </Row>
-                                                <Row>
-
-                                                    <Button className='bid-button' onClick={() => handleBid()}>BID</Button>
 
 
-
-                                                    <Modal show={this.state.showPopup} onHide={() => handleClose()}>
-                                                        <Modal.Header closeButton>
-                                                            <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
-                                                        </Modal.Header>
-                                                        <Modal.Body>Are you sure? You are bound to be banned for irresponsible bids</Modal.Body>
-                                                        <Modal.Footer>
-                                                            <Button variant="secondary" onClick={() => handleClose()}>
-                                                                Back
-                                                            </Button>
-                                                            <Button variant="primary" onClick={() => handleBidConfirm()}>
-                                                                I understand, bid
-                                                            </Button>
-                                                        </Modal.Footer>
-                                                    </Modal>
-
-                                                </Row>
-                                                {
-                                                    this.state.bidMessage && (
-                                                        <Row>
-                                                            <div className="form-group bid-button">
-                                                                <div
-                                                                    className={
-                                                                        this.state.successful
-                                                                            ? "alert alert-success"
-                                                                            : "alert alert-danger"
-                                                                    }
-                                                                    role="alert"
-                                                                >
-                                                                    {this.state.bidMessage}
-                                                                </div>
-                                                            </div>
-                                                        </Row>
-                                                    )
-                                                }
-                                            </>
-                                            : <></>
-                                        }
-
-                                    </Col>
-                            </Row>
-                            <Row className='bid' xs={1} md={2} xl={2}>
-                                <Col className='text-start' >
-                                    <div class="form-group row">
-                                        <label for="staticBuy" class="col-sm-2 col-form-label">Amount to buy out</label>
-                                        <div class="col-10">
-                                        <input type="text" readonly class="form-control-plaintext lead" id="staticBuy" value={String(this.state.auction.buyPrice) + " €"}/>
-                                        </div>
-                                    </div>
-                                </Col>
-                                <Col>
-                                        {this.state.userReady ?
-                                            <Button className='buy-out-button' onClick={() => handleBuyOut(this.state.auction.id)}>BUY OUT</Button>
-                                            : <></>
-                                        }
-
-                                    </Col>
-                            </Row>
-                            
-                    </div>
-                    {!this.state.userReady ?
-                        <div className='loginregister'>
-                            <Link to="/login">
-                                <Button className='login-button'>LOG IN TO PLACE A BID</Button>
-                            </Link>
-                            <span> OR </span>
-
-                            <Link to="/register">
-                                <Button className='register-button'>REGISTER</Button>
-                            </Link>
-                        </div>
-                        : <></>
-                    }
-                    <br></br><br></br>
-
-                    </Row>
 
 
                 </>

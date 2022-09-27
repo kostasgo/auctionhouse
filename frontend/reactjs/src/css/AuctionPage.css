@@ -1,62 +1,66 @@
-.display-4{
+.display-4 {
     padding: 1rem;
 }
 
-.bid-text{
+.bid-text {
     width: auto;
 }
 
-.buy-out-text{
+.align-items-center {
+    align-items: center;
+}
+
+.buy-out-text {
     margin-top: 3rem;
 }
 
-.bid-button{
+.bid-button {
     width: 80%;
 }
 
-.buy-out-button{
+.buy-out-button {
     width: 80%;
 }
 
-.bid{
+.bid {
     margin-top: 0rem;
 }
 
-.buy-out{
+.buy-out {
     margin-top: 3rem;
 }
 
-.desc-text{
+.desc-text {
     justify-self: center;
 }
 
-.end-time{
+.end-time {
     margin-top: 3rem;
 }
 
-.user-button{
-    width : auto;
+.user-button {
+    width: auto;
     margin-left: 1rem;
 }
 
-.carousel-info-container{
+.carousel-info-container {
     margin-top: 3rem;
 }
 
-.rating-text{
+.rating-text {
     margin-left: 1rem;
 }
 
-.back-button{
-    width : auto;
+.back-button {
+    width: auto;
 }
 
-.desc{
+.desc {
     margin-top: 2rem;
     font-size: x-large;
 }
 
-.bidding-section{
+.bidding-section {
     margin-top: 3rem;
 }
 
@@ -64,29 +68,29 @@
     width: 100%;
     height: 100vh;
     z-index: 1;
-  }
-
-  .register-button{
-    width : auto;
-  }
-
-  .login-button{
-    width : auto;
-  }
-
-  .map{
-    height: 300px;
-  }
-
-  .title{
-    margin : 1.5rem;
 }
 
-.loginregister{
+.register-button {
+    width: auto;
+}
+
+.login-button {
+    width: auto;
+}
+
+.map {
+    height: 300px;
+}
+
+.title {
+    margin: 1.5rem;
+}
+
+.loginregister {
     justify-content: center;
 }
 
-.carousel{
+.carousel {
     min-height: auto;
     max-height: auto;
 }
