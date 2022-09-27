@@ -4,6 +4,7 @@ import { Row, Col, Card, Button } from 'react-bootstrap'
 import "../../css/ManageAuctions.css"
 import AuctionManagePage from './AuctionManagePage';
 import AuthService from "../../services/auth.service";
+import { Link } from "react-router-dom";
 import NewAuction from './NewAuction';
 import auctionService from '../../services/auction.service';
 
@@ -24,41 +25,110 @@ export default class ManageAuctions extends Component {
             auction_id: -1,
             redirect: null,
             userReady: false,
-            currentUser: { username: "" }
+            currentUser: { username: "" },
+
+            search_string: "",
+            pageOffset : 0,
+            totalResults : 0
         };
         this.handleToNewAuction = this.handleToNewAuction.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
+        this.handlePageNext = this.handlePageNext.bind(this);
+        this.handlePagePrev = this.handlePagePrev.bind(this);
     }
 
     componentDidMount() {
+
         const currentUser = AuthService.getCurrentUser();
-        if (currentUser != null) {
-            this.setState({ currentUser: currentUser, userReady: true });
-            console.log(currentUser.id);
-            auctionService.getAllUserAuctions(currentUser.id)
-                .then(response => response.data)
-                .then((data) => {
-                    this.setState({ auctions: data });
-                    // console.log(data);
-                });
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = currentUser.id;
         }
-        else {
-            this.setState({ currentUser: "redirect" });
+
+        if (currentUser!= null){
+            this.setState({ currentUser: currentUser, userReady: true });
+            // console.log(currentUser.id);
+
+            auctionService.getAllUserAuctionsCount(activeId, true)
+            .then(response => response.data)
+            .then((data) => {
+                // console.log(data);
+                this.setState({ totalResults: data });
+            });
+
+            auctionService.getAllUserAuctions( activeId ,this.state.pageOffset)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({ auctions: data });
+                // console.log(data);
+            });
+        }
+        else{
+            this.setState({ currentUser: "redirect"});
+        }
+
+        if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
+            document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
     }
 
-    handleSelect(id) {
+    handleSelect(id){
         console.log("SELECT CLICKED");
         this.setState({ toAuctionManage: true });
         this.setState({ auction_id: id });
     };
 
-    handleToNewAuction() {
+    handleToNewAuction(){
         this.setState({ toNewAuction: true });
     }
 
-    render() {
+    handlePageNext(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        }
 
+        this.state.pageOffset++;
+        document.getElementById("prev-page").setAttribute("class","page-link");
+
+
+        if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
+            document.getElementById("next-page").setAttribute("class","page-link disabled")
+        }
+
+        auctionService.getAllUserAuctions(true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+    }
+
+    handlePagePrev(){
+        var activeId = -1;
+        if (this.state.currentUser){
+            activeId = this.state.currentUser.id;
+        }
+
+        this.state.pageOffset--;
+        document.getElementById("next-page").setAttribute("class","page-link");
+
+        if (this.state.pageOffset-1 <= 0 ){
+            document.getElementById("prev-page").setAttribute("class","page-link disabled")
+        }
+
+        auctionService.getAllUserAuctions(true,activeId,this.state.pageOffset)
+        .then(response => response.data)
+        .then((data) => {
+            this.setState({ auctions: data });
+        });
+
+        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+    }
+
+    render() {
+    
 
         const handleSearch = () => {
             console.log("SEARCH CLICKED");
@@ -75,9 +145,73 @@ export default class ManageAuctions extends Component {
         var days;
         var hours;
         var minutes;
+        
+        
 
+        return (this.state.currentUser!="redirect"?
+        <>
+        {!this.state.toAuctionManage ? 
+            <>
+            {!this.state.toNewAuction?
+            <>
+            <div className='title'>
+                <div className="container d-flex h-100">
+                        <div className="row justify-content-center align-self-center">
+                            <span className='display-3'> <u>Manage Auctions</u></span>
+                            <span className='lead'>YOUR AUCTIONS</span>
+                        </div>
+                </div>
+            </div>
 
+            <nav aria-label="Page navigation example">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item">
+                        <a class="page-link disabled" onClick={this.handlePagePrev} aria-label="Previous" id='prev-page'>
+                            <span aria-hidden="true">&laquo;</span>
+                            {/* <span class="sr-only">Previous</span> */}
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
+                    <p className='page-link disabled'> out of { Math.ceil(this.state.totalResults / 3)==0?1:Math.ceil(this.state.totalResults / 3)  } </p>
+                    <li class="page-item">
+                        <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
+                            <span aria-hidden="true">&raquo;</span>
+                            {/* <span class="sr-only">Next</span> */}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
+            <Row>
+                <Col xs={12} md={6} xl={4}>
+                        <div onClick={this.handleToNewAuction} className="options">
+                            <Card className="card shadow-lg" key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
+                                <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg"  style={{ objectFit: 'cover', maxHeight: '350px' }} />
+                                <Card.Body>
+                                    <Row><Card.Title className="card-title"><span className='title-text'>NEW AUCTION</span></Card.Title></Row>
+                                    <Row><Card.Subtitle className="card-title text-muted"> Create a new auction </Card.Subtitle></Row>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                </Col>
+                {
+                    this.state.auctions.length === 0 ?
+                        <h3>No auctions made yet...</h3>
+                        :
+                        
+                        <></>}
+                        {this.state.auctions.map((auction) => (
+                            <Col xs={12} md={6} xl={4}>
+                                <div className="auctionItem">
+                                    <div className="options">
+                                    <Card key={auction.id} className="card shadow">
+                                        <Card.Img variant="top" src={(auction.imgUrl.length!=0)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
+                                        <Card.Body>
+                                            <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
+                                            <ListGroup variant="flush">
+                                                {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
+                                                {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
+                                                <ListGroup.Item key="10000" className='mb-2 text-muted'>{!auction.active?<>Starts at</>:<>Started at</>}:&emsp;&emsp;&emsp;: &emsp;{auction.starts.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
         return (this.state.currentUser != "redirect" ?
             <>
                 {!this.state.toAuctionManage ?
