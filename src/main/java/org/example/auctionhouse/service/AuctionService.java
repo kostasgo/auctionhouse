@@ -56,7 +56,7 @@ public class AuctionService {
     }
 
     public Boolean checkIfCompleted(Auction auction){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         LocalDateTime ends = auction.getEnds();
         LocalDateTime now = LocalDateTime.now();
