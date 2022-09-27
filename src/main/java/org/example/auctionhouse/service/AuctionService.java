@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -51,6 +53,24 @@ public class AuctionService {
         auction.setBids(bids);
 
         this.saveOrUpdate(auction);
+    }
+
+    public Boolean checkIfCompleted(Auction auction){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        LocalDateTime ends = auction.getEnds();
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(ends)){
+            auction.setActive(false);
+            auction.setCompleted(true);
+
+            this.saveOrUpdate(auction);
+            System.out.print(formatter.format(now)+": Auction "+ auction.getId() +": CHANGED\n");
+            return true;
+        }
+        System.out.print(formatter.format(now)+": Auction "+ auction.getId() +": NOT YET\n");
+        return false;
+
     }
 
 
