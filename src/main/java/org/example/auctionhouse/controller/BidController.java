@@ -63,7 +63,9 @@ public class BidController {
         auction.setBids(bids);
 
         auction.setCurrently(bidRequest.getAmount());
-
+        Integer numberOfBids = auction.getNumberOfBids();
+        numberOfBids++;
+        auction.setNumberOfBids(numberOfBids);
         auctionService.saveOrUpdate(auction);
 
         return ResponseEntity.ok(bid);
