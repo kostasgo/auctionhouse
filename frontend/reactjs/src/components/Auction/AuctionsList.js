@@ -36,7 +36,7 @@ export default class AuctionsList extends Component {
             filter3value : "%",
             search_string: "%",
 
-            search_string: "",
+            search_string: "%",
             pageOffset: 0,
             totalResults: 0,
             message: props.message,
@@ -47,6 +47,9 @@ export default class AuctionsList extends Component {
         this.handleSlider = this.handleSlider.bind(this);
         this.handlePageNext = this.handlePageNext.bind(this);
         this.handlePagePrev = this.handlePagePrev.bind(this);
+        this.handlePriceFilter = this.handlePriceFilter.bind(this);
+        this.handleCategoryFilter = this.handleCategoryFilter.bind(this);
+        this.handleCountryFilter = this.handleCountryFilter.bind(this);
     }
 
     componentDidMount() {
@@ -119,15 +122,30 @@ export default class AuctionsList extends Component {
         });
     }
 
+    handlePriceFilter(){
+        this.setState({max : 100000})
+        console.log("handler1")
+    }
+
     handleSlider(e){
         this.state.filter1value = e.target.value;
         document.getElementById("num1").innerHTML = this.state.filter1value;
         console.log(this.state.filter1value);
     }
 
+    handleCategoryFilter(){
+        this.setState({category : "%"})
+        console.log("handler2")
+    }
+
     handleCategory(e){
         this.state.filter2value = e.target.value;
         console.log(this.state.filter2value);
+    }
+
+    handleCountryFilter(){
+        this.setState({country : "%"})
+        console.log("handler3")
     }
 
     handleCountry(e){
@@ -239,7 +257,7 @@ export default class AuctionsList extends Component {
             <Container className='search-container'>
                 <Row xs={3} md={3} xl={3}>
                     <Col>
-                        <Button className="shadow collapsible" variant="btn btn-success"><FontAwesomeIcon icon={faDollar} /> PRICE RANGE</Button>
+                        <Button className="shadow collapsible" variant="btn btn-success" onClick={this.handlePriceFilter}><FontAwesomeIcon icon={faDollar} /> PRICE RANGE</Button>
                         <div class="shadow content">
                             <label for="customRange1" class="form-label">Set maximum amount</label>
                             <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={this.handleSlider} />
@@ -247,21 +265,21 @@ export default class AuctionsList extends Component {
                         </div>
                     </Col>
                     <Col>
-                        <Button className="shadow collapsible" variant="btn btn-warning"><FontAwesomeIcon icon={faList} /> CATEGORY</Button>
+                        <Button className="shadow collapsible" variant="btn btn-warning" onClick={this.handleCategoryFilter}><FontAwesomeIcon icon={faList} /> CATEGORY</Button>
                         <div class="shadow content">
                         <label for="sel1" class="form-label">Select category:</label>
                             <select class="shadow-sm form-control form-bottom" id="sel1" onChange={(e)=>this.handleCategory(e)}>
-                            {/* <option key="" value="">ALL</option> */}
+                            <option key="" value="">CATEGORY</option>
                             <AllCategoriesList/>
                             </select>
                         </div>
                     </Col>
                     <Col>
-                        <Button className="shadow collapsible" variant="btn btn-danger"><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
+                        <Button className="shadow collapsible" variant="btn btn-danger" onClick={this.handleCountryFilter}><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
                         <div class="shadow content">
                         <label for="sel2" class="form-label">Select country:</label>
                         <select class="shadow-sm form-control form-bottom2" id="sel2" onChange={(e)=>this.handleCountry(e)}>
-                            {/* <option key="" value="">ALL</option> */}
+                            <option key="" value="">COUNTRY</option>
                             <AllCountriesList/>
                             </select>
                         </div>
