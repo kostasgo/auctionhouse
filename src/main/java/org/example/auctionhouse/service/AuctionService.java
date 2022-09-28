@@ -2,7 +2,9 @@ package org.example.auctionhouse.service;
 
 import org.example.auctionhouse.model.Auction;
 import org.example.auctionhouse.model.Bid;
+import org.example.auctionhouse.model.Message;
 import org.example.auctionhouse.repository.AuctionRepository;
+import org.example.auctionhouse.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,9 @@ public class AuctionService {
 
     @Autowired
     private AuctionRepository auctionRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     public List<Auction> findAll() {
         return auctionRepository.findAll();
@@ -62,6 +67,21 @@ public class AuctionService {
         this.saveOrUpdate(auction);
     }
 
+    public Bid getHighestBidder(Auction auction){
+        Set<Bid> allBids = auction.getBids();
+
+        Double highestBid = auction.getFirstBid();
+        Bid winner = new Bid();
+        for(Bid bid : allBids){
+            if (bid.getAmount() > highestBid){
+                highestBid = bid.getAmount();
+                winner = bid;
+            }
+        }
+
+        return winner;
+    }
+
     public Boolean checkIfCompleted(Auction auction){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -70,12 +90,32 @@ public class AuctionService {
         if (now.isAfter(ends)){
             auction.setActive(false);
             auction.setCompleted(true);
+            Long senderId, receiverId;
+            String msg;
+
+            receiverId = auction.getSeller().getUser().getId();
+
+            if(auction.getNumberOfBids() > 0){
+                Bid winner = this.getHighestBidder(auction);
+                senderId = winner.getBidder().getUser().getId();
+                msg = "Hello, I just won the auction " + auction.getId() + " (" + auction.getName() + ").\n" +
+                        "You can contact me to arrange payment and delivery.\n" +
+                        "Phone Number: "+winner.getBidder().getUser().getPhone()+"\n" +
+                        "Email: "+winner.getBidder().getUser().getEmail();
+            }
+            else{
+                senderId = Long.valueOf(1);
+                msg ="Sadly, there were no bids in your Auction: "+ auction.getId() + " || (" + auction.getName() + ").\n" +
+                        "Don't be disheartened! This happens even to the most experienced Auctioneers.\n" +
+                        "Try to auction again, at a different price, or for a longer period of time";
+            }
+
+            Message message = new Message(msg, senderId, receiverId);
+            messageRepository.saveAndFlush(message);
 
             this.saveOrUpdate(auction);
-            System.out.print(formatter.format(now)+": Auction "+ auction.getId() +": CHANGED\n");
             return true;
         }
-        System.out.print(formatter.format(now)+": Auction "+ auction.getId() +": NOT YET\n");
         return false;
 
     }

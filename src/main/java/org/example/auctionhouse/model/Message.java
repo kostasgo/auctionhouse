@@ -26,10 +26,10 @@ public class Message {
     private String text;
 
     @Column(nullable = false, name = "sender_id")
-    private Integer senderId;
+    private Long senderId;
 
     @Column(nullable = false, name = "receiver_id")
-    private Integer receiverId;
+    private Long receiverId;
 
     @Column
     private LocalDateTime time;
@@ -38,7 +38,7 @@ public class Message {
     private Boolean deleted;
 
 
-    public Message(String text, Integer senderId, Integer receiverId) {
+    public Message(String text, Long senderId, Long receiverId) {
         this.text = text;
         this.senderId = senderId;
         this.receiverId = receiverId;

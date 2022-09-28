@@ -243,20 +243,24 @@ export default class AuctionManagePage extends Component {
 
                                 <>
                                     <h4 className="text-danger mb-4">THIS AUCTION IS COMPLETED</h4>
-                                    {this.state.auction.numberOfBids == 0 ? (
-                                        <>
-                                            <p className="lead mb-2">Sadly, there were no bids in your auction.</p>
-                                            <p className="lead"> Don't be disheartened! This happens even to the most experienced Auctioneers.</p>
-                                            <p className="lead"> Try to auction again, at a different price, or for a longer period of time.</p>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <p className="lead">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</p>
-                                            {this.state.auction.numberOfBids == 1 ?
-                                                (<p className="lead">The bid's value is {this.state.auction.currently} €.</p>) :
-                                                (<p className="lead">Highest bid so far is {this.state.auction.currently} €.</p>)}
+                                    {this.state.auction.boughtOut
+                                        ? (<><p className="lead mb-2">Congratulations! This auction was bought out to it's full price!</p>
+                                            <p className="lead"> Contact the winner to arrange payment and delivery!</p></>)
+                                        : (<>{this.state.auction.numberOfBids == 0 ? (
+                                            <>
+                                                <p className="lead mb-2">Sadly, there were no bids in your auction.</p>
+                                                <p className="lead"> Don't be disheartened! This happens even to the most experienced Auctioneers.</p>
+                                                <p className="lead"> Try to auction again, at a different price, or for a longer period of time.</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="lead">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</p>
+                                                {this.state.auction.numberOfBids == 1 ?
+                                                    (<p className="lead">The bid's value is {this.state.auction.currently} €.</p>) :
+                                                    (<p className="lead">Highest bid so far is {this.state.auction.currently} €.</p>)}
 
-                                        </>)}</>
+                                            </>)}</>)}
+                                </>
                             )}
 
                             {!this.state.auction.active && !this.state.auction.completed && (
@@ -341,7 +345,7 @@ export default class AuctionManagePage extends Component {
                                 {(this.state.auction.active || this.state.auction.completed) && (
                                     <tr>
                                         <th scope="row">Highest bid</th>
-                                        <td>{String(this.state.auction.currently) + " €"}</td>
+                                        <td>{this.state.auction.boughtOut ? (<>BOUGHT OUT</>) : (<>{String(this.state.auction.currently) + " €"}</>)}</td>
                                     </tr>
                                 )}
 
@@ -363,7 +367,7 @@ export default class AuctionManagePage extends Component {
                                 </tr>
                                 <tr>
                                     <th scope="row">Time remaining</th>
-                                    <td>{(new Date() > new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) ?
+                                    <td>{this.state.auction.completed ?
                                         (<>AUCTION COMPLETED</>) :
                                         (<>
                                             {diff = Math.floor(Math.abs(new Date() - new Date(String(this.state.auction.ends).replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
@@ -392,7 +396,7 @@ export default class AuctionManagePage extends Component {
             </>
             :
             <>
-                <ManageAuctions message={this.state.message} />
+                <ManageAuctions message={this.state.message} successful={this.state.successful} />
             </>
     }
 }

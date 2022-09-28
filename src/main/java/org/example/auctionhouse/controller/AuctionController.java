@@ -2,11 +2,13 @@ package org.example.auctionhouse.controller;
 
 import org.example.auctionhouse.model.*;
 import org.example.auctionhouse.payload.request.AuctionRequest;
+import org.example.auctionhouse.payload.request.BuyOutRequest;
 import org.example.auctionhouse.payload.request.EnableUserRequest;
 import org.example.auctionhouse.payload.response.MessageResponse;
 import org.example.auctionhouse.repository.AuctionRepository;
 import org.example.auctionhouse.repository.CategoryRepository;
 import org.example.auctionhouse.service.AuctionService;
+import org.example.auctionhouse.service.MessageService;
 import org.example.auctionhouse.service.SellerService;
 import org.example.auctionhouse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public class AuctionController {
 
     @Autowired
     private SellerService sellerService;
+
+    @Autowired
+    private MessageService messageService;
 
     @Autowired
     private CategoryRepository categoryRepository;
@@ -165,7 +170,7 @@ public class AuctionController {
         return ResponseEntity.ok(new MessageResponse("Auction successfully created!"));
     }
 
-    @PostMapping(value = "/enable", consumes = APPLICATION_JSON_VALUE)
+    @PostMapping("/enable")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> enableAuction(@Valid @NotBlank @RequestBody Map<String, Long> body){
         Long id = body.get("auction_id");
@@ -175,6 +180,30 @@ public class AuctionController {
 
         auctionService.saveOrUpdate(auction);
 
+        return ResponseEntity.ok(auction);
+    }
+
+    @PostMapping(value = "/buyout", consumes = APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> buyOutAuction(@Valid @RequestBody BuyOutRequest buyOutRequest){
+        User user = userService.findByUsername(buyOutRequest.getUsername()).get();
+        Auction auction = auctionService.findById(buyOutRequest.getAuction_id());
+
+        auction.setBoughtOut(true);
+        auction.setCompleted(true);
+        auction.setActive(false);
+
+        auctionService.saveOrUpdate(auction);
+
+        Long receiverId = auction.getSeller().getUser().getId();
+        Long senderId = user.getId();
+        String msg = "Hello, I just won the auction " + auction.getId() + " (" + auction.getName() + ").\n" +
+                "You can contact me to arrange payment and delivery.\n" +
+                "Phone Number: "+user.getPhone()+"\n" +
+                "Email: "+user.getEmail();
+
+        Message message = new Message(msg, senderId, receiverId);
+        messageService.saveOrUpdate(message);
         return ResponseEntity.ok(auction);
     }
 

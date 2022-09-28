@@ -28,6 +28,13 @@ class AuctionService {
         }, { headers: authHeader() });
     }
 
+    buyOutAuction(auction_id, username) {
+        return axios.post(API_URL + "/buyout", {
+            auction_id,
+            username
+        }, { headers: authHeader() });
+    }
+
     deleteAuction(auction_id) {
         return axios.delete(API_URL + "/delete/" + auction_id, { headers: authHeader() });
     }

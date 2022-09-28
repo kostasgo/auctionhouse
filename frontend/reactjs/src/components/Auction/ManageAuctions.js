@@ -23,7 +23,8 @@ export default class ManageAuctions extends Component {
             search_string: "",
             pageOffset: 0,
             totalResults: 0,
-            message: props.message
+            message: props.message,
+            successful: props.successful
         };
         this.handleToNewAuction = this.handleToNewAuction.bind(this);
         this.handleSelect = this.handleSelect.bind(this);
@@ -171,7 +172,7 @@ export default class ManageAuctions extends Component {
                                     <Col xs={12} md={6} xl={4}>
                                         <div onClick={this.handleToNewAuction} className="options">
                                             <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
-                                                <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg" style={{ objectFit: 'cover', maxHeight: '350px' }} />
+                                                <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg" style={{ objectFit: 'cover', maxHeight: '250px' }} />
                                                 <Card.Body>
                                                     <Row><Card.Title className="card-title"><span className='title-text'>NEW AUCTION</span></Card.Title></Row>
                                                     <Row><Card.Subtitle className="card-title text-muted"> Create a new auction </Card.Subtitle></Row>
@@ -190,7 +191,7 @@ export default class ManageAuctions extends Component {
                                             <div className="auctionItem">
                                                 <div className="options">
                                                     <Card key={auction.id} className="card">
-                                                        <Card.Img variant="top" src={(auction.imgUrl.length != 0) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '350px' }} />
+                                                        <Card.Img variant="top" src={(auction.imgUrl.length != 0) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '250px' }} />
                                                         <Card.Body>
                                                             <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
                                                             {auction.active && (
