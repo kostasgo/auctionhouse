@@ -59,17 +59,17 @@ public class AuctionController {
         return new ResponseEntity<>(auctionService.findAllUserAuctionsCount(id), HttpStatus.OK);
     }
 
-    @GetMapping(params = {"search", "active", "id", "offset"})
-    ResponseEntity<Collection<Auction>> searchAuctions(@RequestParam("search") Optional<String> search,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id, @RequestParam("offset") Optional<Integer> offset){
+    @GetMapping(params = {"search","max","category","country","active", "id", "offset"})
+    ResponseEntity<Collection<Auction>> searchAuctions(@RequestParam("search") Optional<String> search,@RequestParam("max") Optional<Integer> max,@RequestParam("category") Optional<String> category,@RequestParam("country") Optional<String> country,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id, @RequestParam("offset") Optional<Integer> offset){
         System.out.print("in search (non-user) active in controller");
-        return new ResponseEntity<>(auctionService.searchAuctions(search.orElse("*"),active.orElse(true),id.orElse(-1), offset.orElse(0)), HttpStatus.OK);
+        return new ResponseEntity<>(auctionService.searchAuctions(search.orElse("%"),max.orElse(100000),category.orElse("%"),country.orElse("%"),active.orElse(true),id.orElse(-1), offset.orElse(0)), HttpStatus.OK);
     }
 
-    @GetMapping(params = {"search", "active", "id", "count"})
-    ResponseEntity<Integer> searchAuctionsCount(@RequestParam("search") Optional<String> search,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id, @RequestParam("count") Optional<Boolean> count){
+    @GetMapping(params = {"search","max","category","country", "active", "id", "count"})
+    ResponseEntity<Integer> searchAuctionsCount(@RequestParam("search") Optional<String> search,@RequestParam("max") Optional<Integer> max,@RequestParam("category") Optional<String> category,@RequestParam("country") Optional<String> country,@RequestParam("active") Optional<Boolean> active, @RequestParam("id") Optional<Integer> id, @RequestParam("count") Optional<Boolean> count){
         System.out.print(active.orElse(true));
         System.out.print(id.orElse(-1));
-        return new ResponseEntity<>(auctionService.searchAuctionsCount(search.orElse(""),active.orElse(true),id.orElse(-1)), HttpStatus.OK);
+        return new ResponseEntity<>(auctionService.searchAuctionsCount(search.orElse("%"),max.orElse(100000),category.orElse("%"),country.orElse("%"),active.orElse(true),id.orElse(-1)), HttpStatus.OK);
     }
 
 

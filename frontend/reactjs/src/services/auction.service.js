@@ -34,12 +34,12 @@ class AuctionService {
         return axios.get(API_URL+"?active=true&count=true");
     }
 
-    searchAuctions(searchInput = "",active = true , id = -1, offset=0){
-        return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id+"&offset="+offset);
+    searchAuctions(searchInput , max ,category ,country ,active , id, offset){
+        return axios.get(API_URL+"?search="+searchInput+"&max="+max+"&category="+category+"&country="+country+"&active="+active+"&id="+id+"&offset="+offset);
     }
 
-    searchAuctionsCount(searchInput = "",active = true , id = -1, count=true){
-        return axios.get(API_URL+"?search="+searchInput+"&active="+active+"&id="+id+"&count="+count);
+    searchAuctionsCount(searchInput ,max ,category ,country, active, id, count){
+        return axios.get(API_URL+"?search="+searchInput+"&max="+max+"&category="+category+"&country="+country+"&active="+active+"&id="+id+"&count="+count);
     }
 
     getAllUserAuctions(id = -1, offset=0){

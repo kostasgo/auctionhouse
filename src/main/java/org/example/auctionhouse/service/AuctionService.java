@@ -26,13 +26,13 @@ public class AuctionService {
         return auctionRepository.findAllActiveAuctions(active);
     }
 
-    public List<Auction> searchAuctions(String search,Boolean active, Integer id,Integer offset) {
+    public List<Auction> searchAuctions(String search,Integer max,String category,String country,Boolean active, Integer id,Integer offset) {
         offset*=3;
-        return auctionRepository.searchAuctions(search,active, id, offset);
+        return auctionRepository.searchAuctions(search,max,category,country,active, id, offset);
     }
 
-    public Integer searchAuctionsCount(String search,Boolean active, Integer id) {
-        return auctionRepository.searchAuctionsCount(search,active, id);
+    public Integer searchAuctionsCount(String search,Integer max,String category,String country,Boolean active, Integer id) {
+        return auctionRepository.searchAuctionsCount(search,max,category,country,active, id);
     }
 
     public List<Auction> findAllUserAuctions(Integer id ,Integer offset) {

@@ -32,14 +32,18 @@ export default class AuctionsList extends Component {
             currentUser: { username: "" },
 
             filter1value : 100000,
+            filter2value : "%",
+            filter3value : "%",
+            search_string: "%",
 
-            search_string: "",
             pageOffset : 0,
             totalResults : 0
         };
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
+        this.handleCategory = this.handleCategory.bind(this);
+        this.handleCountry = this.handleCountry.bind(this);
         this.handlePageNext = this.handlePageNext.bind(this);
         this.handlePagePrev = this.handlePagePrev.bind(this);
     }
@@ -55,14 +59,14 @@ export default class AuctionsList extends Component {
         } 
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
-        auctionService.searchAuctionsCount(this.state.search_string,true, activeId, true)
+        auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, true)
         .then(response => response.data)
         .then((data) => {
             // console.log(data);
             this.setState({ auctionsCount: data });
         });
         
-        auctionService.searchAuctions(this.state.search_string,true, activeId, this.state.pageOffset)
+        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
             this.setState({ auctions: data });
@@ -96,17 +100,18 @@ export default class AuctionsList extends Component {
     handleSearch(){
         this.state.search_string = document.getElementById("search-input").value;
         var activeId = -1;
-        if (this.state.currentUser){
-            activeId = this.state.currentUser.id;
+        var currentUser = AuthService.getCurrentUser();
+        if (currentUser){
+            activeId = currentUser.id;
         } 
-        auctionService.searchAuctionsCount(this.state.search_string,true,activeId, true)
+        auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,true)
         .then(response => response.data)
         .then((data) => {
             // console.log(data);
             this.setState({ totalResults: data });
         });
         
-        auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
+        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
             this.setState({ auctions: data });
@@ -114,9 +119,19 @@ export default class AuctionsList extends Component {
     }
 
     handleSlider(e){
-        this.filter1value = e.target.value;
-        document.getElementById("num1").innerHTML = this.filter1value;
-        // console.log(this.filter1value);
+        this.state.filter1value = e.target.value;
+        document.getElementById("num1").innerHTML = this.state.filter1value;
+        console.log(this.state.filter1value);
+    }
+
+    handleCategory(e){
+        this.state.filter2value = e.target.value;
+        console.log(this.state.filter2value);
+    }
+
+    handleCountry(e){
+        this.state.filter3value = e.target.value;
+        console.log(this.state.filter3value);
     }
 
     handlePageNext(){
@@ -132,7 +147,7 @@ export default class AuctionsList extends Component {
             document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
 
-        auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
+        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
             this.setState({ auctions: data });
@@ -154,7 +169,7 @@ export default class AuctionsList extends Component {
             document.getElementById("prev-page").setAttribute("class","page-link disabled")
         }
 
-        auctionService.searchAuctions(this.state.search_string,true,activeId,this.state.pageOffset)
+        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
             this.setState({ auctions: data });
@@ -225,16 +240,16 @@ export default class AuctionsList extends Component {
                     <Col>
                         <Button className="shadow collapsible" variant="btn btn-success"><FontAwesomeIcon icon={faDollar}/> PRICE RANGE</Button>
                         <div class="shadow content">
-                            <label for="customRange1" class="form-label">Set maximum amount</label>
-                            <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={this.handleSlider}/>
+                            <label for="maxrange" class="form-label">Set maximum amount</label>
+                            <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={(e)=>this.handleSlider(e)}/>
                             <div className='lead form-bottom'>from 0   to  <span id="num1">100000</span> €</div>
                         </div>
                     </Col>
                     <Col>
                         <Button className="shadow collapsible" variant="btn btn-warning"><FontAwesomeIcon icon={faList}/> CATEGORY</Button>
                         <div class="shadow content">
-                        <label for="sel1" class="form-label">Select category / categories:</label>
-                            <select multiple size="2" class="shadow-sm form-control form-bottom" id="sel1">
+                        <label for="sel1" class="form-label">Select category:</label>
+                            <select class="shadow-sm form-control form-bottom" id="sel1" onChange={(e)=>this.handleCategory(e)}>
                             {/* <option key="" value="">ALL</option> */}
                             <AllCategoriesList/>
                             </select>
@@ -244,7 +259,7 @@ export default class AuctionsList extends Component {
                         <Button className="shadow collapsible" variant="btn btn-danger"><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
                         <div class="shadow content">
                         <label for="sel2" class="form-label">Select country:</label>
-                        <select class="shadow-sm form-control form-bottom2" id="sel2">
+                        <select class="shadow-sm form-control form-bottom2" id="sel2" onChange={(e)=>this.handleCountry(e)}>
                             {/* <option key="" value="">ALL</option> */}
                             <AllCountriesList/>
                             </select>
