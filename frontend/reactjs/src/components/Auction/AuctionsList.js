@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import { Redirect } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
@@ -13,6 +13,7 @@ import AllCategoriesList from '../sharedComponents/AllCategoriesList';
 import AllCountriesList from '../sharedComponents/AllCountriesList';
 
 
+
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
     diff /= 60;
@@ -20,8 +21,10 @@ function calcDifference(dt1, dt2) {
 }
 
 
+
+
 export default class AuctionsList extends Component {
-    constructor(props) {
+    constructor(props) {    
         super(props);
         this.state = {
             auctions: [],
@@ -29,6 +32,7 @@ export default class AuctionsList extends Component {
             auction_id: -1,
             redirect: null,
             userReady: false,
+            resultsReady: false,
             currentUser: { username: "" },
 
             filter1value : 100000,
@@ -38,10 +42,11 @@ export default class AuctionsList extends Component {
 
             search_string: "",
             pageOffset: 0,
-            totalResults: 0,
+            totalResults: -1,
             message: props.message,
             successful: props.successful
         };
+        
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
@@ -51,25 +56,30 @@ export default class AuctionsList extends Component {
         this.handleCategoryFilter = this.handleCategoryFilter.bind(this);
         this.handleCountryFilter = this.handleCountryFilter.bind(this);
         this.handleReady = this.handleReady.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
+        this.handleUserClick = this.handleUserClick.bind(this);
     }
 
     componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
-        
         if (currentUser){
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
         } 
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
+
         auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, true)
         .then(response => response.data)
         .then((data) => {
-            // console.log(data);
-            this.setState({ totalResults: data });
-        }).then(()=>this.handleReady());
+            console.log("initial count")
+            console.log(data);
+            this.setState({ totalResults: data,
+                            resultsReady:true  })
+        })
+
 
         auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, this.state.pageOffset)
         .then(response => response.data)
@@ -96,17 +106,26 @@ export default class AuctionsList extends Component {
         document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
+
+
     handleReady(){
+        this.setState({resultsReady:false });
+        console.log("in handle ready")
         console.log(this.state.pageOffset)
         console.log(Math.ceil(this.state.totalResults / 3))
 
-        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 3)) {
+        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 3) || Math.ceil(this.state.totalResults / 3)==1) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
+        }
+        else{
+            document.getElementById("next-page").setAttribute("class", "page-link")
         }
     }
     
 
+
     handleSearch(){
+        this.setState({resultsReady:false });
         this.state.search_string = document.getElementById("search-input").value;
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
@@ -119,9 +138,11 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,true)
         .then(response => response.data)
         .then((data) => {
-            // console.log(data);
-            this.setState({ totalResults: data });
-        }).then(()=>this.handleReady);
+            console.log("after search count")
+            console.log(data);
+            this.setState({ totalResults: data,
+                            resultsReady:true });
+        });
 
         auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
         .then(response => response.data)
@@ -131,35 +152,39 @@ export default class AuctionsList extends Component {
     }
 
     handlePriceFilter(){
-        this.setState({filter1value : 100000});
-        console.log("handler1");
+        this.setState({filter1value : 50000});
+        document.getElementById("price").value = this.state.filter1value;
+        document.getElementById("num1").innerHTML = this.state.filter1value;
+        // console.log("handler1");
     }
 
     handleSlider(e){
         this.state.filter1value = e.target.value;
         document.getElementById("num1").innerHTML = this.state.filter1value;
-        console.log(this.state.filter1value);
+        // console.log(this.state.filter1value);
     }
 
     handleCategoryFilter(){
         this.setState({filter2value : "%"});
-        console.log("handler2")
+        document.getElementById("category").value = null;
+        // console.log("handler2")
         
     }
 
     handleCategory(e){
         this.state.filter2value = e.target.value;
-        console.log(this.state.filter2value);
+        // console.log(this.state.filter2value);
     }
 
     handleCountryFilter(){
-        this.setState({filter1value : "%"});
-        console.log("handler3");
+        this.setState({filter3value : "%"});
+        document.getElementById("country").value = null;
+        // console.log("handler3");
     }
 
     handleCountry(e){
         this.state.filter3value = e.target.value;
-        console.log(this.state.filter3value);
+        // console.log(this.state.filter3value);
     }
 
     handlePageNext(){
@@ -175,7 +200,7 @@ export default class AuctionsList extends Component {
         this.state.pageOffset++;
         document.getElementById("prev-page").setAttribute("class","page-link");
 
-        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 3)){
+        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 3)){
             document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
 
@@ -214,23 +239,24 @@ export default class AuctionsList extends Component {
         document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
+    handleSelect(id){
+        // console.log("SELECT CLICKED");
+        this.setState({ toAuction: true });
+        this.setState({ auction_id: id });
+    };
+
+    handleUserClick(){
+        // console.log("USER CLICKED");
+        //  <Route path="/" element={<Navigate to="/" />} />
+    };
+
     render() {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
         }
 
-        const handleSelect = (id) => {
-            // console.log("SELECT CLICKED");
-            this.setState({ toAuction: true });
-            this.setState({ auction_id: id });
-        };
 
-        const handleUserClick = () => {
-            // console.log("USER CLICKED");
-            //  <Route path="/" element={<Navigate to="/" />} />
-        };
-
-        // CLACULATING REMAINING TIME
+        // CALCULATING REMAINING TIME
         var diff;
         var diff2;
         var days;
@@ -250,6 +276,8 @@ export default class AuctionsList extends Component {
 
 
         return (!this.state.toAuction) ? <>
+
+            <script>{this.state.resultsReady?this.handleReady():null }</script>
 
             <div className='title'>
                 <div className="container d-flex h-100">
@@ -273,30 +301,30 @@ export default class AuctionsList extends Component {
 
             <Container className='search-container'>
                 <Row xs={3} md={3} xl={3}>
-                    <Col>
+                    <Col id="filter1">
                         <Button className="shadow collapsible" variant="btn btn-success" onClick={this.handlePriceFilter}><FontAwesomeIcon icon={faDollar} /> PRICE RANGE</Button>
-                        <div class="shadow content">
-                            <label for="customRange1" class="form-label">Set maximum amount</label>
-                            <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={this.handleSlider} />
+                        <div className="shadow content">
+                            <label htmlFor="price" className="form-label">Set maximum amount</label>
+                            <input className="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="price" onChange={this.handleSlider} />
                             <div className='lead form-bottom'>from 0   to  <span id="num1">100000</span> €</div>
                         </div>
                     </Col>
-                    <Col>
+                    <Col id="filter2">
                         <Button className="shadow collapsible" variant="btn btn-warning" onClick={this.handleCategoryFilter}><FontAwesomeIcon icon={faList} /> CATEGORY</Button>
-                        <div class="shadow content">
-                        <label for="sel1" class="form-label">Select category:</label>
-                            <select class="shadow-sm form-control form-bottom" id="sel1" onChange={(e)=>this.handleCategory(e)}>
-                            <option key="" value="">CATEGORY</option>
+                        <div className="shadow content">
+                        <label htmlFor="category" className="form-label">Select category:</label>
+                            <select className="shadow-sm form-control form-bottom" id="category" onChange={(e)=>this.handleCategory(e)}>
+                            {/* <option key="" value="">CATEGORY</option> */}
                             <AllCategoriesList/>
                             </select>
                         </div>
                     </Col>
-                    <Col>
+                    <Col id="filter3">
                         <Button className="shadow collapsible" variant="btn btn-danger" onClick={this.handleCountryFilter}><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
-                        <div class="shadow content">
-                        <label for="sel2" class="form-label">Select country:</label>
-                        <select class="shadow-sm form-control form-bottom2" id="sel2" onChange={(e)=>this.handleCountry(e)}>
-                            <option key="" value="">COUNTRY</option>
+                        <div className="shadow content">
+                        <label htmlFor="country" className="form-label">Select country:</label>
+                        <select className="shadow-sm form-control form-bottom" id="country" onChange={(e)=>this.handleCountry(e)}>
+                            {/* <option key="" value="">COUNTRY</option> */}
                             <AllCountriesList/>
                             </select>
                         </div>
@@ -308,19 +336,19 @@ export default class AuctionsList extends Component {
             </Container>
 
             <nav aria-label="Page navigation example">
-                <ul class="pagination pagination-lg">
-                    <li class="page-item">
-                        <a class="page-link disabled" onClick={this.handlePagePrev} aria-label="Previous" id='prev-page'>
+                <ul className="pagination pagination-lg">
+                    <li className="page-item">
+                        <a className="page-link disabled" onClick={this.handlePagePrev} aria-label="Previous" id='prev-page'>
                             <span aria-hidden="true">&laquo;</span>
-                            <span class="sr-only">Previous</span>
+                            <span className="sr-only">Previous</span>
                         </a>
                     </li>
-                    <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
+                    <li className="page-item"><a className="page-link active" id="active-page">1</a></li>
                     <p className='page-link disabled'> out of {Math.ceil(this.state.totalResults / 3) == 0 ? 1 : Math.ceil(this.state.totalResults / 3)} </p>
-                    <li class="page-item">
-                        <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
+                    <li className="page-item">
+                        <a className="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
                             <span aria-hidden="true">&raquo;</span>
-                            <span class="sr-only">Next</span>
+                            <span className="sr-only">Next</span>
                         </a>
                     </li>
                 </ul>
@@ -333,14 +361,14 @@ export default class AuctionsList extends Component {
                         :
 
                         this.state.auctions.map((auction) => (
-                            <Col xs={12} md={6} xl={4}>
+                            <Col key={auction.id} xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
                                     <div className="options">
                                         <Card key={auction.id} className="shadow card" >
                                             <Card.Img className='cardimg' variant="top" src={(auction.imgUrl != null) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover' }} />
                                             <Card.Body className='cardbod'>
                                                 <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
-                                                <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
+                                                <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={this.handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
                                                 {/* <Card.Text className="text-left">
                                                 {auction.description}
                                             </Card.Text> */}
@@ -358,12 +386,12 @@ export default class AuctionsList extends Component {
 
                                                 <Card.Footer>
                                                     <Row>
-                                                        <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>
-                                                        <Col> {auction.currently} € </Col>
+                                                        <Col id="currentbid" className="footer-mini-container"> CURRENT BID: &ensp; </Col>
+                                                        <Col id="currentbidamount"> {auction.currently} € </Col>
                                                     </Row>
 
                                                     <Row >
-                                                        <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>SEE MORE</Button>
+                                                        <Button variant="primary" className='select-button' onClick={() => this.handleSelect(auction.id)}>SEE MORE</Button>
                                                     </Row>
                                                 </Card.Footer>
 

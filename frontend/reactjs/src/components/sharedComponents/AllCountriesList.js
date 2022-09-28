@@ -4,7 +4,7 @@ export default class AllCountriesList extends Component {
     render() {
         return (
             <>
-                <option>Country</option>
+                {/* <option>Country</option> */}
                 <option value="Afghanistan">Afghanistan</option>
                 <option value="Aland Islands">Aland Islands</option>
                 <option value="Albania">Albania</option>
