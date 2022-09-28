@@ -30,6 +30,7 @@ export default class ManageAuctions extends Component {
         this.handleSelect = this.handleSelect.bind(this);
         this.handlePageNext = this.handlePageNext.bind(this);
         this.handlePagePrev = this.handlePagePrev.bind(this);
+        this.handleReady = this.handleReady.bind(this);
     }
 
     componentDidMount() {
@@ -50,16 +51,19 @@ export default class ManageAuctions extends Component {
                 .then(response => response.data)
                 .then((data) => {
                     this.setState({ auctions: data });
-                });
+                }).then(this.handleReady);
         }
         else {
             this.setState({ currentUser: "redirect" });
         }
+    }
 
-        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 3)) {
+    handleReady(){
+        if (this.state.pageOffset >= Math.ceil(this.state.totalResults / 3)) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
         }
     }
+    
 
     handleSelect(id) {
         console.log("SELECT CLICKED");
@@ -103,7 +107,7 @@ export default class ManageAuctions extends Component {
         this.state.pageOffset--;
         document.getElementById("next-page").setAttribute("class", "page-link");
 
-        if (this.state.pageOffset - 1 <= 0) {
+        if (this.state.pageOffset <= 0) {
             document.getElementById("prev-page").setAttribute("class", "page-link disabled")
         }
 
@@ -117,6 +121,10 @@ export default class ManageAuctions extends Component {
     }
 
     render() {
+        console.log(this.state.pageOffset);
+        console.log(this.state.totalResults);
+        console.log(Math.ceil(this.state.totalResults / 3));
+    
 
         return (this.state.currentUser != "redirect" ?
             <>

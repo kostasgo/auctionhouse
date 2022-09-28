@@ -56,15 +56,15 @@ class AuctionService {
     }
 
     searchAuctionsCount(searchInput ,max ,category ,country, active, id, count){
-        return axios.get(API_URL+"/searchCount?search="+searchInput+"&max="+max+"&category="+category+"&country="+country+"&active="+active+"&id="+id+"&count="+count);
+        return axios.get(API_URL+"/searchCount?search="+searchInput+"&max="+max+"&category="+category+"&country="+country+"&active="+active+"&id="+id+"&count=true");
     }
 
-    getAllUserAuctions(id = -1, offset = 0) {
+    getAllUserAuctions(id, offset) {
         return axios.get(API_URL + "?id=" + id + "&offset=" + offset);
     }
 
-    getAllUserAuctionsCount(id = -1, count = true) {
-        return axios.get(API_URL + "?id=" + id + "&count=" + count);
+    getAllUserAuctionsCount(id , count) {
+        return axios.get(API_URL + "?id=" + id + "&count=true");
     }
 }
 
