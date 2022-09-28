@@ -227,11 +227,11 @@ export default class AuctionManagePage extends Component {
                                 <>
                                     <h4 className="text-success mb-4">THIS AUCTION IS ACTIVE</h4>
                                     {this.state.auction.numberOfBids == 0 ? (
-                                        <p className="lead">There hasn't been placed a bid yet.</p>
+                                        <p className="lead">There hasn't been any bid placed yet.</p>
 
                                     ) : (
                                         <>
-                                            <p className="lead">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</p>
+                                            <p className="lead">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)} placed.</p>
                                             {this.state.auction.numberOfBids == 1 ?
                                                 (<p className="lead">The bid's value is {this.state.auction.currently} €.</p>) :
                                                 (<p className="lead">Highest bid so far is {this.state.auction.currently} €.</p>)}

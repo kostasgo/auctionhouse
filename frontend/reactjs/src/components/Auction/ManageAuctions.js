@@ -19,6 +19,7 @@ export default class ManageAuctions extends Component {
             auction_id: -1,
             redirect: null,
             userReady: false,
+            resultsReady: false,
             currentUser: { username: "" },
             search_string: "",
             pageOffset: 0,
@@ -34,6 +35,7 @@ export default class ManageAuctions extends Component {
     }
 
     componentDidMount() {
+        this.handleReady();
         const currentUser = AuthService.getCurrentUser();
         var activeId = -1;
         if (this.state.currentUser) {
@@ -45,7 +47,8 @@ export default class ManageAuctions extends Component {
             auctionService.getAllUserAuctionsCount(activeId, true)
                 .then(response => response.data)
                 .then((data) => {
-                    this.setState({ totalResults: data });
+                    this.setState({ totalResults: data,
+                                    resultsReady:true });
                 });
             auctionService.getAllUserAuctions(activeId, this.state.pageOffset)
                 .then(response => response.data)
@@ -59,6 +62,7 @@ export default class ManageAuctions extends Component {
     }
 
     handleReady(){
+        this.setState({resultsReady:false});
         if (this.state.pageOffset >= Math.ceil(this.state.totalResults / 3)) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
         }
@@ -128,6 +132,9 @@ export default class ManageAuctions extends Component {
 
         return (this.state.currentUser != "redirect" ?
             <>
+
+            <script>{this.state.resultsReady?this.handleReady():null }</script>
+
                 {!this.state.toAuctionManage ?
                     <>
                         {!this.state.toNewAuction ?
@@ -241,10 +248,20 @@ export default class ManageAuctions extends Component {
                                     ))}
 
                                 </Row >
+                                <br></br><br></br><br></br><br></br>
                             </>
-                            : <NewAuction />}
+                            
+                            :
+                            <>
+                            <NewAuction />
+                            <br></br><br></br><br></br><br></br>
+                            </>}
                     </>
-                    : <AuctionManagePage data_tranfer={this.state.auction_id} />}
+                    :
+                    <> 
+                    <AuctionManagePage data_tranfer={this.state.auction_id} />
+                    <br></br><br></br><br></br><br></br>
+                    </>}
             </>
             : <Redirect exact to="/login"></Redirect>
         )

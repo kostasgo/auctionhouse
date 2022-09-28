@@ -61,6 +61,7 @@ export default class AuctionsList extends Component {
     }
 
     componentDidMount() {
+        this.handleReady();
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
@@ -125,7 +126,6 @@ export default class AuctionsList extends Component {
 
 
     handleSearch(){
-        this.setState({resultsReady:false });
         this.state.search_string = document.getElementById("search-input").value;
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
@@ -364,7 +364,7 @@ export default class AuctionsList extends Component {
                             <Col key={auction.id} xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
                                     <div className="options">
-                                        <Card key={auction.id} className="shadow card" >
+                                        <Card key={auction.id} className="shadow-lg card" >
                                             <Card.Img className='cardimg' variant="top" src={(auction.imgUrl != null) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover' }} />
                                             <Card.Body className='cardbod'>
                                                 <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
@@ -403,8 +403,16 @@ export default class AuctionsList extends Component {
                         ))
                 }
             </Row >
-        </> : <AuctionPage data_tranfer={this.state.auction_id} />
-
+            <br></br><br></br><br></br><br></br>
+            {/* <div className="footer"> */}
+                {/* <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p> */}
+            {/* </div> */}
+        </> 
+        :
+        <>
+            <AuctionPage data_tranfer={this.state.auction_id} />
+            <br></br><br></br><br></br><br></br>
+        </>
     }
 
 
