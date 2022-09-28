@@ -32,11 +32,11 @@ export default class AuctionsList extends Component {
             currentUser: { username: "" },
 
             filter1value : 100000,
-            filter2value : "%",
-            filter3value : "%",
-            search_string: "%",
+            filter2value : "",
+            filter3value : "",
+            search_string: "",
 
-            search_string: "%",
+            search_string: "",
             pageOffset: 0,
             totalResults: 0,
             message: props.message,
@@ -123,8 +123,8 @@ export default class AuctionsList extends Component {
     }
 
     handlePriceFilter(){
-        this.setState({max : 100000})
-        console.log("handler1")
+        this.setState({filter1value : 100000});
+        console.log("handler1");
     }
 
     handleSlider(e){
@@ -134,8 +134,9 @@ export default class AuctionsList extends Component {
     }
 
     handleCategoryFilter(){
-        this.setState({category : "%"})
+        this.setState({filter2value : "%"});
         console.log("handler2")
+        
     }
 
     handleCategory(e){
@@ -144,8 +145,8 @@ export default class AuctionsList extends Component {
     }
 
     handleCountryFilter(){
-        this.setState({country : "%"})
-        console.log("handler3")
+        this.setState({filter1value : "%"});
+        console.log("handler3");
     }
 
     handleCountry(e){
