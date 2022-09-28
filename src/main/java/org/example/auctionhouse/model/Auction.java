@@ -81,6 +81,8 @@ public class Auction {
 
     private Boolean completed = false;
 
+    private Boolean boughtOut = false;
+
 
     public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime starts, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
         this.seller = seller;

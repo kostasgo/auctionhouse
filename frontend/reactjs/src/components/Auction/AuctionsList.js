@@ -36,14 +36,15 @@ export default class AuctionsList extends Component {
             filter3value : "%",
             search_string: "%",
 
-            pageOffset : 0,
-            totalResults : 0
+            search_string: "",
+            pageOffset: 0,
+            totalResults: 0,
+            message: props.message,
+            successful: props.successful
         };
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
-        this.handleCategory = this.handleCategory.bind(this);
-        this.handleCountry = this.handleCountry.bind(this);
         this.handlePageNext = this.handlePageNext.bind(this);
         this.handlePagePrev = this.handlePagePrev.bind(this);
     }
@@ -65,7 +66,7 @@ export default class AuctionsList extends Component {
             // console.log(data);
             this.setState({ auctionsCount: data });
         });
-        
+
         auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
@@ -77,21 +78,21 @@ export default class AuctionsList extends Component {
         var i;
 
         for (i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function() {
+            coll[i].addEventListener("click", function () {
                 this.classList.toggle("active");
                 var content = this.nextElementSibling;
                 if (content.style.display === "block") {
-                content.style.display = "none";
+                    content.style.display = "none";
                 } else {
-                content.style.display = "block";
+                    content.style.display = "block";
                 }
             });
         }
 
-        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+        document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
 
-        if (this.state.pageOffset+1 >= Math.ceil(this.state.totalResults / 3)){
-            document.getElementById("next-page").setAttribute("class","page-link disabled")
+        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 3)) {
+            document.getElementById("next-page").setAttribute("class", "page-link disabled")
         }
 
 
@@ -103,14 +104,14 @@ export default class AuctionsList extends Component {
         var currentUser = AuthService.getCurrentUser();
         if (currentUser){
             activeId = currentUser.id;
-        } 
+        }
         auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,true)
         .then(response => response.data)
         .then((data) => {
             // console.log(data);
             this.setState({ totalResults: data });
         });
-        
+
         auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
         .then(response => response.data)
         .then((data) => {
@@ -147,35 +148,35 @@ export default class AuctionsList extends Component {
             document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
 
-        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
-        .then(response => response.data)
-        .then((data) => {
-            this.setState({ auctions: data });
-        });
+        auctionService.searchAuctions(this.state.search_string, true, activeId, this.state.pageOffset)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({ auctions: data });
+            });
 
-        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+        document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
-    handlePagePrev(){
+    handlePagePrev() {
         var activeId = -1;
-        if (this.state.currentUser){
+        if (this.state.currentUser) {
             activeId = this.state.currentUser.id;
-        } 
-
-        this.state.pageOffset--;
-        document.getElementById("next-page").setAttribute("class","page-link");
-
-        if (this.state.pageOffset-1 <= 0 ){
-            document.getElementById("prev-page").setAttribute("class","page-link disabled")
         }
 
-        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
-        .then(response => response.data)
-        .then((data) => {
-            this.setState({ auctions: data });
-        });
+        this.state.pageOffset--;
+        document.getElementById("next-page").setAttribute("class", "page-link");
 
-        document.getElementById("active-page").innerHTML=this.state.pageOffset+1;
+        if (this.state.pageOffset - 1 <= 0) {
+            document.getElementById("prev-page").setAttribute("class", "page-link disabled")
+        }
+
+        auctionService.searchAuctions(this.state.search_string, true, activeId, this.state.pageOffset)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({ auctions: data });
+            });
+
+        document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
     render() {
@@ -206,10 +207,10 @@ export default class AuctionsList extends Component {
         var coll;
         var i;
 
-    
 
-        
-        
+
+
+
 
 
 
@@ -218,7 +219,7 @@ export default class AuctionsList extends Component {
             <div className='title'>
                 <div className="container d-flex h-100">
                     <div className="row justify-content-center align-self-center">
-                        <span className='display-3'> <u className='shadow-sm title-text-effects'>Browse Auctions <FontAwesomeIcon icon={faSearch}/></u></span>
+                        <span className='display-3'> <u className='shadow-sm title-text-effects'>Browse Auctions <FontAwesomeIcon icon={faSearch} /></u></span>
                         <span className='lead'>Find what you need!</span>
                     </div>
                 </div>
@@ -238,15 +239,15 @@ export default class AuctionsList extends Component {
             <Container className='search-container'>
                 <Row xs={3} md={3} xl={3}>
                     <Col>
-                        <Button className="shadow collapsible" variant="btn btn-success"><FontAwesomeIcon icon={faDollar}/> PRICE RANGE</Button>
+                        <Button className="shadow collapsible" variant="btn btn-success"><FontAwesomeIcon icon={faDollar} /> PRICE RANGE</Button>
                         <div class="shadow content">
-                            <label for="maxrange" class="form-label">Set maximum amount</label>
-                            <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={(e)=>this.handleSlider(e)}/>
+                            <label for="customRange1" class="form-label">Set maximum amount</label>
+                            <input class="form-range" type="range" step="100" min="0" max="100000" aria-valuenow="30000" id="customRange1" onChange={this.handleSlider} />
                             <div className='lead form-bottom'>from 0   to  <span id="num1">100000</span> €</div>
                         </div>
                     </Col>
                     <Col>
-                        <Button className="shadow collapsible" variant="btn btn-warning"><FontAwesomeIcon icon={faList}/> CATEGORY</Button>
+                        <Button className="shadow collapsible" variant="btn btn-warning"><FontAwesomeIcon icon={faList} /> CATEGORY</Button>
                         <div class="shadow content">
                         <label for="sel1" class="form-label">Select category:</label>
                             <select class="shadow-sm form-control form-bottom" id="sel1" onChange={(e)=>this.handleCategory(e)}>
@@ -266,9 +267,9 @@ export default class AuctionsList extends Component {
                         </div>
                     </Col>
                 </Row>
-               
-                
-                
+
+
+
             </Container>
 
             <nav aria-label="Page navigation example">
@@ -280,7 +281,7 @@ export default class AuctionsList extends Component {
                         </a>
                     </li>
                     <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
-                    <p className='page-link disabled'> out of { Math.ceil(this.state.totalResults / 3)==0?1:Math.ceil(this.state.totalResults / 3) } </p>
+                    <p className='page-link disabled'> out of {Math.ceil(this.state.totalResults / 3) == 0 ? 1 : Math.ceil(this.state.totalResults / 3)} </p>
                     <li class="page-item">
                         <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
                             <span aria-hidden="true">&raquo;</span>
@@ -300,39 +301,39 @@ export default class AuctionsList extends Component {
                             <Col xs={12} md={6} xl={4}>
                                 <div className="auctionItem">
                                     <div className="options">
-                                    <Card key={auction.id} className="shadow card" >
-                                        <Card.Img className='cardimg' variant="top" src={(auction.imgUrl!=null)?auction.imgUrl.split(",")[0]:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover'}} />
-                                        <Card.Body className='cardbod'>
-                                            <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
-                                            <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
-                                            {/* <Card.Text className="text-left">
+                                        <Card key={auction.id} className="shadow card" >
+                                            <Card.Img className='cardimg' variant="top" src={(auction.imgUrl != null) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover' }} />
+                                            <Card.Body className='cardbod'>
+                                                <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
+                                                <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
+                                                {/* <Card.Text className="text-left">
                                                 {auction.description}
                                             </Card.Text> */}
 
-                                            <ListGroup variant="flush">
-                                                {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
-                                                {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
-                                                <ListGroup.Item key='1' className='mb-2 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
-                                                <ListGroup.Item key='2' className='mb-2 text-muted remaining'>Time remaining&nbsp;&nbsp;: &emsp;
-                                                    {diff = Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
-                                                    {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
-                                                    {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
-                                                </ListGroup.Item>
-                                            </ListGroup>
+                                                <ListGroup variant="flush">
+                                                    {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
+                                                    {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
+                                                    <ListGroup.Item key='1' className='mb-2 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
+                                                    <ListGroup.Item key='2' className='mb-2 text-muted remaining'>Time remaining&nbsp;&nbsp;: &emsp;
+                                                        {diff = Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
+                                                        {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
+                                                        {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
+                                                    </ListGroup.Item>
+                                                </ListGroup>
 
-                                            <Card.Footer>
-                                                <Row>
-                                                    <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>
-                                                    <Col> {auction.currently} € </Col>
-                                                </Row>
+                                                <Card.Footer>
+                                                    <Row>
+                                                        <Col className="footer-mini-container"> CURRENT BID: &ensp; </Col>
+                                                        <Col> {auction.currently} € </Col>
+                                                    </Row>
 
-                                                <Row >
-                                                    <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>SEE MORE</Button>
-                                                </Row>
-                                            </Card.Footer>
+                                                    <Row >
+                                                        <Button variant="primary" className='select-button' onClick={() => handleSelect(auction.id)}>SEE MORE</Button>
+                                                    </Row>
+                                                </Card.Footer>
 
-                                        </Card.Body>
-                                    </Card>
+                                            </Card.Body>
+                                        </Card>
                                     </div>
                                 </div>
                             </Col>
@@ -343,5 +344,5 @@ export default class AuctionsList extends Component {
 
     }
 
-    
+
 }

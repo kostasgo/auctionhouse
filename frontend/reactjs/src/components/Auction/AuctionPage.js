@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Modal from 'react-bootstrap/Modal';
 import AuthService from "../../services/auth.service";
 import BidService from '../../services/bid.service';
+import AuctionService from '../../services/auction.service';
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -28,7 +29,8 @@ export default class AuctionPage extends Component {
             bids: [],
             categories: [],
             toBack: false,
-            showPopup: false,
+            showBidPopUp: false,
+            showBuyOutPopUp: false,
             redirect: null,
             userReady: false,
             Loaded: false,
@@ -99,8 +101,44 @@ export default class AuctionPage extends Component {
 
 
         const handleBuyOut = () => {
-            //console.log("BUY-OUT CLICKED");
+            this.setState({ showBuyOutPopUp: true });
         };
+
+        const handleBuyOutConfirm = () => {
+
+            this.setState({
+                successful: false,
+                message: ""
+            })
+            AuctionService.buyOutAuction(
+                this.state.auction.id,
+                this.state.currentUser.username)
+                .then(
+                    () => {
+                        this.setState({
+                            message: "Auction was just bought out!",
+                            successful: true,
+                            toBack: true
+                        });
+                    },
+                    error => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+
+                        this.setState({
+                            successful: false,
+                            message: resMessage
+                        });
+                    }
+                );
+
+            this.setState({ showBuyOutPopUp: false });
+        };
+
 
 
         const handleBid = () => {
@@ -126,14 +164,14 @@ export default class AuctionPage extends Component {
                 return;
             }
 
-            this.setState({ showPopup: true });
+            this.setState({ showBidPopUp: true });
         };
 
         const handleBidConfirm = () => {
             var amount = parseFloat(document.getElementById("bid_amount").value);
-            console.log(this.state.currentUser.username);
-            console.log(this.state.auction.id);
-            console.log(amount);
+            //console.log(this.state.currentUser.username);
+            //console.log(this.state.auction.id);
+            //console.log(amount);
 
             this.setState({
                 successful: false,
@@ -173,49 +211,49 @@ export default class AuctionPage extends Component {
                         });
                     }
                 );
-            this.setState({ showPopup: false });
+            this.setState({ showBidPopUp: false });
         };
 
         const handleClose = () => {
-            //console.log("CLOSE CLICKED");
-            this.setState({ showPopup: false });
+            this.setState({
+                showBidPopUp: false,
+                showBuyOutPopUp: false
+            });
         };
 
         var diff;
         var diff2;
-        var days;
-        var hours;
-        var minutes;
         var firstbid_placeholder = "> " + String(this.state.auction.currently)
 
         var lat = this.state.auction.latitude;
         var lng = this.state.auction.longitude;
-
-        // console.log(lat, lng);
-
-
 
 
         return (!this.state.toBack) ?
             (!this.state.Loaded) ? <></> :
 
                 <>
-                    {
-                        this.state.message && (
-                            <div className="form-group">
-                                <div
-                                    className={
-                                        this.state.successful
-                                            ? "alert alert-success"
-                                            : "alert alert-danger"
-                                    }
-                                    role="alert"
-                                >
-                                    {this.state.message}
-                                </div>
-                            </div>
-                        )
-                    }
+                    <Row className="my-3">
+                        <Col md={3}>
+                            {
+                                this.state.message && (
+                                    <div className="form-group">
+                                        <div
+                                            className={
+                                                this.state.successful
+                                                    ? "alert alert-success"
+                                                    : "alert alert-danger"
+                                            }
+                                            role="alert"
+                                        >
+                                            {this.state.message}
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </Col>
+                    </Row>
+
                     <div className='title'>
                         <div className="container d-flex h-100">
                             <div className="row justify-content-center align-self-center">
@@ -224,13 +262,6 @@ export default class AuctionPage extends Component {
                             </div>
                         </div>
                     </div>
-
-                    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
-                        integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-                        crossorigin="" />
-                    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
-                        integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-                        crossorigin=""></script>
 
                     <Button variant="primary" className='back-button shadow' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button>
 
@@ -313,13 +344,9 @@ export default class AuctionPage extends Component {
 
                                             <input id="bid_amount" placeholder={firstbid_placeholder} className='bid-button'></input>
 
-
-
                                             <Button className='bid-button mb-2' onClick={() => handleBid()}>BID</Button>
 
-
-
-                                            <Modal show={this.state.showPopup} onHide={() => handleClose()}>
+                                            <Modal show={this.state.showBidPopUp} onHide={() => handleClose()}>
                                                 <Modal.Header closeButton>
                                                     <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
                                                 </Modal.Header>
@@ -357,7 +384,24 @@ export default class AuctionPage extends Component {
                                         : <></>
                                     }
                                     {this.state.userReady ?
-                                        <Button className='buy-out-button' onClick={() => handleBuyOut(this.state.auction.id)}>BUY OUT</Button>
+                                        <>
+                                            <Button className='buy-out-button' onClick={() => handleBuyOut(this.state.auction.id)}>BUY OUT</Button>
+
+                                            <Modal show={this.state.showBuyOutPopUp} onHide={() => handleClose()}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>Are you sure? You are about to buy out this item for the whole price of {this.state.auction.buyPrice} €</Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={() => handleClose()}>
+                                                        Back
+                                                    </Button>
+                                                    <Button variant="primary" onClick={() => handleBuyOutConfirm()}>
+                                                        Buy
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
+                                        </>
                                         : <></>
                                     }
                                     {!this.state.userReady ?
@@ -435,7 +479,7 @@ export default class AuctionPage extends Component {
                 </>
             :
             <>
-                <AuctionsList />
+                <AuctionsList message={this.state.message} successful={this.state.successful} />
             </>
     }
 }

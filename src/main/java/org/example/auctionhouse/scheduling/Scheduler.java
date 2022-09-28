@@ -21,6 +21,5 @@ public class Scheduler {
         for(Auction auction : auctions) {
             auctionService.checkIfCompleted(auction);
         }
-        System.out.print("\nEnd of this turn!\n\n\n");
     }
 }

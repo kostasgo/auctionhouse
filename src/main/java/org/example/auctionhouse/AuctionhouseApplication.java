@@ -220,11 +220,11 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				auctionService.saveOrUpdate(auction2);
 
 
-				Message message1 = new Message("hallo! i won an auction and would love some more info on the prize", 3,2);
-				Message message2 = new Message("hallo! sure lets talk more", 2,3);
-				Message message3 = new Message("ok, where shall we meet to make the trade?", 3,2);
-				Message message4 = new Message("not sure... maybe if you want we can make the payment online and ill send you the thing.", 2,3);
-				Message message5 = new Message("Or we can meet in athens from wednesday on.", 2,3);
+				Message message1 = new Message("hallo! i won an auction and would love some more info on the prize", Long.valueOf(3),Long.valueOf(2));
+				Message message2 = new Message("hallo! sure lets talk more", Long.valueOf(2),Long.valueOf(3));
+				Message message3 = new Message("ok, where shall we meet to make the trade?", Long.valueOf(3),Long.valueOf(2));
+				Message message4 = new Message("not sure... maybe if you want we can make the payment online and ill send you the thing.", Long.valueOf(2),Long.valueOf(3));
+				Message message5 = new Message("Or we can meet in athens from wednesday on.", Long.valueOf(2),Long.valueOf(3));
 
 				messageService.saveOrUpdate(message1);
 				messageService.saveOrUpdate(message2);

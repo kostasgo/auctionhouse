@@ -46,6 +46,6 @@ public class UserController {
         user.setEnabled(true);
         userService.saveOrUpdate(user);
 
-        return ResponseEntity.ok(new MessageResponse("User enabled successfully!"));
+        return ResponseEntity.ok(user);
     }
 }
