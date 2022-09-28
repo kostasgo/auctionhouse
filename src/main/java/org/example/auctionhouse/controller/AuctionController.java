@@ -99,7 +99,8 @@ public class AuctionController {
         Seller seller = user.getSeller();
         if (seller == null) {
             seller = new Seller(user);
-            sellerService.saveOrUpdate(seller);
+            user.setSeller(seller);
+            userService.saveOrUpdate(user);
         }
 
         Set<String> strCategories = auctionRequest.getCategories();
@@ -166,7 +167,11 @@ public class AuctionController {
             }
         }
         auction.setImgUrl(urls);
+        Set<Auction> sellers_auctions = seller.getAuctions();
+        sellers_auctions.add(auction);
+        seller.setAuctions(sellers_auctions);
 
+        sellerService.saveOrUpdate(seller);
         auctionService.saveOrUpdate(auction);
         return ResponseEntity.ok(new MessageResponse("Auction successfully created!"));
     }

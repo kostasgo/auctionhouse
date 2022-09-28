@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import AuthService from "../../services/auth.service";
+import userService from "../../services/user.service";
 
 export default class Profile extends Component {
     constructor(props) {
@@ -15,10 +16,7 @@ export default class Profile extends Component {
 
     componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
-        console.log("profile");
-        console.log(currentUser);
-
-        if (!currentUser) this.setState({ redirect: "/home" });
+        const profileUser = userService.
         this.setState({ currentUser: currentUser, userReady: true })
     }
 

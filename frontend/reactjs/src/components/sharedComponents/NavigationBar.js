@@ -41,14 +41,14 @@ class NavigationBar extends React.Component {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <Nav.Link href="/"><FontAwesomeIcon icon={faHouse}/>&nbsp;&nbsp;Home</Nav.Link>
+                    <Nav.Link href="/"><FontAwesomeIcon icon={faHouse} />&nbsp;&nbsp;Home</Nav.Link>
                     {this.props.showAdminBoard && (
-                      <Nav.Link href="/admin"><FontAwesomeIcon icon={faContactCard}/>&nbsp;&nbsp;Admin Board</Nav.Link>
+                      <Nav.Link href="/admin"><FontAwesomeIcon icon={faContactCard} />&nbsp;&nbsp;Admin Board</Nav.Link>
                     )}
-                    {this.props.currentUser ? <Nav.Link href="/manage"><FontAwesomeIcon icon={faPeopleRoof}/>&nbsp;&nbsp;My Auctions</Nav.Link> : null}
-                    {this.props.currentUser ? <Nav.Link href="/chat"><FontAwesomeIcon icon={faMessage}/>&nbsp;&nbsp;Messages</Nav.Link> : null}
+                    {this.props.currentUser ? <Nav.Link href="/manage"><FontAwesomeIcon icon={faPeopleRoof} />&nbsp;&nbsp;My Auctions</Nav.Link> : null}
+                    {this.props.currentUser ? <Nav.Link href="/chat"><FontAwesomeIcon icon={faMessage} />&nbsp;&nbsp;Messages</Nav.Link> : null}
                     <Nav.Link href="#"><br></br></Nav.Link>
-                    <Nav.Link href="/auctions"><FontAwesomeIcon icon={faSearch}/>&nbsp;&nbsp;Browse Auctions </Nav.Link>
+                    <Nav.Link href="/auctions"><FontAwesomeIcon icon={faSearch} />&nbsp;&nbsp;Browse Auctions </Nav.Link>
 
                   </Nav>
 
@@ -56,7 +56,7 @@ class NavigationBar extends React.Component {
                   {this.props.currentUser ? (
                     <Nav className="justify-content-end mt-5">
 
-                      <Nav.Link href="/profile" className="text-danger text-decoration-underline">{this.props.currentUser.username}</Nav.Link>
+                      <Nav.Link href={`/user/${this.props.currentUser.username}`} className="text-danger text-decoration-underline">{this.props.currentUser.username}</Nav.Link>
                       <Nav.Link href="/login" className="text-danger text-decoration-underline" onClick={handleLogout}>Logout</Nav.Link>
 
                     </Nav>
@@ -79,7 +79,8 @@ class NavigationBar extends React.Component {
               </Navbar.Offcanvas>
             </Container>
           </Navbar>
-        ))}
+        ))
+        }
       </>
     );
   }

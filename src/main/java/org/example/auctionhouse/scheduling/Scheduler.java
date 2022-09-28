@@ -15,7 +15,7 @@ public class Scheduler {
     @Autowired
     private AuctionService auctionService;
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void manageAuctionsExpiration(){
         List<Auction> auctions = auctionService.findAllActiveAuctions(true);
         for(Auction auction : auctions) {

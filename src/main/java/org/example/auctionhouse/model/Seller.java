@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -25,17 +26,18 @@ public class Seller {
     private User user;
 
     @Column
-    private Integer rating;
+    private Double rating;
 
     @Column(name= "rating_count")
-    private Double ratingCount;
+    private Integer ratingCount;
 
     @OneToMany(targetEntity = Auction.class, mappedBy = "seller", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Auction> auctions;
 
     public Seller(User user) {
         this.user = user;
-        this.rating = 0;
-        this.ratingCount = 0.0;
+        this.rating = 0.0;
+        this.ratingCount = 0;
+        this.auctions = new HashSet<Auction>();
     }
 }

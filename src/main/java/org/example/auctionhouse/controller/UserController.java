@@ -32,6 +32,12 @@ public class UserController {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    ResponseEntity<User> findById(@PathVariable("id") Long id){
+        return new ResponseEntity<>(userService.findById(id).get(), HttpStatus.OK);
+    }
+
     @PostMapping("/enable")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> enableUser(@Valid @RequestBody EnableUserRequest enableRequest){

@@ -46,12 +46,17 @@ public class BidController {
         Bidder bidder = user.getBidder();
         if (bidder == null) {
             bidder = new Bidder(user);
-            bidderService.saveOrUpdate(bidder);
+            user.setBidder(bidder);
+            userService.saveOrUpdate(user);
         }
 
         Auction auction = auctionService.findById(bidRequest.getAuction_id());
 
         Bid bid = new Bid(bidder, auction, LocalDateTime.now(), bidRequest.getAmount());
+        Set<Bid> bidders_bids = bidder.getBids();
+        bidders_bids.add(bid);
+        bidder.setBids(bidders_bids);
+        bidderService.saveOrUpdate(bidder);
         bidService.saveOrUpdate(bid);
 
         Set<Bid> bids = auction.getBids();

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -27,18 +28,19 @@ public class Bidder {
     private User user;
 
     @Column
-    private Integer rating;
+    private Double rating;
 
     @Column(name= "rating_count")
-    private Double ratingCount;
+        private Integer ratingCount;
 
-    @OneToMany(targetEntity = Bid.class, mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Bid> bids;
+        @OneToMany(targetEntity = Bid.class, mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        private Set<Bid> bids;
 
     public Bidder(User user) {
-        this.user = user;
-        this.rating = 0;
-        this.ratingCount = 0.0;
+            this.user = user;
+            this.rating = 0.0;
+            this.ratingCount = 0;
+            this.bids = new HashSet<Bid>();
     }
 
 

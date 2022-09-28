@@ -112,15 +112,24 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 				Seller seller = new Seller(user2);
 				Bidder bidder = new Bidder(user2);
+				user2.setSeller(seller);
+				user2.setBidder(bidder);
 
 				Seller seller2 = new Seller(user3);
 				Bidder bidder2 = new Bidder(user3);
+
+				user3.setSeller(seller2);
+				user3.setBidder(bidder2);
 
 				sellerService.saveOrUpdate(seller);
 				bidderService.saveOrUpdate(bidder);
 
 				sellerService.saveOrUpdate(seller2);
 				bidderService.saveOrUpdate(bidder2);
+
+				userService.saveOrUpdate(user2);
+				userService.saveOrUpdate(user3);
+
 
 				Category category = new Category("Instruments");
 				Category category2_1 = new Category("Cars");
@@ -201,9 +210,19 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				Bid bid = new Bid(bidder, auction1, bidTime, 140.00);
 				bidService.saveOrUpdate(bid);
 
+				Set<Bid> bidder_bids = bidder.getBids();
+				bidder_bids.add(bid);
+				bidder.setBids(bidder_bids);
+				bidderService.saveOrUpdate(bidder);
+
 				LocalDateTime bidTime2 = LocalDateTime.parse("21-09-2022 10:13:05", formatter);
 				Bid bid2 = new Bid(bidder2, auction3, bidTime, 500.00);
 				bidService.saveOrUpdate(bid2);
+
+				Set<Bid> bidder2_bids = bidder2.getBids();
+				bidder_bids.add(bid);
+				bidder2.setBids(bidder2_bids);
+				bidderService.saveOrUpdate(bidder2);
 
 
 				Set<Bid> bids = new HashSet<Bid>();
@@ -218,6 +237,19 @@ public class AuctionhouseApplication implements CommandLineRunner {
 
 				auctionService.saveOrUpdate(auction1);
 				auctionService.saveOrUpdate(auction2);
+
+				Set<Auction> seller_auctions = seller.getAuctions();
+				seller_auctions.add(auction1);
+				seller_auctions.add(auction3);
+				seller_auctions.add(auction4);
+				seller.setAuctions(seller_auctions);
+				sellerService.saveOrUpdate(seller);
+
+				Set<Auction> seller2_auctions = seller2.getAuctions();
+				seller2_auctions.add(auction2);
+				seller2_auctions.add(auction5);
+				seller.setAuctions(seller2_auctions);
+				sellerService.saveOrUpdate(seller2);
 
 
 				Message message1 = new Message("hallo! i won an auction and would love some more info on the prize", Long.valueOf(3),Long.valueOf(2));
