@@ -75,8 +75,12 @@ export default class AdminBoard extends Component {
             })
             UserService.enable(username).then(
                 response => {
+                    var usersEdited = this.state.users;
+                    usersEdited = usersEdited.map(u => u.id !== response.id ? u : response);
+                    console.log(usersEdited);
                     this.setState({
-                        message: response.data.message,
+                        users: usersEdited,
+                        message: "User successfully enabled!",
                         successful: true
                     });
                 },
@@ -139,7 +143,7 @@ export default class AdminBoard extends Component {
                         <Button onClick={exportAuctions}> Submit</Button>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="my-3">
                     <Col md={3}>
                         {this.state.message && (
                             <div className="form-group">

@@ -248,21 +248,7 @@ export default class NewAuction extends Component {
 
 
 
-        console.log(
-            this.state.currentUser.username,
-            this.state.title,
-            this.state.description,
-            this.state.categories,
-            this.state.firstBid,
-            this.state.buyPrice,
-            this.state.endDate,
-            this.state.country,
-            this.state.city,
-            this.state.latitude,
-            this.state.longitude,
-            imageData,
-            imageNames
-        )
+
         if (this.checkBtn.context._errors.length === 0) {
             auctionService.createNewAuction(
                 this.state.currentUser.username,
@@ -280,6 +266,7 @@ export default class NewAuction extends Component {
                 imageNames
             ).then(
                 response => {
+                    console.log(response);
                     this.setState({
                         message: response.data.message,
                         successful: true
@@ -318,16 +305,6 @@ export default class NewAuction extends Component {
 
         return (!this.state.toManage2) ?
             <>
-
-                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
-                    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-                    crossOrigin="" />
-                <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
-                    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-                    crossOrigin=""></script>
-
-                <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
-
                 <div className='title'>
                     <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">

@@ -4,6 +4,7 @@ import org.example.auctionhouse.model.Auction;
 import org.example.auctionhouse.model.Bid;
 import org.example.auctionhouse.repository.AuctionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.criteria.CriteriaBuilder;

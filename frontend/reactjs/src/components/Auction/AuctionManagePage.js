@@ -6,6 +6,8 @@ import "../../css/AuctionManagePage.css"
 import ManageAuctions from './ManageAuctions';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import AuthService from "../../services/auth.service";
+import AuctionService from '../../services/auction.service';
+import Modal from 'react-bootstrap/Modal';
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -25,11 +27,13 @@ export default class AuctionManagePage extends Component {
             categories: [],
             images: [],
             toManage: false,
-            showPopup: false,
+            showEnablePopup: false,
+            showDeletePopup: false,
             redirect: null,
             userReady: false,
             currentUser: { username: "" },
-
+            message: "",
+            successful: false,
             numberOfBids: 0
 
         };
@@ -63,24 +67,115 @@ export default class AuctionManagePage extends Component {
             this.setState({ toManage: true });
         };
 
-        const handleClose = () => {
-            console.log("SHOW CLICKED");
-            this.setState({ showPopup: false });
+        const handleActivate = () => {
+            this.setState({
+                message: "",
+                successful: false
+            });
+            AuctionService.enableAuction(this.state.auction.id)
+                .then(
+                    response => {
+                        this.setState({
+                            auction: response.data,
+                            seller: response.data.seller,
+                            user: response.data.seller.user,
+                            categories: response.data.categories,
+                            images: response.data.imgUrl.split(","),
+                            numberOfBids: response.data.numberOfBids,
+                            message: "Auction successfully activated!",
+                            successful: true
+                        });
+                    },
+                    error => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+
+                        this.setState({
+                            successful: false,
+                            message: resMessage
+                        });
+                    }
+                );
         };
 
+        const handleDelete = () => {
+            this.setState({
+                message: "",
+                successful: false
+            });
+            AuctionService.deleteAuction(this.state.auction.id)
+                .then(
+                    response => {
+                        this.setState({
+                            toManage: true,
+                            message: response.data.message,
+                            successful: true
+                        });
+                    },
+                    error => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+
+                        this.setState({
+                            successful: false,
+                            message: resMessage
+                        });
+                    }
+                );
+        };
+
+        const handleEnablePopup = () => {
+            this.setState({
+                showEnablePopup: true
+            });
+        };
+
+        const handleDeletePopup = () => {
+            this.setState({
+                showDeletePopup: true
+            });
+        };
+
+        const handleClose = () => {
+            this.setState({
+                showEnablePopup: false,
+                showDeletePopup: false
+            });
+        };
         var diff;
         var diff2;
-        var days;
-        var hours;
-        var minutes;
-        var firstbid_placeholder = "> " + String(this.state.auction.firstBid)
-
-
-
 
 
         return (!this.state.toManage) ?
             <>
+                <Row className="my-3">
+                    <Col md={3}>
+                        {
+                            this.state.message && (
+                                <div className="form-group">
+                                    <div
+                                        className={
+                                            this.state.successful
+                                                ? "alert alert-success"
+                                                : "alert alert-danger"
+                                        }
+                                        role="alert"
+                                    >
+                                        {this.state.message}
+                                    </div>
+                                </div>
+                            )
+                        }
+                    </Col>
+                </Row>
                 <div className='title'>
                     <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">
@@ -89,12 +184,6 @@ export default class AuctionManagePage extends Component {
                         </div>
                     </div>
                 </div>
-                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
-                    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
-                    crossorigin="" />
-                <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
-                    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-                    crossorigin=""></script>
 
                 <Button variant="primary" className='back-button shadow' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO YOUR AUCTIONS&emsp; </Button>
 
@@ -138,14 +227,14 @@ export default class AuctionManagePage extends Component {
                                 <>
                                     <h4 className="text-success mb-4">THIS AUCTION IS ACTIVE</h4>
                                     {this.state.auction.numberOfBids == 0 ? (
-                                        <h5>There hasn't been placed a bid yet.</h5>
+                                        <p className="lead">There hasn't been placed a bid yet.</p>
 
                                     ) : (
                                         <>
-                                            <h5>There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</h5>
+                                            <p className="lead">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</p>
                                             {this.state.auction.numberOfBids == 1 ?
-                                                (<h5>The bid's value is {this.state.auction.currently} €.</h5>) :
-                                                (<h5>Highest bid so far is {this.state.auction.currently} €.</h5>)}
+                                                (<p className="lead">The bid's value is {this.state.auction.currently} €.</p>) :
+                                                (<p className="lead">Highest bid so far is {this.state.auction.currently} €.</p>)}
 
                                         </>)}</>
                             )}
@@ -156,25 +245,75 @@ export default class AuctionManagePage extends Component {
                                     <h4 className="text-danger mb-4">THIS AUCTION IS COMPLETED</h4>
                                     {this.state.auction.numberOfBids == 0 ? (
                                         <>
-                                            <h5 className="text-muted mb-2">Sadly, there were no bids in your auction.</h5>
-                                            <h5 className="text-muted"> Don't be disheartened! This happens even to the most experienced Auctioneers.</h5>
-                                            <h5 className="text-muted"> Try to auction again, at a different price, or for a longer period of time.</h5>
+                                            <p className="lead mb-2">Sadly, there were no bids in your auction.</p>
+                                            <p className="lead"> Don't be disheartened! This happens even to the most experienced Auctioneers.</p>
+                                            <p className="lead"> Try to auction again, at a different price, or for a longer period of time.</p>
                                         </>
                                     ) : (
                                         <>
-                                            <h5 className="text-muted">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</h5>
+                                            <p className="lead">There {this.state.auction.numberOfBids == 1 ? (<>has</>) : (<>have</>)} been placed {this.state.auction.numberOfBids} bid{this.state.auction.numberOfBids == 1 ? (<></>) : (<>s</>)}.</p>
                                             {this.state.auction.numberOfBids == 1 ?
-                                                (<h5 className="text-muted">The bid's value is {this.state.auction.currently} €.</h5>) :
-                                                (<h5 className="text-muted">Highest bid so far is {this.state.auction.currently} €.</h5>)}
+                                                (<p className="lead">The bid's value is {this.state.auction.currently} €.</p>) :
+                                                (<p className="lead">Highest bid so far is {this.state.auction.currently} €.</p>)}
 
                                         </>)}</>
                             )}
 
-
-
                             {!this.state.auction.active && !this.state.auction.completed && (
-                                <h3 className="text-muted text-center mb-2"> NOT STARTED</h3>
+
+                                <>
+                                    <h4 className="text-muted mb-4">THIS AUCTION HAS NOT STARTED YET</h4>
+                                    <Row>
+                                        <Col xs={9}>
+                                            <p className="lead">Before you activate the auction, make sure that everything is as you want it. After the activation you will not be able to edit or delete the auction anymore.</p>
+                                        </Col>
+                                        <Col xs={3} className="d-grid">
+                                            <Button variant="primary" className="my-2 p-0"> EDIT</Button>
+                                            <Button variant="danger" className="my-2 p-0" onClick={() => handleDeletePopup()}> DELETE</Button>
+                                            <Modal show={this.state.showDeletePopup} onHide={() => handleClose()}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>Are you sure? You are about to delete this auction. </Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={() => handleClose()}>
+                                                        Back
+                                                    </Button>
+                                                    <Button variant="danger" onClick={() => handleDelete()}>
+                                                        Delete
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
+                                        </Col>
+                                    </Row>
+                                    <hr />
+                                    <Row>
+                                        <Col xs={9}>
+                                            <p className="lead"> You should activate your auction, to make it visible to other users.</p>
+                                        </Col>
+                                        <Col xs={3} className="d-grid">
+                                            <Button variant="primary" className="my-2 p-0" onClick={() => handleEnablePopup()}> ACTIVATE </Button>
+                                            <Modal show={this.state.showEnablePopup} onHide={() => handleClose()}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>ARE YOU SURE - POPUP</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>Are you sure? After activating this auction you won't be able to edit or delete it.</Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={() => handleClose()}>
+                                                        Back
+                                                    </Button>
+                                                    <Button variant="primary" onClick={() => handleActivate()}>
+                                                        I understand, activate
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
+
+                                        </Col>
+                                    </Row>
+                                </>
                             )}
+
+
 
                         </div>
 
@@ -253,7 +392,7 @@ export default class AuctionManagePage extends Component {
             </>
             :
             <>
-                <ManageAuctions />
+                <ManageAuctions message={this.state.message} />
             </>
     }
 }
