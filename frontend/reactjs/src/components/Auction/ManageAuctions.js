@@ -6,6 +6,8 @@ import AuctionManagePage from './AuctionManagePage';
 import AuthService from "../../services/auth.service";
 import NewAuction from './NewAuction';
 import auctionService from '../../services/auction.service';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPeopleRoof} from '@fortawesome/free-solid-svg-icons';
 
 function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -151,7 +153,7 @@ export default class ManageAuctions extends Component {
                                 <div className='title'>
                                     <div className="container d-flex h-100">
                                         <div className="row justify-content-center align-self-center">
-                                            <span className='display-3'> <u>Manage Auctions</u></span>
+                                            <span className='display-3'> <u>Manage Auctions <FontAwesomeIcon icon={faPeopleRoof}/></u></span>
                                             <span className='lead'>YOUR AUCTIONS</span>
                                         </div>
                                     </div>

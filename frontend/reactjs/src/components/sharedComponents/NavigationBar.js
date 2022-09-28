@@ -4,8 +4,9 @@ import { Nav, Navbar, Container, Offcanvas, Form, Button } from 'react-bootstrap
 import { Link } from 'react-router-dom';
 
 import AuthService from "../../services/auth.service";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import '../../css/header.css';
+import { faContactCard, faHouse, faMessage, faPeopleRoof, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 
 class NavigationBar extends React.Component {
@@ -40,13 +41,14 @@ class NavigationBar extends React.Component {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                   <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <Nav.Link href="/">Home</Nav.Link>
+                    <Nav.Link href="/"><FontAwesomeIcon icon={faHouse}/>&nbsp;&nbsp;Home</Nav.Link>
                     {this.props.showAdminBoard && (
-                      <Nav.Link href="/admin">Admin Board</Nav.Link>
+                      <Nav.Link href="/admin"><FontAwesomeIcon icon={faContactCard}/>&nbsp;&nbsp;Admin Board</Nav.Link>
                     )}
-                    {this.props.currentUser ? <Nav.Link href="/manage">My Auctions</Nav.Link> : null}
+                    {this.props.currentUser ? <Nav.Link href="/manage"><FontAwesomeIcon icon={faPeopleRoof}/>&nbsp;&nbsp;My Auctions</Nav.Link> : null}
+                    {this.props.currentUser ? <Nav.Link href="/chat"><FontAwesomeIcon icon={faMessage}/>&nbsp;&nbsp;Messages</Nav.Link> : null}
                     <Nav.Link href="#"><br></br></Nav.Link>
-                    <Nav.Link href="/auctions">Browse Auctions</Nav.Link>
+                    <Nav.Link href="/auctions"><FontAwesomeIcon icon={faSearch}/>&nbsp;&nbsp;Browse Auctions </Nav.Link>
 
                   </Nav>
 

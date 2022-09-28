@@ -14,11 +14,11 @@ import java.util.Optional;
 public interface MessageRepository extends JpaRepository<Message, Long> {
     Optional<Message> findById(Long id);
 
-    final static String GET_USER_INBOX = "SELECT * FROM messages mes WHERE mes.sender_id = :id ORDER BY mes.id ";
+    final static String GET_USER_INBOX = "SELECT * FROM messages mes INNER JOIN user u ON mes.sender_id=u.id WHERE mes.receiver_id = :id AND mes.deleted=false ORDER BY mes.id DESC";
     @Query(value = GET_USER_INBOX, nativeQuery = true)
     List<Message> getUserInbox(@Param("id") Integer id);
 
-    final static String GET_USER_SENT = "SELECT * FROM messages mes WHERE mes.receiver_id = :id ORDER BY mes.id ";
+    final static String GET_USER_SENT = "SELECT * FROM messages mes WHERE mes.sender_id = :id ORDER BY mes.id DESC";
     @Query(value = GET_USER_SENT, nativeQuery = true)
     List<Message> getUserSent(@Param("id") Integer id);
 }

@@ -8,7 +8,7 @@ import AuthService from "../../services/auth.service";
 import { Form } from 'react-bootstrap';
 import auctionService from '../../services/auction.service';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationPin, faList, faDollar } from '@fortawesome/free-solid-svg-icons'
+import { faLocationPin, faList, faDollar, faContactCard, faSearch } from '@fortawesome/free-solid-svg-icons'
 import AllCategoriesList from '../sharedComponents/AllCategoriesList';
 import AllCountriesList from '../sharedComponents/AllCountriesList';
 
@@ -203,7 +203,7 @@ export default class AuctionsList extends Component {
             <div className='title'>
                 <div className="container d-flex h-100">
                     <div className="row justify-content-center align-self-center">
-                        <span className='display-3'> <u className='shadow-sm title-text-effects'>Browse Auctions</u></span>
+                        <span className='display-3'> <u className='shadow-sm title-text-effects'>Browse Auctions <FontAwesomeIcon icon={faSearch}/></u></span>
                         <span className='lead'>Find what you need!</span>
                     </div>
                 </div>
