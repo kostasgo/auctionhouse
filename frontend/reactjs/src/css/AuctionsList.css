@@ -1,67 +1,72 @@
-.search-container{
+.search-container {
     align-self: center;
-    margin-top : 0.2rem;
-    margin-bottom : 5rem;
+    margin-top: 0.2rem;
+    margin-bottom: 5rem;
 
-    
+
 }
 
-.search-input{
+.item-footer {
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-input {
     align-self: center;
-    font-size : 1.5rem;
+    font-size: 1.5rem;
     line-height: 3rem;
 }
 
-.search-button{
+.search-button {
     align-self: center;
-    font-size : 1.5rem;
+    font-size: 1.5rem;
     line-height: 3rem;
     /* -moz-text-size-adjust: auto; */
 }
 
-.userName{
+.userName {
     line-height: 0.7rem;
     width: auto;
 }
 
-.votecount{
+.votecount {
     line-height: 0.2rem;
     color: rgb(160, 160, 160);
 }
 
-.text-left{
+.text-left {
     padding: 0.5rem;
 }
 
-.title{
-    margin : 1.5rem;
+.title {
+    margin: 1.5rem;
 }
 
-.card-title{
+.card-title {
     min-height: 3rem;
     max-height: 3rem;
     text-align: center;
     justify-content: center;
 }
 
-.remaining{
+.remaining {
     min-height: 3rem;
     max-height: 3rem;
 }
 
-.cardimg{
+.cardimg {
     height: 15rem;
 }
 
-.cardbod{
+.cardbod {
     height: 15rem;
 }
 
-.title-text{
+.title-text {
     font-size: match-parent;
 }
 
-.card{
+.card {
     margin-bottom: 1rem;
 }
 
@@ -82,36 +87,37 @@
     font-size: 15px;
     transition: transform 250ms;
 }
+
 .collapsing
 
-  
-  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  .active, .collapsible:hover {
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.collapsible:hover {
     background-color: #ccc;
-  }
-  
-  /* Style the collapsible content. Note: hidden by default */
-  .content {
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
     padding: 0 18px;
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
     transition: transform 250ms;
-  }
+}
 
-.searchbutton{
+.searchbutton {
     height: auto;
 }
 
-.form-label{
+.form-label {
     margin-top: 1rem;
 }
 
-.form-bottom{
+.form-bottom {
     margin-bottom: 1rem;
 }
 
-.form-bottom2{
+.form-bottom2 {
     margin-bottom: 2.7rem;
 }
 
@@ -127,7 +133,29 @@
     background-color: #568cf0;
     color: white;
     text-align: center;
-  }
+}
 
+.btn-price {
+    position: absolute;
+}
 
-  
+.btn-price button.btn {
+    border-radius: 100%;
+    padding: 25px;
+    background: white;
+    color: #568CF0;
+    border: 2px solid #568CF0;
+    box-shadow: 0.6rem 0.6rem 2rem #A9BCDF;
+}
+
+.btn-price:hover strong {
+    font-size: 1.05rem;
+}
+
+.btn-price strong {
+    transition: font-size .4s ease-in-out;
+}
+
+.btn-price:hover button {
+    padding: 19px;
+}
