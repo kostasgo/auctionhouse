@@ -70,6 +70,7 @@ public class MessageController {
         receiver.setReceived(received);
 
         receiver.setNotify(true);
+
         userService.saveOrUpdate(receiver);
         userService.saveOrUpdate(sender);
 

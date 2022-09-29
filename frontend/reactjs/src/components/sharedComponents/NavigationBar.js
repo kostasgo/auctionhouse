@@ -7,6 +7,7 @@ import AuthService from "../../services/auth.service";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import '../../css/header.css';
 import { faBell, faBellConcierge, faBellSlash, faCircleDot, faContactCard, faDotCircle, faHouse, faMessage, faPeopleRoof, faSearch } from '@fortawesome/free-solid-svg-icons';
+import userService from '../../services/user.service';
 
 
 class NavigationBar extends React.Component {
@@ -14,7 +15,8 @@ class NavigationBar extends React.Component {
     super(props);
     this.state = {currentUser : null,
                   userReady : false,
-                  redirect : false}
+                  redirect : false,
+                  notify : false}
   }
 
 
@@ -22,11 +24,17 @@ class NavigationBar extends React.Component {
       const currentUser = AuthService.getCurrentUser();
       const guest = AuthService.getGuest();
       var activeId = -1;
+  
       if (currentUser){
-          this.setState({ currentUser: currentUser, userReady: true });
+          this.setState({ currentUser: currentUser, userReady: true});
           activeId = currentUser.id;
+          userService.getNotify(currentUser.id).then(response => response.data)
+          .then((data) => {
+            this.setState({ notify : data.notify});
+          });
       } 
       if (!guest && !currentUser) this.setState({ redirect: "/login" });
+  
   }
   render() {
 
@@ -41,7 +49,7 @@ class NavigationBar extends React.Component {
           <Navbar key={expand} bg="light" expand={expand} className="mb-3">
             <Container fluid className='shadow'>
               <Navbar.Brand href="/"><img className='logo_navbar' src={require('./../../media/logo/500x500.png')} alt="logo" /></Navbar.Brand>
-              <div className='notification'>{this.state.userReady?this.state.currentUser.notify?<div className='notification2 mx-4'><FontAwesomeIcon icon={faBell}/></div>:null : null}</div><Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`}/>
+              <div className='notification'>{this.state.userReady?this.state.notify?<div className='notification2 mx-4'><FontAwesomeIcon icon={faBell}/></div>:null : null}</div><Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`}/>
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}
                 aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
@@ -59,7 +67,7 @@ class NavigationBar extends React.Component {
                       <Nav.Link href="/admin"><FontAwesomeIcon icon={faContactCard} />&nbsp;&nbsp;Admin Board</Nav.Link>
                     )}
                     {this.props.currentUser ? <Nav.Link href="/manage"><FontAwesomeIcon icon={faPeopleRoof} />&nbsp;&nbsp;My Auctions </Nav.Link> : null}
-                    {this.props.currentUser ? <Nav.Link href="/chat" className="d-flex"><FontAwesomeIcon icon={faMessage}/>&nbsp;&nbsp;Messages {this.state.userReady?this.state.currentUser.notify?<div className='notification2 mx-4'><FontAwesomeIcon icon={faBell}/></div>:null : null}</Nav.Link> : null}
+                    {this.props.currentUser ? <Nav.Link href="/chat" className="d-flex"><FontAwesomeIcon icon={faMessage}/>&nbsp;&nbsp;Messages {this.state.userReady?this.state.notify?<div className='notification2 mx-4'><FontAwesomeIcon icon={faBell}/></div>:null : null}</Nav.Link> : null}
                     <Nav.Link href="#"><br></br></Nav.Link>
                     <Nav.Link href="/auctions"><FontAwesomeIcon icon={faSearch} />&nbsp;&nbsp;Browse Auctions </Nav.Link>
 

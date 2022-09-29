@@ -27,6 +27,9 @@ class ChatService {
         return axios.post(API_URL + "/delete" + "?id=" + id, { headers: authHeader() });
     }
 
+    sendMessage(sender, receiver, text) {
+        return axios.post(API_URL + "/new" + "?senderId=" + sender +"&receiverId=" + receiver + "&text=" + text, { headers: authHeader() });
+    }
 
     async getUsername(id) {
         return await axios.get(API_URL + "/username" + "?id=" + id)

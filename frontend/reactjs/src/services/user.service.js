@@ -13,10 +13,18 @@ class UserService {
         return axios.get(API_URL, { headers: authHeader() });
     }
 
+    getNotify(id) {
+        return axios.get(API_URL+id, { headers: authHeader() });
+    }
+
     enable(username) {
         return axios.post(API_URL + "enable", {
             username
         }, { headers: authHeader() });
+    }
+
+    disableNotify(id) {
+        return axios.post(API_URL + "disableNotify", {id}, { headers: authHeader() });
     }
 }
 

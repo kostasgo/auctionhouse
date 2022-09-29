@@ -13,8 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.Map;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/users")
 @RestController
@@ -52,6 +56,14 @@ public class UserController {
         user.setEnabled(true);
         userService.saveOrUpdate(user);
 
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/disableNotify")
+    public ResponseEntity<?> disableNotify(@Valid @NotBlank @RequestBody Map<String, Long> body){
+        User user = userService.findById(body.get("id")).get();
+        user.setNotify(false);
+        userService.saveOrUpdate(user);
         return ResponseEntity.ok(user);
     }
 }
