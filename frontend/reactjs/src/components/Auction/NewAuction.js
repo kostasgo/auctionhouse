@@ -91,6 +91,8 @@ export default class NewAuction extends Component {
             selectedFiles: [],
             selectedFileNames: [],
 
+            loading: false,
+
             toManage2: false,
             userReady: false,
             currentUser: { username: "" },
@@ -196,10 +198,7 @@ export default class NewAuction extends Component {
 
     onChange(e) {
         console.log(e)
-        // console.log(e.length)
-        // console.log(e[0])
-        // console.log(e[0].file.name)
-        // console.log(e[0].data)
+
         for (let i = 0; i < e.length; i++) {
             document.getElementById("pic" + String(i + 1)).src = (e[i].data);
             document.getElementById("pic" + String(i + 1)).name = (e[i].file.name);
@@ -228,9 +227,12 @@ export default class NewAuction extends Component {
     handleNewAuction(e) {
         e.preventDefault();
 
+
+
         this.setState({
             message: "",
-            successful: false
+            successful: false,
+            loading : true
         });
 
         this.form.validateAll();
@@ -282,10 +284,16 @@ export default class NewAuction extends Component {
 
                     this.setState({
                         successful: false,
-                        message: resMessage
+                        message: resMessage,
+                        loading : false
                     });
                 }
             );
+        }
+        else{
+            this.setState({
+                loading : false
+            });
         }
 
 
@@ -440,7 +448,7 @@ export default class NewAuction extends Component {
 
                                                 <Input
                                                     id="datefield"
-                                                    size="500"
+                                                    size="100"
                                                     type="datetime-local"
                                                     validations={[required]}
                                                     className="form-control newAuction-input"
@@ -561,7 +569,12 @@ export default class NewAuction extends Component {
 
                                             {/* SAVE BUTTON */}
                                             <div className="form-group">
-                                                <Button className="btn btn-primary btn-block" onClick={this.handleNewAuction}><FontAwesomeIcon icon={faSave} /> Create Auction</Button>
+                                                <Button className="btn btn-primary btn-block" disabled={this.state.loading} onClick={this.handleNewAuction}>
+                                                    {this.state.loading && (
+                                                    <span className="spinner-border spinner-border-sm"></span>
+                                                    )}
+                                                    <FontAwesomeIcon icon={faSave} /> Create Auction
+                                                </Button>
                                             </div>
                                         </div>
                                     )}

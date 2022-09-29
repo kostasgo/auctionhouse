@@ -167,10 +167,10 @@ public class AuctionController {
             }
         }
         auction.setImgUrl(urls);
-        Set<Auction> sellers_auctions = seller.getAuctions();
-        sellers_auctions.add(auction);
-        seller.setAuctions(sellers_auctions);
-
+//        Set<Auction> sellers_auctions = seller.getAuctions();
+//        sellers_auctions.add(auction);
+//        seller.setAuctions(sellers_auctions);
+//
         sellerService.saveOrUpdate(seller);
         auctionService.saveOrUpdate(auction);
         return ResponseEntity.ok(new MessageResponse("Auction successfully created!"));

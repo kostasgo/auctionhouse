@@ -54,7 +54,7 @@ export default class ManageAuctions extends Component {
                 .then(response => response.data)
                 .then((data) => {
                     this.setState({ auctions: data });
-                }).then(this.handleReady);
+                })
         }
         else {
             this.setState({ currentUser: "redirect" });
@@ -63,8 +63,11 @@ export default class ManageAuctions extends Component {
 
     handleReady(){
         this.setState({resultsReady:false});
-        if (this.state.pageOffset >= Math.ceil(this.state.totalResults / 3)) {
+        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 9) || Math.ceil(this.state.totalResults / 9)==1) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
+        }
+        else{
+            document.getElementById("next-page").setAttribute("class", "page-link")
         }
     }
     
@@ -80,20 +83,21 @@ export default class ManageAuctions extends Component {
     }
 
     handlePageNext() {
+        const currentUser = AuthService.getCurrentUser();
         var activeId = -1;
         if (this.state.currentUser) {
-            activeId = this.state.currentUser.id;
+            activeId = currentUser.id;
         }
 
         this.state.pageOffset++;
         document.getElementById("prev-page").setAttribute("class", "page-link");
 
 
-        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 3)) {
+        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 8)) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
         }
 
-        auctionService.getAllUserAuctions(true, activeId, this.state.pageOffset)
+        auctionService.getAllUserAuctions(activeId, this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
@@ -103,9 +107,10 @@ export default class ManageAuctions extends Component {
     }
 
     handlePagePrev() {
+        const currentUser = AuthService.getCurrentUser();
         var activeId = -1;
         if (this.state.currentUser) {
-            activeId = this.state.currentUser.id;
+            activeId = currentUser.id;
         }
 
         this.state.pageOffset--;
@@ -115,7 +120,7 @@ export default class ManageAuctions extends Component {
             document.getElementById("prev-page").setAttribute("class", "page-link disabled")
         }
 
-        auctionService.getAllUserAuctions(true, activeId, this.state.pageOffset)
+        auctionService.getAllUserAuctions(activeId, this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
@@ -127,7 +132,7 @@ export default class ManageAuctions extends Component {
     render() {
         console.log(this.state.pageOffset);
         console.log(this.state.totalResults);
-        console.log(Math.ceil(this.state.totalResults / 3));
+        console.log(Math.ceil(this.state.totalResults / 8));
     
 
         return (this.state.currentUser != "redirect" ?
@@ -175,7 +180,7 @@ export default class ManageAuctions extends Component {
                                             </a>
                                         </li>
                                         <li class="page-item"><a class="page-link active" id="active-page">1</a></li>
-                                        <p className='page-link disabled'> out of {Math.ceil(this.state.totalResults / 3) == 0 ? 1 : Math.ceil(this.state.totalResults / 3)} </p>
+                                        <p className='page-link disabled'> out of {Math.ceil(this.state.totalResults / 8) == 0 ? 1 : Math.ceil(this.state.totalResults / 8)} </p>
                                         <li class="page-item">
                                             <a class="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
                                                 <span aria-hidden="true">&raquo;</span>
@@ -185,7 +190,7 @@ export default class ManageAuctions extends Component {
                                 </nav>
                                 <Row>
                                     <Col xs={12} md={6} xl={4}>
-                                        <div onClick={this.handleToNewAuction} className="options">
+                                        <div onClick={this.handleToNewAuction} className="options auctionItem my-5">
                                             <Card key="new" background='green' style={{ objectFit: 'cover', maxHeight: '100px' }}>
                                                 <Card.Img variant="top" src="https://content.fortune.com/wp-content/uploads/2019/04/brb05.19.plus_.jpg" style={{ objectFit: 'cover', maxHeight: '250px' }} />
                                                 <Card.Body>
@@ -203,7 +208,7 @@ export default class ManageAuctions extends Component {
                                             <></>}
                                     {this.state.auctions.map((auction) => (
                                         <Col xs={12} md={6} xl={4}>
-                                            <div className="auctionItem">
+                                            <div className="auctionItem my-5">
                                                 <div className="options">
                                                     <Card key={auction.id} className="card">
                                                         <Card.Img variant="top" src={(auction.imgUrl.length != 0) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover', height: '250px' }} />

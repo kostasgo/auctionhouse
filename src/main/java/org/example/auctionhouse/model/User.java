@@ -66,6 +66,9 @@ public class User {
     @Column
     private Boolean enabled = false;
 
+    @Column
+    private Boolean notify = false;
+
     public User(String username, String name, String email, String phone, String country, String location, String password) {
         this.username = username;
         this.name = name;

@@ -28,7 +28,7 @@ class NavigationBar extends React.Component {
           <Navbar key={expand} bg="light" expand={expand} className="mb-3">
             <Container fluid className='shadow'>
               <Navbar.Brand href="/"><img className='logo_navbar' src={require('./../../media/logo/500x500.png')} alt="logo" /></Navbar.Brand>
-              <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
+              <div className='notification'>notification</div><Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`}/>
               <Navbar.Offcanvas
                 id={`offcanvasNavbar-expand-${expand}`}
                 aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}

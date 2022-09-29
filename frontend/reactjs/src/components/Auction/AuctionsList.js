@@ -113,9 +113,9 @@ export default class AuctionsList extends Component {
         this.setState({resultsReady:false });
         console.log("in handle ready")
         console.log(this.state.pageOffset)
-        console.log(Math.ceil(this.state.totalResults / 3))
+        console.log(Math.ceil(this.state.totalResults / 9))
 
-        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 3) || Math.ceil(this.state.totalResults / 3)==1) {
+        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 9) || Math.ceil(this.state.totalResults / 9)==1) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
         }
         else{
@@ -200,7 +200,7 @@ export default class AuctionsList extends Component {
         this.state.pageOffset++;
         document.getElementById("prev-page").setAttribute("class","page-link");
 
-        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 3)){
+        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 9)){
             document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
 
@@ -344,7 +344,7 @@ export default class AuctionsList extends Component {
                         </a>
                     </li>
                     <li className="page-item"><a className="page-link active" id="active-page">1</a></li>
-                    <p className='page-link disabled'> out of {Math.ceil(this.state.totalResults / 3) == 0 ? 1 : Math.ceil(this.state.totalResults / 3)} </p>
+                    <p className='page-link disabled'> out of {Math.ceil(this.state.totalResults / 9) == 0 ? 1 : Math.ceil(this.state.totalResults / 9)} </p>
                     <li className="page-item">
                         <a className="page-link" onClick={this.handlePageNext} aria-label="Next" id='next-page'>
                             <span aria-hidden="true">&raquo;</span>
@@ -362,7 +362,7 @@ export default class AuctionsList extends Component {
 
                         this.state.auctions.map((auction) => (
                             <Col key={auction.id} xs={12} md={6} xl={4}>
-                                <div className="auctionItem">
+                                <div className="auctionItem my-5">
                                     <div className="options">
                                         <Card key={auction.id} className="shadow-lg card" >
                                             <Card.Img className='cardimg' variant="top" src={(auction.imgUrl != null) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover' }} />
@@ -404,9 +404,9 @@ export default class AuctionsList extends Component {
                 }
             </Row >
             <br></br><br></br><br></br><br></br>
-            {/* <div className="footer"> */}
-                {/* <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p> */}
-            {/* </div> */}
+            <div className="footer">
+                <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p>
+            </div>
         </> 
         :
         <>

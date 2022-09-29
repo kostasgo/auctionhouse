@@ -159,13 +159,13 @@ public class AuctionhouseApplication implements CommandLineRunner {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
 				LocalDateTime started = LocalDateTime.parse("15-09-2022 10:24:46", formatter);
-				LocalDateTime ends = LocalDateTime.parse("25-09-2022 23:59:59", formatter);
+				LocalDateTime ends = LocalDateTime.parse("25-10-2022 23:59:59", formatter);
 
 				LocalDateTime started2 = LocalDateTime.parse("17-09-2022 12:20:10", formatter);
-				LocalDateTime ends2 = LocalDateTime.parse("29-09-2022 11:59:59", formatter);
+				LocalDateTime ends2 = LocalDateTime.parse("29-10-2022 11:59:59", formatter);
 
 				LocalDateTime started3 = LocalDateTime.parse("25-09-2022 10:24:46", formatter);
-				LocalDateTime ends3 = LocalDateTime.parse("27-09-2022 17:00:00", formatter);
+				LocalDateTime ends3 = LocalDateTime.parse("27-10-2022 17:00:00", formatter);
 
 				LocalDateTime started4 = LocalDateTime.parse("22-09-2022 10:24:46", formatter);
 				LocalDateTime ends4 = LocalDateTime.parse("02-10-2022 17:00:00", formatter);

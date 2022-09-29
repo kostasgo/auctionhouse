@@ -30,3 +30,9 @@ body {
 .Shoes{
     background-color: rgb(160, 244, 255);
 }
+
+.notification {
+    position: absolute;
+    right :0vw;
+    top : 58%;
+  }

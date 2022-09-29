@@ -58,9 +58,9 @@ img{ max-width:100%;}
 }
 .inbox_chat { height: 550px; overflow-y: scroll;}
 
-.active_chat{ background:#ebebeb;}
+.active_chat{ background:#bbd1f9;}
 
-
+.inactive_chat{ background:#eef4fe;}
 
 .messaging { padding: 0 0 50px 0;}
 .msg_history {

@@ -1,6 +1,7 @@
 package org.example.auctionhouse.repository;
 
 import org.example.auctionhouse.model.Message;
+import org.example.auctionhouse.payload.response.MessageResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +20,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query(value = GET_USER_INBOX, nativeQuery = true)
     List<Message> getUserInbox(@Param("id") Integer id);
 
-    final static String GET_USER_SENT = "SELECT * FROM messages mes WHERE mes.sender_id = :id ORDER BY mes.id DESC";
+    final static String GET_USER_SENT = "SELECT * FROM messages mes WHERE mes.sender_id = :id AND mes.deleted=false ORDER BY mes.id DESC";
     @Query(value = GET_USER_SENT, nativeQuery = true)
     List<Message> getUserSent(@Param("id") Integer id);
 

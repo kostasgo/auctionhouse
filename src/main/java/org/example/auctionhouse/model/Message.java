@@ -44,5 +44,7 @@ public class Message {
         this.receiverId = receiverId;
         this.time = LocalDateTime.now();
         this.deleted = false;
+
+
     }
 }

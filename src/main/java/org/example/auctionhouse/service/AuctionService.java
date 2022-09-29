@@ -3,6 +3,7 @@ package org.example.auctionhouse.service;
 import org.example.auctionhouse.model.Auction;
 import org.example.auctionhouse.model.Bid;
 import org.example.auctionhouse.model.Message;
+import org.example.auctionhouse.model.User;
 import org.example.auctionhouse.repository.AuctionRepository;
 import org.example.auctionhouse.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import java.util.Set;
 
 @Service
 public class AuctionService {
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private AuctionRepository auctionRepository;
@@ -33,7 +36,7 @@ public class AuctionService {
     }
 
     public List<Auction> searchAuctions(String search,Integer max,String category,String country,Boolean active, Integer id,Integer offset) {
-        offset*=3;
+        offset*=9;
         return auctionRepository.searchAuctions(search,max,category,country,active, id, offset);
     }
 
@@ -42,7 +45,7 @@ public class AuctionService {
     }
 
     public List<Auction> findAllUserAuctions(Integer id ,Integer offset) {
-        offset*=3;
+        offset*=8;
         return auctionRepository.findAllUserAuctions(id, offset);
     }
 
@@ -93,7 +96,8 @@ public class AuctionService {
             Long senderId, receiverId;
             String msg;
 
-            receiverId = auction.getSeller().getUser().getId();
+            User receiver = auction.getSeller().getUser();
+            receiverId = receiver.getId();
 
             if(auction.getNumberOfBids() > 0){
                 Bid winner = this.getHighestBidder(auction);
@@ -112,6 +116,9 @@ public class AuctionService {
 
             Message message = new Message(msg, senderId, receiverId);
             messageRepository.saveAndFlush(message);
+
+            receiver.setNotify(true);
+            userService.saveOrUpdate(receiver);
 
             this.saveOrUpdate(auction);
             return true;

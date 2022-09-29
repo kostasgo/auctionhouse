@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, Router } from 'react-router-dom';
 import { Container, Row, Col, Card, Button, NavItem } from 'react-bootstrap'
-import ListGroup from 'react-bootstrap/ListGroup';
-import axios from 'axios'
 import "./ChatPage.css"
 import AuthService from "../services/auth.service";
 import ChatService from "../services/chat.service";
 import { Redirect } from "react-router-dom";
-import Chat from "./sharedComponents/Chat"
-import { Link } from "react-router-dom";
-import chatService from '../services/chat.service';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Modal from 'react-bootstrap/Modal';
+import chatService from '../services/chat.service';
+import { async } from 'q';
 
 
 
@@ -34,6 +30,7 @@ export default class ChatPage extends Component {
 
             showDeletePopUp: false,
 
+            prevId : -1,
             id : -1,
             text : "",
             sender : "",
@@ -95,7 +92,7 @@ export default class ChatPage extends Component {
     }
 
     handleBack(){
-        this.setState({toMessage : false, toSent:false, toInbox:false, toChat:true , messages : []});
+        this.setState({prevId : -1 , toMessage : false, toSent:false, toInbox:false, toChat:true , messages : []});
     }
 
     handleGetMessages(){
@@ -104,13 +101,10 @@ export default class ChatPage extends Component {
 
     handleMsgClick(id, text, time, sender, receiver, username){
         console.log("in click");
-        // console.log(id) ;
-        // console.log(text);
-        // console.log(time);
-        // console.log(sender);
-        // console.log(receiver);
-        if(this.state.id!=-1)document.getElementById(this.state.id+1000).setAttribute("class", "chat_list" );
+        
+        if(this.state.prevId!=-1)document.getElementById(this.state.prevId+1000).setAttribute("class", "chat_list inactive_chat" );
         document.getElementById(id+1000).setAttribute("class", "chat_list active_chat" )
+        this.state.prevId = id;
     
         this.setState({ toMessage:true,
                         curId : id,
@@ -126,9 +120,8 @@ export default class ChatPage extends Component {
         ChatService.deleteMessage(id);
         var elem = document.getElementById(id + 1000);
         elem.parentNode.removeChild(elem);
-        elem = document.getElementById("current-message");
-        elem.parentNode.removeChild(elem);
-        this.setState({showDeletePopUp : false});
+        this.setState({ showDeletePopUp : false,
+                        toMessage : false});
         
     }
 
@@ -193,12 +186,12 @@ export default class ChatPage extends Component {
                             <div class="inbox_chat">
 
                                 {this.state.messages.map((message) => (
-                                <div onClick={()=>this.handleMsgClick(message.id, message.text, message.time, message.senderId, message.receiverId, message.username)}>
-                                    <div class="chat_list active_chat" id={message.id + 1000}>
+                                <div onClick={()=>this.handleMsgClick(message.id, message.text, message.time, message.senderId, message.receiverId)}>
+                                    <div class="chat_list" id={message.id + 1000}>
                                         <div class="chat_people">
                                             <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
                                             <div class="chat_ib">
-                                            <h5>{this.state.toInbox?<>from {message.senderId} to you</>:<>from you to {message.receiverId}</>} <span class="chat_date">{message.time.replace('T', ' ').replace('Z', '').replace(/-/g,'/')}</span></h5>
+                                            <h5>{this.state.toInbox?<>from {message.senderId} to you</>:<>from you to { String(chatService.getUsername(message.receiverId)) }</>} <span class="chat_date">{message.time.replace('T', ' ').replace('Z', '').replace(/-/g,'/')}</span></h5>
                                             <p>{message.text}</p>
                                             </div>
                                         </div>
@@ -235,7 +228,9 @@ export default class ChatPage extends Component {
                                                     </Button>
                                                 </Modal.Footer>
                                             </Modal>
+                                        {this.state.toInbox?
                                         <Button className='msginfo' variant="btn btn-success">REPLY</Button>
+                                        :null}
                                     </div>
                                     :
                                     <></>
