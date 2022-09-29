@@ -93,32 +93,41 @@ public class AuctionService {
         if (now.isAfter(ends)){
             auction.setActive(false);
             auction.setCompleted(true);
-            Long senderId, receiverId;
+            User sender;
             String msg;
 
             User receiver = auction.getSeller().getUser();
-            receiverId = receiver.getId();
 
             if(auction.getNumberOfBids() > 0){
                 Bid winner = this.getHighestBidder(auction);
-                senderId = winner.getBidder().getUser().getId();
+                sender = winner.getBidder().getUser();
                 msg = "Hello, I just won the auction " + auction.getId() + " (" + auction.getName() + ").\n" +
                         "You can contact me to arrange payment and delivery.\n" +
                         "Phone Number: "+winner.getBidder().getUser().getPhone()+"\n" +
                         "Email: "+winner.getBidder().getUser().getEmail();
             }
             else{
-                senderId = Long.valueOf(1);
+                sender = userService.findById(Long.valueOf(1)).get();
                 msg ="Sadly, there were no bids in your Auction: "+ auction.getId() + " || (" + auction.getName() + ").\n" +
                         "Don't be disheartened! This happens even to the most experienced Auctioneers.\n" +
                         "Try to auction again, at a different price, or for a longer period of time";
             }
 
-            Message message = new Message(msg, senderId, receiverId);
+            Message message = new Message(msg, sender, receiver);
             messageRepository.saveAndFlush(message);
+
+            Set<Message> sent = sender.getSent();
+            Set<Message> received = receiver.getReceived();
+
+            sent.add(message);
+            received.add(message);
+
+            sender.setSent(sent);
+            receiver.setReceived(received);
 
             receiver.setNotify(true);
             userService.saveOrUpdate(receiver);
+            userService.saveOrUpdate(sender);
 
             this.saveOrUpdate(auction);
             return true;

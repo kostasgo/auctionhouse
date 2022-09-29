@@ -33,8 +33,8 @@ public class Bidder {
     @Column(name= "rating_count")
         private Integer ratingCount;
 
-        @OneToMany(targetEntity = Bid.class, mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-        private Set<Bid> bids;
+    @OneToMany(targetEntity = Bid.class, mappedBy = "bidder", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Bid> bids;
 
     public Bidder(User user) {
             this.user = user;

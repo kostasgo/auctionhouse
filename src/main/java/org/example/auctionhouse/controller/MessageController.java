@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/v1/messages")
@@ -53,13 +54,24 @@ public class MessageController {
     @PostMapping("/new")
     ResponseEntity<?> sendMessage(@Param("senderId")Long senderId, @Param("receiverId")Long receiverId, @Param("text")String text){
 
-        Message message = new Message(text , senderId, receiverId);
+        User sender = userService.findById(senderId).get();
+        User receiver = userService.findById(receiverId).get();
+        Message message = new Message(text , sender, receiver);
         message.setTime(LocalDateTime.now());
         messageService.saveOrUpdate(message);
 
-        User receiver = userService.findById(receiverId).get();
+        Set<Message> sent = sender.getSent();
+        Set<Message> received = receiver.getReceived();
+
+        sent.add(message);
+        received.add(message);
+
+        sender.setSent(sent);
+        receiver.setReceived(received);
+
         receiver.setNotify(true);
         userService.saveOrUpdate(receiver);
+        userService.saveOrUpdate(sender);
 
         return ResponseEntity.ok(null);
     }

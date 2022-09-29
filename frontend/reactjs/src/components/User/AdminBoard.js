@@ -20,7 +20,8 @@ export default class AdminBoard extends Component {
             successful: false,
             redirect: null,
             currentUser: null,
-            allAuctions: []
+            allAuctions: [],
+            loading: false
         };
     }
 
@@ -50,14 +51,6 @@ export default class AdminBoard extends Component {
         if (!currentUser) this.setState({ redirect: "/" });
         this.setState({ currentUser: currentUser })
 
-        AuctionService.getAllAuctions()
-            .then(response => response.data)
-            .then((data) => {
-                this.setState({
-                    allAuctions: data
-                })
-                //console.log(JSON.stringify(this.state.allAuctions));
-            });
     }
 
 
@@ -110,20 +103,28 @@ export default class AdminBoard extends Component {
             );
         };
 
-        const exportAuctions = () => {
-            var e = document.getElementById("typeOptions");
-            var type = e.value;
-
+        const exportAuctions = async () => {
             this.setState({
+                loading: true,
                 successful: false,
                 message: ""
             })
+            const auctions = await AuctionService.getAllAuctions();
+
+            console.log(auctions.data);
+
+
+
+            var e = document.getElementById("typeOptions");
+            var type = e.value;
+
 
             if (type === 'JSON') {
-                const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
-                    this.state.allAuctions
-                )}`;
-                console.log(JSON.stringify(this.state.allAuctions));
+                const jsonString = `data:text/json;chatset=utf-8,
+                    ${JSON.stringify(auctions, null, 2)}
+                }`;
+                console.log(jsonString);
+
                 const link = document.createElement("a");
                 link.href = jsonString;
                 link.download = "auctions.json";
@@ -135,6 +136,10 @@ export default class AdminBoard extends Component {
                     message: "Downloaded Auctions as a JSON file"
                 })
             };
+
+            this.setState({
+                loading: false
+            })
         }
 
 
@@ -150,7 +155,10 @@ export default class AdminBoard extends Component {
                             <option value="XML">XML</option>
 
                         </select>
-                        <Button onClick={exportAuctions}> Submit</Button>
+                        <Button onClick={exportAuctions} disabled={this.state.loading}> Submit</Button>
+                        {this.state.loading && (
+                            <span className="spinner-border spinner-border-sm"></span>
+                        )}
                     </Col>
                 </Row>
                 <Row className="my-3">

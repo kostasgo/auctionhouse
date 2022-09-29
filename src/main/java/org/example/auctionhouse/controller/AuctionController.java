@@ -201,15 +201,28 @@ public class AuctionController {
 
         auctionService.saveOrUpdate(auction);
 
-        Long receiverId = auction.getSeller().getUser().getId();
-        Long senderId = user.getId();
+        User receiver = auction.getSeller().getUser();
         String msg = "Hello, I just won the auction " + auction.getId() + " (" + auction.getName() + ").\n" +
                 "You can contact me to arrange payment and delivery.\n" +
                 "Phone Number: "+user.getPhone()+"\n" +
                 "Email: "+user.getEmail();
 
-        Message message = new Message(msg, senderId, receiverId);
+        Message message = new Message(msg, user, receiver);
         messageService.saveOrUpdate(message);
+
+        Set<Message> sent = user.getSent();
+        Set<Message> received = receiver.getReceived();
+
+        sent.add(message);
+        received.add(message);
+
+        user.setSent(sent);
+        receiver.setReceived(received);
+
+        receiver.setNotify(true);
+        userService.saveOrUpdate(receiver);
+        userService.saveOrUpdate(user);
+
         return ResponseEntity.ok(auction);
     }
 

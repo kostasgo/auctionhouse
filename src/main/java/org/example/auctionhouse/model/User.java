@@ -69,6 +69,12 @@ public class User {
     @Column
     private Boolean notify = false;
 
+    @OneToMany(targetEntity = Message.class, mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Message> sent = new HashSet<>();
+
+    @OneToMany(targetEntity = Message.class, mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Message> received = new HashSet<>();
+
     public User(String username, String name, String email, String phone, String country, String location, String password) {
         this.username = username;
         this.name = name;
