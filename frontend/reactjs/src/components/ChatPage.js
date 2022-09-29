@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import chatService from '../services/chat.service';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Modal from 'react-bootstrap/Modal';
 
 
 
@@ -31,6 +32,8 @@ export default class ChatPage extends Component {
             toSent : false,
             toChat : true,
 
+            showDeletePopUp: false,
+
             id : -1,
             text : "",
             sender : "",
@@ -44,6 +47,9 @@ export default class ChatPage extends Component {
         this.handleBack = this.handleBack.bind(this);
         this.handleGetMessages = this.handleGetMessages.bind(this);
         this.handleMsgClick = this.handleMsgClick.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleDeletePopUp = this.handleDeletePopUp.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentDidMount() {
@@ -115,11 +121,39 @@ export default class ChatPage extends Component {
                         curName : username});
     }
 
+    handleDelete(id){
+        console.log("in click");
+        ChatService.deleteMessage(id);
+        var elem = document.getElementById(id + 1000);
+        elem.parentNode.removeChild(elem);
+        elem = document.getElementById("current-message");
+        elem.parentNode.removeChild(elem);
+        this.setState({showDeletePopUp : false});
+        
+    }
+
+
+    handleDeletePopUp(){
+        this.setState({
+            showDeletePopUp: true,
+        });
+    };
+
+    handleClose(){
+        this.setState({
+            showDeletePopUp: false,
+        });
+    };
+
+    
+
 
     render() {
         if (this.state.redirect) {
             return <Redirect to={this.state.redirect} />
         }
+
+        
 
 
 
@@ -178,11 +212,30 @@ export default class ChatPage extends Component {
                                 <div class="msg_history">
 
                                     {this.state.toMessage?
-                                    <div>
+                                    <div id='current-message'>
                                         <h2 className='display-6 justify-content-center msgtitle'>{this.state.curSender==this.state.currentUser.id?<>Sent to : </>:<>Sent by : </> }{this.state.curName} </h2>
                                         <h4 className='lead lh-base msginfo'>{this.state.curText}</h4>
                                         <br></br>
-                                        <div className='lead lh-base msginfo'>{this.state.curTime.replace('T', ' ').replace('Z', '').replace(/-/g,'/')}</div>
+                                        <div className='lead lh-base msginfo'>Date : {this.state.curTime.replace('T', ' ').replace('Z', '').replace(/-/g,'/')}</div>
+
+
+                                        <br></br><br></br>
+                                        <Button className='msginfo' variant="btn btn-danger" onClick={()=>this.handleDeletePopUp()}>DELETE</Button>
+                                        <Modal show={this.state.showDeletePopUp} onHide={() => this.handleClose()}>
+                                                <Modal.Header closeButton>
+                                                    <Modal.Title>ARE YOU SURE?</Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>Are you sure you want to delete this message? Action is irriversable.</Modal.Body>
+                                                <Modal.Footer>
+                                                    <Button variant="secondary" onClick={() => this.handleClose()}>
+                                                        Back
+                                                    </Button>
+                                                    <Button variant="primary" onClick={() => this.handleDelete(this.state.curId)}>
+                                                        Yes, delete
+                                                    </Button>
+                                                </Modal.Footer>
+                                            </Modal>
+                                        <Button className='msginfo' variant="btn btn-success">REPLY</Button>
                                     </div>
                                     :
                                     <></>

@@ -23,6 +23,10 @@ class ChatService {
         return axios.post(API_URL+"?id="+id+"&sent=true",{ headers: authHeader() });
     }
 
+    deleteMessage(id){
+        return axios.post(API_URL+"/delete"+"?id="+id,{ headers: authHeader() });
+    }
+
 }
 
 export default new ChatService();
