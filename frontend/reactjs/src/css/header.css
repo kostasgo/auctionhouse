@@ -33,6 +33,6 @@ body {
 
 .notification {
     position: absolute;
-    right :0vw;
-    top : 58%;
+    right : 80px;
+    top : 45%;
   }
