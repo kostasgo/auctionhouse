@@ -43,7 +43,7 @@ public class Message {
     private Boolean deleted;
 
 
-    public Message(String text, User senderId, User receiverId) {
+    public Message(String text, User sender, User receiver) {
         this.text = text;
         this.sender = sender;
         this.receiver = receiver;

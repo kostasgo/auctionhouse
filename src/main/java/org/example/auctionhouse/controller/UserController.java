@@ -27,13 +27,13 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity<Collection<User>> findAll(){
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     ResponseEntity<User> findById(@PathVariable("id") Long id){
         return new ResponseEntity<>(userService.findById(id).get(), HttpStatus.OK);
     }

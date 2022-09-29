@@ -14,6 +14,7 @@ import { async } from 'q';
 
 
 export default class ChatPage extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -21,22 +22,22 @@ export default class ChatPage extends Component {
             userReady: false,
             currentUser: { username: "" },
 
-            messages : [],
+            messages: [],
 
             toMessage: false,
-            toInbox : false,
-            toSent : false,
-            toChat : true,
+            toInbox: false,
+            toSent: false,
+            toChat: true,
 
             showDeletePopUp: false,
 
-            prevId : -1,
-            id : -1,
-            text : "",
-            sender : "",
+            prevId: -1,
+            id: -1,
+            text: "",
+            sender: "",
             receiver: "",
-            time : "",
-            name : ""
+            time: "",
+            name: ""
         };
 
         this.handleToInbox = this.handleToInbox.bind(this);
@@ -57,8 +58,8 @@ export default class ChatPage extends Component {
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
     }
 
-    handleToInbox(){
-        this.setState({toInbox:true, toChat:false});
+    handleToInbox() {
+        this.setState({ toInbox: true, toChat: false });
 
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
@@ -66,16 +67,16 @@ export default class ChatPage extends Component {
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
         ChatService.getUserInbox(currentUser.id)
-        .then(response => response.data)
-        .then((data) => {
-            console.log(data);
-            this.setState({ messages: data });
-        });
+            .then(response => response.data)
+            .then((data) => {
+                console.log(data);
+                this.setState({ messages: data });
+            });
 
     }
 
-    handleToSent(){
-        this.setState({toSent:true, toChat:false});
+    handleToSent() {
+        this.setState({ toSent: true, toChat: false });
 
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
@@ -83,62 +84,61 @@ export default class ChatPage extends Component {
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
         ChatService.getUserSent(currentUser.id)
-        .then(response => response.data)
-        .then((data) => {
-            console.log(data);
-            this.setState({ messages: data });
-        });
+            .then(response => response.data)
+            .then((data) => {
+                console.log(data);
+                this.setState({ messages: data });
+            });
 
     }
 
-    handleBack(){
-        this.setState({prevId : -1 , toMessage : false, toSent:false, toInbox:false, toChat:true , messages : []});
+    handleBack() {
+        this.setState({ prevId: -1, toMessage: false, toSent: false, toInbox: false, toChat: true, messages: [] });
     }
 
-    handleGetMessages(){
-        this.setState({toSent:false, toInbox:false, toChat:true});
+    handleGetMessages() {
+        this.setState({ toSent: false, toInbox: false, toChat: true });
     }
 
-    handleMsgClick(id, text, time, sender, receiver, username){
+    handleMsgClick(message) {
         console.log("in click");
-        
-        if(this.state.prevId!=-1)document.getElementById(this.state.prevId+1000).setAttribute("class", "chat_list inactive_chat" );
-        document.getElementById(id+1000).setAttribute("class", "chat_list active_chat" )
-        this.state.prevId = id;
-    
-        this.setState({ toMessage:true,
-                        curId : id,
-                        curText : text,
-                        curTime : time,
-                        curSender : sender,
-                        curReceiver : receiver,
-                        curName : username});
+
+        if (this.state.prevId != -1) document.getElementById(this.state.prevId + 1000).setAttribute("class", "chat_list inactive_chat");
+        document.getElementById(message.id + 1000).setAttribute("class", "chat_list active_chat")
+        this.state.prevId = message.id;
+
+        this.setState({
+            toMessage: true,
+            curMessage: message
+        });
     }
 
-    handleDelete(id){
+    handleDelete(id) {
         console.log("in click");
         ChatService.deleteMessage(id);
         var elem = document.getElementById(id + 1000);
         elem.parentNode.removeChild(elem);
-        this.setState({ showDeletePopUp : false,
-                        toMessage : false});
-        
+        this.setState({
+            showDeletePopUp: false,
+            toMessage: false
+        });
+
     }
 
 
-    handleDeletePopUp(){
+    handleDeletePopUp() {
         this.setState({
             showDeletePopUp: true,
         });
     };
 
-    handleClose(){
+    handleClose() {
         this.setState({
             showDeletePopUp: false,
         });
     };
 
-    
+
 
 
     render() {
@@ -146,13 +146,13 @@ export default class ChatPage extends Component {
             return <Redirect to={this.state.redirect} />
         }
 
-        
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 
 
-        return( 
+        return (
             <>
-            <div className='title'>
+                <div className='title'>
                     <div className="container d-flex h-100">
                         <div className="row justify-content-center align-self-center">
                             <span className='display-3'> <u>Messaging <FontAwesomeIcon icon={faMessage} /></u></span>
@@ -160,92 +160,92 @@ export default class ChatPage extends Component {
                         </div>
                     </div>
                 </div>
-            {this.state.toChat?
-            <>
+                {this.state.toChat ?
+                    <>
 
-                <div class="d-grid gap-2 col-6 mx-auto">
-                <Button type="button" variant="btn btn-outline-primary" className='btn-lg inbox-btn position-relative-start' onClick={this.handleToInbox}> INBOX </Button>
-               
-                <Button type="button" variant="btn btn-outline-primary" className='btn-lg sent-btn position-relative-end' onClick={this.handleToSent}> SENT </Button>
-                </div>
-            </>
-            :
-            <>
-    
-            <Button variant="primary" className='back-button shadow' onClick={this.handleBack}> &emsp;BACK TO BROWSING&emsp; </Button>
-                <div class="container">
-                    <h3 class=" text-center">{this.state.toInbox?<span>Inbox</span>:<span>Sent</span>}</h3>
-                    <div class="messaging">
-                        <div class="inbox_msg">
-                            <div class="inbox_people">
-                            <div class="headind_srch">
-                                <div class="recent_heading">
-                                <h4>{this.state.toInbox?<span>Inbox</span>:<span>Sent</span>} Messages</h4>
-                                </div>
-                            </div>
-                            <div class="inbox_chat">
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <Button type="button" variant="btn btn-outline-primary" className='btn-lg inbox-btn position-relative-start' onClick={this.handleToInbox}> INBOX </Button>
 
-                                {this.state.messages.map((message) => (
-                                <div onClick={()=>this.handleMsgClick(message.id, message.text, message.time, message.senderId, message.receiverId)}>
-                                    <div class="chat_list" id={message.id + 1000}>
-                                        <div class="chat_people">
-                                            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"/> </div>
-                                            <div class="chat_ib">
-                                            <h5>{this.state.toInbox?<>from {message.senderId} to you</>:<>from you to { String(chatService.getUsername(message.receiverId)) }</>} <span class="chat_date">{message.time.replace('T', ' ').replace('Z', '').replace(/-/g,'/')}</span></h5>
-                                            <p>{message.text}</p>
+                            <Button type="button" variant="btn btn-outline-primary" className='btn-lg sent-btn position-relative-end' onClick={this.handleToSent}> SENT </Button>
+                        </div>
+                    </>
+                    :
+                    <>
+
+                        <Button variant="primary" className='back-button shadow' onClick={this.handleBack}> &emsp;BACK TO BROWSING&emsp; </Button>
+                        <div class="container">
+                            <h3 class=" text-center">{this.state.toInbox ? <span>Inbox</span> : <span>Sent</span>}</h3>
+                            <div class="messaging">
+                                <div class="inbox_msg">
+                                    <div class="inbox_people">
+                                        <div class="headind_srch">
+                                            <div class="recent_heading">
+                                                <h4>{this.state.toInbox ? <span>Inbox</span> : <span>Sent</span>} Messages</h4>
                                             </div>
+                                        </div>
+                                        <div class="inbox_chat">
+
+                                            {this.state.messages.map((message) => (
+                                                <div onClick={() => this.handleMsgClick(message)}>
+                                                    <div class="chat_list" id={message.id + 1000}>
+                                                        <div class="chat_people">
+                                                            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil" /> </div>
+                                                            <div class="chat_ib">
+                                                                <h5>{this.state.toInbox ? <>from {message.sender.username} to you</> : <>from you to {message.receiver.username}</>} <span class="chat_date">{message.time.replace('T', ' ').replace('Z', '').replace(/-/g, '/')}</span></h5>
+                                                                <p>{message.text}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+
+                                        </div>
+                                    </div>
+                                    <div class="mesgs">
+                                        <div class="msg_history">
+
+                                            {this.state.toMessage ?
+                                                <div id='current-message'>
+                                                    <h2 className='display-6 justify-content-center msgtitle'>{this.state.curMessage.sender.id == this.state.currentUser.id ? <>Sent to {this.state.curMessage.receiver.username}: </> : <>Sent by : {this.state.curMessage.sender.username}</>} </h2>
+                                                    <h4 className='lead lh-base msgtext'>{this.state.curMessage.text}</h4>
+                                                    <hr />
+                                                    <div className='text-muted'>{new Date(this.state.curMessage.time).toLocaleString(options)}</div>
+
+
+                                                    <br></br><br></br>
+                                                    <Button className='mx-2' variant="btn btn-danger" onClick={() => this.handleDeletePopUp()}>DELETE</Button>
+                                                    <Modal show={this.state.showDeletePopUp} onHide={() => this.handleClose()}>
+                                                        <Modal.Header closeButton>
+                                                            <Modal.Title>ARE YOU SURE?</Modal.Title>
+                                                        </Modal.Header>
+                                                        <Modal.Body>Are you sure you want to delete this message? Action is irriversable.</Modal.Body>
+                                                        <Modal.Footer>
+                                                            <Button variant="secondary" onClick={() => this.handleClose()}>
+                                                                Back
+                                                            </Button>
+                                                            <Button variant="primary" onClick={() => this.handleDelete(this.state.curMessage.id)}>
+                                                                Yes, delete
+                                                            </Button>
+                                                        </Modal.Footer>
+                                                    </Modal>
+                                                    {this.state.toInbox ?
+                                                        <Button className='mx-2' variant="btn btn-success">REPLY</Button>
+                                                        : null}
+                                                </div>
+                                                :
+                                                <></>
+                                            }
+
+
                                         </div>
                                     </div>
                                 </div>
-                                ))}
-
                             </div>
-                            </div>
-                            <div class="mesgs">
-                                <div class="msg_history">
-
-                                    {this.state.toMessage?
-                                    <div id='current-message'>
-                                        <h2 className='display-6 justify-content-center msgtitle'>{this.state.curSender==this.state.currentUser.id?<>Sent to : </>:<>Sent by : </> }{this.state.curName} </h2>
-                                        <h4 className='lead lh-base msginfo'>{this.state.curText}</h4>
-                                        <br></br>
-                                        <div className='lead lh-base msginfo'>Date : {this.state.curTime.replace('T', ' ').replace('Z', '').replace(/-/g,'/')}</div>
-
-
-                                        <br></br><br></br>
-                                        <Button className='msginfo' variant="btn btn-danger" onClick={()=>this.handleDeletePopUp()}>DELETE</Button>
-                                        <Modal show={this.state.showDeletePopUp} onHide={() => this.handleClose()}>
-                                                <Modal.Header closeButton>
-                                                    <Modal.Title>ARE YOU SURE?</Modal.Title>
-                                                </Modal.Header>
-                                                <Modal.Body>Are you sure you want to delete this message? Action is irriversable.</Modal.Body>
-                                                <Modal.Footer>
-                                                    <Button variant="secondary" onClick={() => this.handleClose()}>
-                                                        Back
-                                                    </Button>
-                                                    <Button variant="primary" onClick={() => this.handleDelete(this.state.curId)}>
-                                                        Yes, delete
-                                                    </Button>
-                                                </Modal.Footer>
-                                            </Modal>
-                                        {this.state.toInbox?
-                                        <Button className='msginfo' variant="btn btn-success">REPLY</Button>
-                                        :null}
-                                    </div>
-                                    :
-                                    <></>
-                                    }
-                                
-
-                                </div>
-                            </div>
-                        </div>    
-                    </div>
-                </div>
-                <br></br><br></br><br></br><br></br>
+                        </div>
+                        <br></br><br></br><br></br><br></br>
+                    </>
+                }
             </>
-            }
-        </>
         )
     }
 

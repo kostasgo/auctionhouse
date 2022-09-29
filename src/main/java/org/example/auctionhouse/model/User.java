@@ -69,9 +69,11 @@ public class User {
     @Column
     private Boolean notify = false;
 
+    @JsonIgnore
     @OneToMany(targetEntity = Message.class, mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Message> sent = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(targetEntity = Message.class, mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Message> received = new HashSet<>();
 

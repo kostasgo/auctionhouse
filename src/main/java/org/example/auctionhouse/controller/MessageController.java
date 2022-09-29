@@ -35,12 +35,12 @@ public class MessageController {
         return new ResponseEntity<>(messageService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping(params={"id", "inbox"})
+    @GetMapping(params={"id", "inbox"})
     ResponseEntity<Collection<Message>> findInbox(@Param("id")Integer id){
         return new ResponseEntity<>(messageService.getUserInbox(id), HttpStatus.OK);
     }
 
-    @PostMapping(params={"id", "sent"})
+    @GetMapping(params={"id", "sent"})
     ResponseEntity<Collection<Message>> findSent(@Param("id")Integer id){
         return new ResponseEntity<>(messageService.getUserSent(id), HttpStatus.OK);
     }
