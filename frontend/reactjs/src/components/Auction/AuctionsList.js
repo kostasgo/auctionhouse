@@ -24,7 +24,7 @@ function calcDifference(dt1, dt2) {
 
 
 export default class AuctionsList extends Component {
-    constructor(props) {    
+    constructor(props) {
         super(props);
         this.state = {
             auctions: [],
@@ -35,9 +35,9 @@ export default class AuctionsList extends Component {
             resultsReady: false,
             currentUser: { username: "" },
 
-            filter1value : 100000,
-            filter2value : "",
-            filter3value : "",
+            filter1value: 100000,
+            filter2value: "",
+            filter3value: "",
             search_string: "",
 
             search_string: "",
@@ -46,7 +46,7 @@ export default class AuctionsList extends Component {
             message: props.message,
             successful: props.successful
         };
-        
+
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
@@ -65,28 +65,30 @@ export default class AuctionsList extends Component {
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
-        if (currentUser){
+        if (currentUser) {
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
-        } 
+        }
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
 
 
-        auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, true)
-        .then(response => response.data)
-        .then((data) => {
-            console.log("initial count")
-            console.log(data);
-            this.setState({ totalResults: data,
-                            resultsReady:true  })
-        })
+        auctionService.searchAuctionsCount(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, true)
+            .then(response => response.data)
+            .then((data) => {
+                console.log("initial count")
+                console.log(data);
+                this.setState({
+                    totalResults: data,
+                    resultsReady: true
+                })
+            })
 
 
-        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true, activeId, this.state.pageOffset)
-        .then(response => response.data)
-        .then((data) => {
-            this.setState({ auctions: data });
-        });
+        auctionService.searchAuctions(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, this.state.pageOffset)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({ auctions: data });
+            });
 
 
         var coll = document.getElementsByClassName("collapsible");
@@ -109,102 +111,104 @@ export default class AuctionsList extends Component {
 
 
 
-    handleReady(){
-        this.setState({resultsReady:false });
+    handleReady() {
+        this.setState({ resultsReady: false });
         console.log("in handle ready")
         console.log(this.state.pageOffset)
         console.log(Math.ceil(this.state.totalResults / 9))
 
-        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 9) || Math.ceil(this.state.totalResults / 9)==1) {
+        if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 9) || Math.ceil(this.state.totalResults / 9) == 1) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
         }
-        else{
+        else {
             document.getElementById("next-page").setAttribute("class", "page-link")
         }
     }
-    
 
 
-    handleSearch(){
+
+    handleSearch() {
         this.state.search_string = document.getElementById("search-input").value;
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
-        
-        if (currentUser){
+
+        if (currentUser) {
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
-        } 
-        auctionService.searchAuctionsCount(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,true)
-        .then(response => response.data)
-        .then((data) => {
-            console.log("after search count")
-            console.log(data);
-            this.setState({ totalResults: data,
-                            resultsReady:true });
-        });
+        }
+        auctionService.searchAuctionsCount(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, true)
+            .then(response => response.data)
+            .then((data) => {
+                console.log("after search count")
+                console.log(data);
+                this.setState({
+                    totalResults: data,
+                    resultsReady: true
+                });
+            });
 
-        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value,true,activeId,this.state.pageOffset)
-        .then(response => response.data)
-        .then((data) => {
-            this.setState({ auctions: data });
-        });
+        auctionService.searchAuctions(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, this.state.pageOffset)
+            .then(response => response.data)
+            .then((data) => {
+                this.setState({ auctions: data });
+            });
     }
 
-    handlePriceFilter(){
-        this.setState({filter1value : 50000});
+    handlePriceFilter() {
+        this.setState({ filter1value: 50000 });
         document.getElementById("price").value = this.state.filter1value;
         document.getElementById("num1").innerHTML = this.state.filter1value;
         // console.log("handler1");
     }
 
-    handleSlider(e){
+    handleSlider(e) {
         this.state.filter1value = e.target.value;
         document.getElementById("num1").innerHTML = this.state.filter1value;
         // console.log(this.state.filter1value);
     }
 
-    handleCategoryFilter(){
-        this.setState({filter2value : "%"});
+    handleCategoryFilter() {
+        this.setState({ filter2value: "%" });
         document.getElementById("category").value = null;
         // console.log("handler2")
-        
+
     }
 
-    handleCategory(e){
+    handleCategory(e) {
         this.state.filter2value = e.target.value;
         // console.log(this.state.filter2value);
     }
 
-    handleCountryFilter(){
-        this.setState({filter3value : "%"});
+    handleCountryFilter() {
+        this.setState({ filter3value: "%" });
         document.getElementById("country").value = null;
         // console.log("handler3");
     }
 
-    handleCountry(e){
+    handleCountry(e) {
         this.state.filter3value = e.target.value;
         // console.log(this.state.filter3value);
     }
 
-    handlePageNext(){
+    handlePageNext() {
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
-        
-        if (currentUser){
+
+        if (currentUser) {
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
-        } 
-
-        this.state.pageOffset++;
-        document.getElementById("prev-page").setAttribute("class","page-link");
-
-        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 9)){
-            document.getElementById("next-page").setAttribute("class","page-link disabled")
         }
 
-        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value, true, activeId, this.state.pageOffset)
+        this.state.pageOffset++;
+        document.getElementById("prev-page").setAttribute("class", "page-link");
+
+        if (this.state.pageOffset + 1 >= Math.ceil(this.state.totalResults / 9)) {
+            document.getElementById("next-page").setAttribute("class", "page-link disabled")
+        }
+
+        auctionService.searchAuctions(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
@@ -217,11 +221,11 @@ export default class AuctionsList extends Component {
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
-        
-        if (currentUser){
+
+        if (currentUser) {
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
-        } 
+        }
 
         this.state.pageOffset--;
         document.getElementById("next-page").setAttribute("class", "page-link");
@@ -230,7 +234,7 @@ export default class AuctionsList extends Component {
             document.getElementById("prev-page").setAttribute("class", "page-link disabled")
         }
 
-        auctionService.searchAuctions(this.state.search_string,this.state.filter1value,this.state.filter2value,this.state.filter3value, true, activeId, this.state.pageOffset)
+        auctionService.searchAuctions(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
                 this.setState({ auctions: data });
@@ -239,13 +243,13 @@ export default class AuctionsList extends Component {
         document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
-    handleSelect(id){
+    handleSelect(id) {
         // console.log("SELECT CLICKED");
         this.setState({ toAuction: true });
         this.setState({ auction_id: id });
     };
 
-    handleUserClick(){
+    handleUserClick() {
         // console.log("USER CLICKED");
         //  <Route path="/" element={<Navigate to="/" />} />
     };
@@ -277,7 +281,7 @@ export default class AuctionsList extends Component {
 
         return (!this.state.toAuction) ? <>
 
-            <script>{this.state.resultsReady?this.handleReady():null }</script>
+            <script>{this.state.resultsReady ? this.handleReady() : null}</script>
 
             <div className='title'>
                 <div className="container d-flex h-100">
@@ -312,20 +316,20 @@ export default class AuctionsList extends Component {
                     <Col id="filter2">
                         <Button className="shadow collapsible" variant="btn btn-warning" onClick={this.handleCategoryFilter}><FontAwesomeIcon icon={faList} /> CATEGORY</Button>
                         <div className="shadow content">
-                        <label htmlFor="category" className="form-label">Select category:</label>
-                            <select className="shadow-sm form-control form-bottom" id="category" onChange={(e)=>this.handleCategory(e)}>
-                            {/* <option key="" value="">CATEGORY</option> */}
-                            <AllCategoriesList/>
+                            <label htmlFor="category" className="form-label">Select category:</label>
+                            <select className="shadow-sm form-control form-bottom" id="category" onChange={(e) => this.handleCategory(e)}>
+                                {/* <option key="" value="">CATEGORY</option> */}
+                                <AllCategoriesList />
                             </select>
                         </div>
                     </Col>
                     <Col id="filter3">
                         <Button className="shadow collapsible" variant="btn btn-danger" onClick={this.handleCountryFilter}><FontAwesomeIcon icon={faLocationPin} /> LOCATION</Button>
                         <div className="shadow content">
-                        <label htmlFor="country" className="form-label">Select country:</label>
-                        <select className="shadow-sm form-control form-bottom" id="country" onChange={(e)=>this.handleCountry(e)}>
-                            {/* <option key="" value="">COUNTRY</option> */}
-                            <AllCountriesList/>
+                            <label htmlFor="country" className="form-label">Select country:</label>
+                            <select className="shadow-sm form-control form-bottom" id="country" onChange={(e) => this.handleCountry(e)}>
+                                {/* <option key="" value="">COUNTRY</option> */}
+                                <AllCountriesList />
                             </select>
                         </div>
                     </Col>
@@ -368,7 +372,7 @@ export default class AuctionsList extends Component {
                                             <Card.Img className='cardimg' variant="top" src={(auction.imgUrl != null) ? auction.imgUrl.split(",")[0] : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1024px-No_image_available.svg.png"} style={{ objectFit: 'cover' }} />
                                             <Card.Body className='cardbod'>
                                                 <Card.Title className="card-title"><span className='title-text'>{auction.name}</span></Card.Title>
-                                                <Card.Subtitle className="mb-2 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={this.handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
+                                                <Card.Subtitle className="mb-3 text-muted">Auctioned By: <Button variant="secondary" className='userName' onClick={this.handleUserClick} >{auction.seller.user.username}</Button> ({auction.seller.rating}/5) <span className='votecount'> {auction.seller.rating_count} votes </span> </Card.Subtitle>
                                                 {/* <Card.Text className="text-left">
                                                 {auction.description}
                                             </Card.Text> */}
@@ -376,24 +380,25 @@ export default class AuctionsList extends Component {
                                                 <ListGroup variant="flush">
                                                     {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : {moment().format("YYYY-MM-DD hh:mm:ss")} </ListGroup.Item> */}
                                                     {/* <ListGroup.Item className='mb-2 text-muted'>Current time     : { new Date().toString() } </ListGroup.Item> */}
-                                                    <ListGroup.Item key='1' className='mb-2 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
-                                                    <ListGroup.Item key='2' className='mb-2 text-muted remaining'>Time remaining&nbsp;&nbsp;: &emsp;
-                                                        {diff = Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)} days&ensp;
-                                                        {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)} hours&ensp;
-                                                        {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)} minutes
+                                                    <ListGroup.Item key='1' className='p-0 text-muted'>Ends on&emsp;&emsp;&emsp;&emsp;: &emsp;{auction.ends.replace('T', ' ').replace('Z', '')} </ListGroup.Item>
+                                                    <ListGroup.Item key='2' className='p-0 text-muted'>Time remaining&nbsp;&nbsp;: &emsp;
+                                                        {diff = Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/'))) / 1000 / 60 / 60 / 24)}d,&ensp;
+                                                        {diff2 = Math.floor(Math.abs(diff2 = new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60 / 60)}h,&ensp;
+                                                        {Math.floor(Math.abs(new Date() - new Date(auction.ends.replace('T', ' ').replace('Z', '').replace(/-/g, '/')) + (diff2 * 1000 * 60 * 60) + (diff * 1000 * 60 * 60 * 24)) / 1000 / 60)}m
                                                     </ListGroup.Item>
                                                 </ListGroup>
 
-                                                <Card.Footer>
-                                                    <Row>
-                                                        <Col id="currentbid" className="footer-mini-container"> CURRENT BID: &ensp; </Col>
-                                                        <Col id="currentbidamount"> {auction.currently} € </Col>
-                                                    </Row>
+                                                <div className="mx-5">
 
-                                                    <Row >
+                                                    <div className="footer-mini-container col  text-center my-3 font-weight-bold">
+                                                        <strong>PRICE TO BEAT</strong><br />
+                                                        <strong class="lead">{auction.currently} €</strong>
+                                                    </div>
+                                                    <Row>
                                                         <Button variant="primary" className='select-button' onClick={() => this.handleSelect(auction.id)}>SEE MORE</Button>
                                                     </Row>
-                                                </Card.Footer>
+
+                                                </div>
 
                                             </Card.Body>
                                         </Card>
@@ -407,12 +412,12 @@ export default class AuctionsList extends Component {
             <div className="footer">
                 <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p>
             </div>
-        </> 
-        :
-        <>
-            <AuctionPage data_tranfer={this.state.auction_id} />
-            <br></br><br></br><br></br><br></br>
         </>
+            :
+            <>
+                <AuctionPage data_tranfer={this.state.auction_id} />
+                <br></br><br></br><br></br><br></br>
+            </>
     }
 
 
