@@ -1,12 +1,13 @@
 package org.example.auctionhouse.repository;
 
-import org.example.auctionhouse.model.Auction;
 import org.example.auctionhouse.model.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,10 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     final static String GET_USER_SENT = "SELECT * FROM messages mes WHERE mes.sender_id = :id ORDER BY mes.id DESC";
     @Query(value = GET_USER_SENT, nativeQuery = true)
     List<Message> getUserSent(@Param("id") Integer id);
+
+    final static String DELETE_MESSAGE = "UPDATE messages mes SET mes.deleted = true WHERE mes.id = :id ";
+    @Modifying
+    @Transactional
+    @Query(value = DELETE_MESSAGE, nativeQuery = true)
+    void deleteMessage(@Param("id") Integer id);
 }

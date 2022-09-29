@@ -32,5 +32,11 @@ public class MessageController {
         return new ResponseEntity<>(messageService.getUserSent(id), HttpStatus.OK);
     }
 
+    @PostMapping("/delete")
+    ResponseEntity<?> deleteMessage(@Param("id")Integer id){
+        messageService.deleteMessage(id);
+        return ResponseEntity.ok(id);
+    }
+
 
 }

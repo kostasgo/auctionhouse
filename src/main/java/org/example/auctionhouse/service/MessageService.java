@@ -31,4 +31,10 @@ public class MessageService {
         return messageRepository.getUserSent(id);
     }
 
+
+    public Boolean deleteMessage(Integer id) {
+        messageRepository.deleteMessage(id);
+        return true;
+    }
+
 }
