@@ -1,5 +1,6 @@
 package org.example.auctionhouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +26,15 @@ public class Message {
     @Column(nullable = false)
     private String text;
 
-    @Column(nullable = false, name = "sender_id")
-    private Long senderId;
+    @ManyToOne
+    @JsonIgnoreProperties({ "sent" })
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
-    @Column(nullable = false, name = "receiver_id")
-    private Long receiverId;
+    @ManyToOne
+    @JsonIgnoreProperties({ "received" })
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
     @Column
     private LocalDateTime time;
@@ -38,10 +43,10 @@ public class Message {
     private Boolean deleted;
 
 
-    public Message(String text, Long senderId, Long receiverId) {
+    public Message(String text, User senderId, User receiverId) {
         this.text = text;
-        this.senderId = senderId;
-        this.receiverId = receiverId;
+        this.sender = sender;
+        this.receiver = receiver;
         this.time = LocalDateTime.now();
         this.deleted = false;
 
