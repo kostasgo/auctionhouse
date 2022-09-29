@@ -128,12 +128,13 @@ img {
 .msg_history {
   height: 516px;
   overflow-y: auto;
+  padding: 3rem;
 }
 
 .msgtext {
   padding: 2rem 1rem;
   background: #fff;
-  margin: 3rem 3rem;
+  margin: 3rem 0rem 2rem;
   border-radius: 0.5rem;
 }
 
