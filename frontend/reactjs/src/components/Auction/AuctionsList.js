@@ -61,11 +61,11 @@ export default class AuctionsList extends Component {
     }
 
     componentDidMount() {
-        this.handleReady();
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
         var activeId = -1;
         if (currentUser) {
+            console.log(currentUser);
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
         }
@@ -87,6 +87,7 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctions(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
+                console.log(data.length);
                 this.setState({ auctions: data });
             });
 
@@ -105,14 +106,13 @@ export default class AuctionsList extends Component {
                 }
             });
         }
-
         document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
 
 
     handleReady() {
-        this.setState({ resultsReady: false });
+        this.state.resultsReady = false;
         console.log("in handle ready")
         console.log(this.state.pageOffset)
         console.log(Math.ceil(this.state.totalResults / 9))
@@ -230,7 +230,7 @@ export default class AuctionsList extends Component {
         this.state.pageOffset--;
         document.getElementById("next-page").setAttribute("class", "page-link");
 
-        if (this.state.pageOffset - 1 <= 0) {
+        if (this.state.pageOffset - 1 < 0) {
             document.getElementById("prev-page").setAttribute("class", "page-link disabled")
         }
 

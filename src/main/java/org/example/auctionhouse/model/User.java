@@ -77,6 +77,14 @@ public class User {
     @OneToMany(targetEntity = Message.class, mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Message> received = new HashSet<>();
 
+    public User(String username, String name, String email, String password, Boolean enabled) {
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.enabled = enabled;
+    }
+
     public User(String username, String name, String email, String phone, String country, String location, String password) {
         this.username = username;
         this.name = name;

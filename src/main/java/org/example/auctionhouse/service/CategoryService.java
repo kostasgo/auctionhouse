@@ -18,6 +18,8 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public Category findByName(String name){return categoryRepository.findByName(name).orElse(null);}
+
     public Category saveOrUpdate(Category category) {
         return categoryRepository.saveAndFlush(category);
     }

@@ -2,6 +2,7 @@ package org.example.auctionhouse;
 
 import org.example.auctionhouse.enums.RoleTypes;
 import org.example.auctionhouse.model.*;
+import org.example.auctionhouse.parsing.XMLParse;
 import org.example.auctionhouse.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

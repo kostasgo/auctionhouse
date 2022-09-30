@@ -66,6 +66,7 @@ public class AuctionService {
         bids.add(bid);
 
         auction.setBids(bids);
+        auction.setNumberOfBids(auction.getNumberOfBids()+1);
 
         this.saveOrUpdate(auction);
     }
