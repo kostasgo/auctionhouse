@@ -29,6 +29,7 @@ export default class AdminBoard extends Component {
         UserService.getAdminBoard()
             .then(response => response.data)
             .then((data) => {
+                console.log(data);
                 this.setState({ users: data });
             },
                 error => {
@@ -68,7 +69,6 @@ export default class AdminBoard extends Component {
             })
             UserService.enable(username).then(
                 response => {
-                    console.log(response.data)
                     var usersEdited = this.state.users;
                     for (var i = 0, l = usersEdited.length; i < l; i++) {
                         if (usersEdited[i].id === response.data.id) {
@@ -192,6 +192,7 @@ export default class AdminBoard extends Component {
                             <th>Phone Number</th>
                             <th>Address</th>
                             <th>Country</th>
+                            <th>Role</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -212,6 +213,12 @@ export default class AdminBoard extends Component {
                                         <td>{user.phone}</td>
                                         <td>{user.location}</td>
                                         <td>{user.country}</td>
+                                        {user.roles.length > 1 ?
+                                            <td>ADMIN</td>
+                                            :
+                                            <td>USER</td>
+
+                                        }
                                         <td>
                                             {user.enabled ? (
                                                 <span className="text-success">Enabled</span>

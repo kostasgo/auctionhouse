@@ -1,17 +1,15 @@
 package org.example.auctionhouse.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -67,7 +65,7 @@ public class Auction {
     @Column(name="first_bid", nullable = false)
     private Double firstBid;
 
-    @OneToMany(targetEntity = Bid.class, mappedBy = "auction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Bid.class, mappedBy = "auction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Bid> bids;
 
     @Column
@@ -82,6 +80,10 @@ public class Auction {
     private Boolean completed = false;
 
     private Boolean boughtOut = false;
+
+    @JsonIgnore
+    @Column(name = "auction_features")
+    private Double[] auctionFeatures;
 
 
     public Auction(Seller seller, String name, String description, String country, String location, Double latitude, Double longitude, LocalDateTime starts, LocalDateTime ends, List<Category> categories, Double buyPrice, Double firstBid, String imgUrl) {
@@ -102,6 +104,13 @@ public class Auction {
         this.imgUrl = imgUrl;
         this.active = false;
         this.numberOfBids=0;
+//
+//        Random r = new Random();
+//        Double[] auctionFeatures = new Double[10];
+//        for (int j=10; j<10; j++){
+//            auctionFeatures[j] = r.nextDouble();
+//        }
+//        this.auctionFeatures=auctionFeatures;
     }
 
 }

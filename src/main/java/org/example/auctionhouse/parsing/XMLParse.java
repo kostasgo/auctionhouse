@@ -11,9 +11,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.example.auctionhouse.enums.RoleTypes;
 import org.example.auctionhouse.model.*;
+import org.example.auctionhouse.recommendations.MatrixFactorization;
+import org.example.auctionhouse.repository.UserRepository;
 import org.example.auctionhouse.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -42,6 +45,9 @@ public class XMLParse {
     private UserService userService;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private BidderService bidderService;
 
     @Autowired
@@ -52,6 +58,10 @@ public class XMLParse {
 
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Bean
+    public Integer getFeaturesNumber(){
+        return 10;
+    }
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -66,7 +76,7 @@ public class XMLParse {
             //File Path
             String filePath = "./src/main/resources/static/ebay-data/items-0.xml";
 
-            System.out.print("PARSING FILE : " + filePath +"\n");
+            System.out.print("\nPARSING FILE : " + filePath +"\n");
 
             //Read XML file.
             File inputFile = new File(filePath);
@@ -93,7 +103,7 @@ public class XMLParse {
 
             List<User> userlist = new ArrayList<>();
 
-            System.out.print("PARSING FILE : " + filePath +"\n");
+
 
             for (int i = 1; i < 11; i++) {
                     User newuser = new User("user"+i, "name"+i, "user"+i+"@gmail.com", this.passwordEncoder.encode("user"+i), true);
@@ -113,12 +123,12 @@ public class XMLParse {
 
 
 
-
+            System.out.print("FOUND " + items.getLength() +" ITEMS INSIDE FILE.\nPARSING...\n");
 
 
             //Process element list.
 //            items.getLength()
-            for (int temp = 0; temp < 20; temp++) {
+            for (int temp = 0; temp < 15; temp++) {
                 Node item = items.item(temp);
                 if (item.getNodeType() == Node.ELEMENT_NODE) {
                     Seller currentSeller = userlist.get(temp % 10).getSeller();
@@ -149,7 +159,13 @@ public class XMLParse {
                             categories.add(newCategory);
                         }
                     }
-                    System.out.print("\n");
+
+
+                    System.out.print(" "+temp);
+                    if(temp != items.getLength()) System.out.print(",");
+                    if(temp % 45 == 44) System.out.print("\n");
+
+
 
                     Double currently = Double.parseDouble( itemElement.getElementsByTagName("Currently").item(0).getTextContent().replace("$","") ) ;
 //                    System.out.print("currently : "+ currently);
@@ -228,7 +244,25 @@ public class XMLParse {
                 }
 
             }
-            System.out.print("DONE.");
+            System.out.print("\nDONE.\n");
+
+
+            List<Auction> allAuctions = auctionService.findAll();
+            List<User> allUsers = userRepository.findAll();
+            System.out.print("BUILDING RECOMMENDATIONS ARRAY\n\n");
+            Double[][] recommendationArray = auctionService.createRecommendationArray(allAuctions, allUsers);
+
+            MatrixFactorization clf = new MatrixFactorization(auctionService, userService,getFeaturesNumber(), recommendationArray);
+
+            User user = allUsers.get(allUsers.size()-1);
+
+
+
+            clf.train(allAuctions, allUsers, 100000, 0.00001, 0.001, 1000, 0.001);
+
+            List<Auction> recommendations = auctionService.getUserRecommendations(user);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -10,8 +10,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Table(name = "user")
 @Entity
@@ -77,6 +76,10 @@ public class User {
     @OneToMany(targetEntity = Message.class, mappedBy = "receiver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Message> received = new HashSet<>();
 
+    @JsonIgnore
+    @Column(name = "user_features")
+    private Double[] userFeatures;
+
     public User(String username, String name, String email, String password, Boolean enabled) {
         this.username = username;
         this.name = name;
@@ -93,5 +96,6 @@ public class User {
         this.country = country;
         this.location = location;
         this.password = password;
+
     }
 }

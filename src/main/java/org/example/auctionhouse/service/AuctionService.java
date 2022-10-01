@@ -6,6 +6,7 @@ import org.example.auctionhouse.model.Message;
 import org.example.auctionhouse.model.User;
 import org.example.auctionhouse.repository.AuctionRepository;
 import org.example.auctionhouse.repository.MessageRepository;
+import org.example.auctionhouse.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,18 @@ import org.springframework.stereotype.Service;
 import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Service
 public class AuctionService {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private AuctionRepository auctionRepository;
@@ -137,5 +143,110 @@ public class AuctionService {
 
     }
 
+    public Double[][] getAllAuctionFeatures(List<Auction> auctions, Integer features){
 
+        Double[][] allAuctionFeatures = new Double[auctions.size()][features];
+
+        int i =0;
+        for (Auction auction : auctions){
+            Double[] auctionFeatures = auction.getAuctionFeatures();
+            if(auctionFeatures == null){
+                Random r = new Random();
+                auctionFeatures = new Double[features];
+                for (int j=0; j<features; j++){
+                    auctionFeatures[j] = r.nextDouble();
+                }
+                auction.setAuctionFeatures(auctionFeatures);
+                this.saveOrUpdate(auction);
+            }
+            allAuctionFeatures[i] = auctionFeatures;
+            i++;
+        }
+
+        return allAuctionFeatures;
+    }
+
+    public Double[][] createRecommendationArray(List<Auction> auctions, List<User> users) {
+
+        Double[][] recommendationArray = new Double[users.size()][auctions.size()];
+
+        for (int i = 0; i<users.size(); i++){
+            for (int j=0; j<auctions.size(); j++){
+                recommendationArray[i][j] = 0.0;
+            }
+        }
+
+        for (Auction auction : auctions){
+            Set<Bid> bids = auction.getBids();
+            int auctionId = Math.toIntExact(auction.getId() -1);
+            for (Bid bid : bids){
+                int bidderId = Math.toIntExact(bid.getBidder().getUser().getId() - 1);
+                recommendationArray[bidderId][auctionId]++;
+            }
+
+
+        }
+        return recommendationArray;
+    }
+
+    public List<Auction> getUserRecommendations(User user){
+        List<Auction> allAuctions = findAllActiveAuctions(true);
+
+        Double[] userFeatures = user.getUserFeatures();
+
+        Double[][] allAuctionFeatures = getAllAuctionFeatures(allAuctions, userFeatures.length);
+
+        Double[] predictionRow = new Double[allAuctions.size()];
+
+        for (int i =0 ; i<allAuctionFeatures.length; i++){
+            predictionRow[i]=0.0;
+            for (int j=0; j<userFeatures.length;j++){
+                predictionRow[i]+= userFeatures[j] * allAuctionFeatures[i][j];
+            }
+        }
+        Double[] bestResults = new Double[5];
+        Integer[] bestIndexes = new Integer[5];
+
+        Double smallest= predictionRow[0];
+        Integer smallest_index=0;
+
+        for(int i=0; i<allAuctionFeatures.length; i++){
+            if(i<5) {
+                if(predictionRow[i]<smallest){
+                    smallest=predictionRow[i];
+                    smallest_index=i;
+                }
+                bestResults[i] = predictionRow[i];
+                bestIndexes[i] = i;
+            }
+            else{
+                if (predictionRow[i] > smallest){
+                    bestResults[smallest_index] = predictionRow[i];
+                    bestIndexes[smallest_index]=i;
+                    smallest= predictionRow[i];
+                    for(int j=0; j<5; j++){
+                        if (bestResults[j] < smallest){
+                            smallest= bestResults[j];
+                            smallest_index = j;
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.print("BEST RESULTS OF USER '"+ user.getUsername() +"' ARE:\n\n");
+        for (int i=0; i<5; i++){
+            System.out.printf("%,.2f ", bestResults[i] );
+        }
+
+        List<Auction> recommendations = new ArrayList<>();
+        for (int i=0; i<5; i++){
+            recommendations.add(allAuctions.get(bestIndexes[i]));
+        }
+        System.out.print("AUCTION NAMES OF BEST RESULTS:\n\n");
+        for(Auction auction : recommendations){
+            System.out.print(auction.getName() + "\n");
+        }
+        return recommendations;
+    }
 }
