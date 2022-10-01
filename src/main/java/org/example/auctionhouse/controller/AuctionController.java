@@ -1,7 +1,9 @@
 package org.example.auctionhouse.controller;
 
+import org.apache.tomcat.jni.Local;
 import org.example.auctionhouse.model.*;
 import org.example.auctionhouse.payload.request.AuctionRequest;
+import org.example.auctionhouse.payload.request.AuctionUpdateRequest;
 import org.example.auctionhouse.payload.request.BuyOutRequest;
 import org.example.auctionhouse.payload.request.EnableUserRequest;
 import org.example.auctionhouse.payload.response.MessageResponse;
@@ -174,6 +176,36 @@ public class AuctionController {
         sellerService.saveOrUpdate(seller);
         auctionService.saveOrUpdate(auction);
         return ResponseEntity.ok(new MessageResponse("Auction successfully created!"));
+    }
+
+
+    @PostMapping("/update_auction")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> updateAuction(@Valid @RequestBody AuctionUpdateRequest auctionUpdateRequest ){
+        Auction auction = auctionService.findById(auctionUpdateRequest.getId());
+
+        Set<String> strCategories = auctionUpdateRequest.getCategories();
+        List<Category> categories = new ArrayList<>();
+
+        strCategories.forEach(category -> {
+            Category cat = categoryRepository.findByName(category)
+                    .orElseThrow(() -> new RuntimeException("Error: Category is not found."));
+            if(cat!=null) categories.add(cat);
+        });
+        auction.setCategories(categories);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime ends = LocalDateTime.parse(auctionUpdateRequest.getEnds(), formatter);
+
+        auction.setFirstBid(auctionUpdateRequest.getFirstBid());
+        auction.setBuyPrice(auctionUpdateRequest.getBuyPrice());
+        auction.setName(auctionUpdateRequest.getName());
+        auction.setDescription(auctionUpdateRequest.getDescription());
+        auction.setLocation(auctionUpdateRequest.getLocation());
+
+
+        auctionService.saveOrUpdate(auction);
+        return ResponseEntity.ok(new MessageResponse("Auction successfully updated!"));
     }
 
     @PostMapping("/enable")

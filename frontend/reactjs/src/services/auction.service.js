@@ -22,6 +22,19 @@ class AuctionService {
             },{ headers: authHeader() });
         }
 
+        updateAuction(id, name, description, categories, firstBid, buyPrice, ends, location) {
+            return axios.post(API_URL+"/update_auction", {
+                id,
+                name,
+                description,
+                categories,
+                firstBid,
+                buyPrice,
+                ends,
+                location,
+                },{ headers: authHeader() });
+            }
+
     enableAuction(auction_id) {
         return axios.post(API_URL + "/enable", {
             auction_id

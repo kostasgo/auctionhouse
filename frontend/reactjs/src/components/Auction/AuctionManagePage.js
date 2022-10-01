@@ -8,6 +8,13 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import AuthService from "../../services/auth.service";
 import AuctionService from '../../services/auction.service';
 import Modal from 'react-bootstrap/Modal';
+import { InputGroup } from "react-bootstrap";
+import Input from "react-validation/build/input";
+import Form from "react-validation/build/form";
+import AllCategoriesList from '../sharedComponents/AllCategoriesList';
+import auctionService from '../../services/auction.service';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -34,7 +41,9 @@ export default class AuctionManagePage extends Component {
             currentUser: { username: "" },
             message: "",
             successful: false,
-            numberOfBids: 0
+            numberOfBids: 0,
+            editMode : false,
+            cur_categories : []
 
         };
     }
@@ -51,8 +60,25 @@ export default class AuctionManagePage extends Component {
                     , categories: data.categories
                     , images: data.imgUrl.split(",")
                     , numberOfBids: data.numberOfBids
+
+                    ,cur_title : data.name
+                    ,cur_description  : data.description
+                    ,cur_firstBid  : data.firstBid
+                    ,cur_buyPrice  : data.buyPrice
+                    ,cur_ends  : data.ends.replace('T', ' ')
+                    ,cur_categories  : []
+                    ,cur_location : data.location
+                    
                 });
+
+                for (let j = 0; j < data.categories.length; j++) {
+                    this.state.cur_categories.push(data.categories[j].name);
+                    console.log(data.categories[j].name);
+                }
+
+
             });
+            
 
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
@@ -150,12 +176,112 @@ export default class AuctionManagePage extends Component {
                 showDeletePopup: false
             });
         };
+
+
+        const handleEdit = () => {
+            console.log("in handleedit")
+            this.setState({
+                editMode: true
+            });
+        };
+
+        const handleEditBack = () => {
+            console.log("in handleedit")
+            this.setState({
+                editMode: false
+            });
+        };
+
+
+        const handleTitle = (e) => {
+            this.setState({ cur_title : e.target.value });
+        };
+
+        const handleDescription = (e) => {
+            this.setState({ cur_description : e.target.value });
+        };
+
+        const handlefirstBid = (e) => {
+            this.setState({ cur_firstBid : e.target.value });
+        };
+
+        const handleends = (e) => {
+            this.setState({ cur_ends : e.target.value.replace('T', ' ') });
+        };
+
+        const handlebuyPrice = (e) => {
+            this.setState({ cur_buyPrice : e.target.value });
+        };
+
+        const handlelocation = (e) => {
+            this.setState({ cur_location : e.target.value });
+        };
+
+        const handlecategories = (e) => {
+            // console.log(e.target.selectedOptions);
+            this.state.cur_categories = [];
+            for (let j = 0; j < e.target.selectedOptions.length; j++) {
+                this.state.cur_categories.push(e.target.selectedOptions[j].value);
+                console.log(e.target.selectedOptions[j].value);
+            }
+            console.log(this.state.cur_categories);
+        };
+
+
+        const handleUpdate = () => {
+            this.setState({
+                message: "",
+                successful: false
+            });
+            auctionService.updateAuction(
+                this.state.auction.id,
+                this.state.cur_title,
+                this.state.cur_description,
+                this.state.cur_categories,
+                this.state.cur_firstBid,
+                this.state.cur_buyPrice,
+                this.state.cur_ends,
+                this.state.cur_location,
+            ).then(
+                response => {
+                    toast.success('Auction successfully edited', {
+                        position: toast.POSITION.TOP_CENTER
+                      });
+                    // console.log(response);
+                    this.setState({
+                        message: response.data.message,
+                        successful: true,
+                        editMode: false,
+                        toManage : true
+                    });
+                },
+                error => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+
+                    this.setState({
+                        successful: false,
+                        message: resMessage,
+                        loading : false,
+                        toManage : true
+                    });
+                }
+            );
+        };
+
         var diff;
         var diff2;
 
 
         return (!this.state.toManage) ?
             <>
+            <ToastContainer />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.min.js"></script>
                 <Row className="my-3">
                     <Col md={3}>
                         {
@@ -184,8 +310,9 @@ export default class AuctionManagePage extends Component {
                         </div>
                     </div>
                 </div>
-
+                <ToastContainer />
                 <Button variant="primary" className='back-button shadow' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO YOUR AUCTIONS&emsp; </Button>
+
 
                 <Row className="my-4">
                     <Col xs={12} md={6} className='carousel-info-container mt-0' >
@@ -206,11 +333,23 @@ export default class AuctionManagePage extends Component {
                         </Carousel>
                     </Col>
                     <Col xs={12} md={6}>
-                        <div className='display-6 mb-3'>{this.state.auction.name}</div>
+                        {!this.state.editMode?
+                        <>
+                            <div className='display-6 mb-3' > {this.state.auction.name} </div>
+                        </>
+                        :
+                        <>  
+                        <div class="mb-3">
+                            <label for="title-input" class="form-label">Auction Title</label>
+                            <input type="text" class="form-control" id="title-input" aria-describedby="Title" value={this.state.cur_title} onChange={handleTitle}/>
+                            <div id="emailHelp" class="form-text">This will help users find your auction.</div>
+                        </div>
+                        </>
+                         }
 
 
                         <div className='align-items-center d-flex'> Auctioned by :
-                            <Button variant='secondary' className='user-button'>{this.state.user.username}</Button>
+                            <Button variant='secondary' className='user-button' >{this.state.user.username}</Button>
                             <div className='rating-text'>
                                 <span className='lead' > Seller Rating : {this.state.seller.rating} / 5 <span className='votecount'> ( {this.state.seller.rating_count} votes ) </span>
                                 </span>
@@ -219,11 +358,24 @@ export default class AuctionManagePage extends Component {
 
                         <p className="desc"><u>DESCRIPTION</u></p>
 
-                        <p className='lead'>{this.state.auction.description}</p>
+
+                        {!this.state.editMode?
+                        <>
+                            <p className='lead'>{this.state.auction.description}</p>
+                        </>
+                        :
+                        <>  
+                        <div class="mb-3">
+                            <label for="description-input" class="form-label">Auction Description</label>
+                            <input type="text" class="form-control" id="description-input" aria-describedby="Description" value={this.state.cur_description} onChange={handleDescription}/>
+                            <div id="emailHelp" class="form-text"></div>
+                        </div>
+                        </>
+                         }
                         <hr />
+                        {!this.state.editMode?
                         <div class="mt-3">
                             {this.state.auction.active && (
-
                                 <>
                                     <h4 className="text-success mb-4">THIS AUCTION IS ACTIVE</h4>
                                     {this.state.auction.numberOfBids == 0 ? (
@@ -272,7 +424,7 @@ export default class AuctionManagePage extends Component {
                                             <p className="lead">Before you activate the auction, make sure that everything is as you want it. After the activation you will not be able to edit or delete the auction anymore.</p>
                                         </Col>
                                         <Col xs={3} className="d-grid">
-                                            <Button variant="primary" className="my-2 p-0"> EDIT</Button>
+                                            <Button variant="primary" className="my-2 p-0" onClick={() => handleEdit()}> EDIT</Button>
                                             <Button variant="danger" className="my-2 p-0" onClick={() => handleDeletePopup()}> DELETE</Button>
                                             <Modal show={this.state.showDeletePopup} onHide={() => handleClose()}>
                                                 <Modal.Header closeButton>
@@ -291,6 +443,7 @@ export default class AuctionManagePage extends Component {
                                         </Col>
                                     </Row>
                                     <hr />
+
                                     <Row>
                                         <Col xs={9}>
                                             <p className="lead"> You should activate your auction, to make it visible to other users.</p>
@@ -320,6 +473,11 @@ export default class AuctionManagePage extends Component {
 
 
                         </div>
+                        : 
+                        <>
+                            <Button variant="primary" className="my-2 p-4" onClick={() => handleEditBack()}> BACK TO VIEW MODE</Button>
+                            <Button variant="btn btn-success" className="my-2 p-4 mx-4" onClick={() => handleUpdate()}> SAVE CHANGES</Button>
+                        </>}
 
 
 
@@ -332,40 +490,111 @@ export default class AuctionManagePage extends Component {
                             <tbody>
                                 <tr>
                                     <th scope="row">Starting Price</th>
-                                    <td>{String(this.state.auction.firstBid) + " €"}</td>
+                                    {!this.state.editMode?
+                                    <>
+                                        <td>{String(this.state.auction.firstBid) + " €"}</td>
+                                    </>
+                                    :
+                                    <>  
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="firstbid-input" aria-describedby="FirstBid" value={this.state.cur_firstBid}  onChange={handlefirstBid}/>
+                                    </div>
+                                    </>
+                                    }
                                 </tr>
                                 <tr>
                                     <th scope="row">Amount to buy out</th>
-                                    <td>{String(this.state.auction.buyPrice) + " €"}</td>
+                                    {!this.state.editMode?
+                                    <>
+                                        <td>{String(this.state.auction.buyPrice) + " €"}</td>
+                                    </>
+                                    :
+                                    <>  
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="firstbid-input" aria-describedby="FirstBid" value={this.state.cur_buyPrice}  onChange={handlebuyPrice}/>
+                                    </div>
+                                    </>
+                                    }
                                 </tr>
-                                <tr>
-                                    <th scope="row">Total bids</th>
-                                    <td>{this.state.numberOfBids}</td>
-                                </tr>
-                                {(this.state.auction.active || this.state.auction.completed) && (
-                                    <tr>
-                                        <th scope="row">Highest bid</th>
-                                        <td>{this.state.auction.boughtOut ? (<>BOUGHT OUT</>) : (<>{String(this.state.auction.currently) + " €"}</>)}</td>
-                                    </tr>
-                                )}
+                                {!this.state.editMode?
+                                    <>
+                                        <tr>
+                                            <th scope="row">Total bids</th>
+                                            <td>{this.state.numberOfBids}</td>
+                                        </tr>
+                                        {(this.state.auction.active || this.state.auction.completed) && (
+                                        <tr>
+                                            <th scope="row">Highest bid</th>
+                                            <td>{this.state.auction.boughtOut ? (<>BOUGHT OUT</>) : (<>{String(this.state.auction.currently) + " €"}</>)}</td>
+                                        </tr>
+                                        )}
+                                    </>
+                                    :
+                                    null
+                                }
 
                                 <tr>
                                     <th scope="row">Categories</th>
-                                    <td><div className="d-flex">{this.state.categories.map((category) => (
+                                    {!this.state.editMode?
+                                    <>
+                                        <td><div className="d-flex">{this.state.categories.map((category) => (
 
                                         <div className={`category ${category.name}`}>&nbsp;{category.name}&nbsp;</div>
 
-                                    ))}</div></td>
+                                        ))}</div></td>
+                                    </>
+                                    :
+                                    <>  
+                                    <div class="mb-3">
+                                        <select multiple className="form-select" id="categories-input" aria-describedby="categories" onChange={handlecategories}>
+                                            <AllCategoriesList/>
+                                        </select>
+                                    </div>
+                                    </>
+                                    }
+                                    
                                 </tr>
                                 <tr>
                                     <th scope="row">Location</th>
-                                    <td>{String(this.state.auction.location)}</td>
+
+                                    {!this.state.editMode?
+                                    <>
+                                        <td>{String(this.state.auction.location)}</td>
+                                    </>
+                                    :
+                                    <>  
+                                    <div class="mb-3">
+                                        <input type="text" class="form-control" id="location-input" aria-describedby="Location" value={this.state.cur_location}  onChange={handlelocation}/>
+                                    </div>
+                                    </>}
+                                    
+                
                                 </tr>
                                 <tr>
                                     <th scope="row">Ends on</th>
-                                    <td>{String(this.state.auction.ends).replace('T', ' ')}</td>
+                                    {!this.state.editMode?
+                                    <>
+                                        <td>{String(this.state.auction.ends).replace('T', ' ')}</td>
+                                    </>
+                                    :
+                                    <>  
+                                    <div class="mb-3">
+                                            <input
+                                                id="datefield"
+                                                size="100"
+                                                type="datetime-local"
+                                                className="form-control newAuction-input"
+                                                name="endDate"
+                                                onChange={handleends}
+                                                value={this.state.cur_ends}
+                                            />
+                                    </div>
+                                    </>
+                                    }
                                 </tr>
-                                <tr>
+                                {!this.state.editMode?
+                                <>
+                                    <tr>
                                     <th scope="row">Time remaining</th>
                                     <td>{this.state.auction.completed ?
                                         (<>AUCTION COMPLETED</>) :
@@ -376,6 +605,11 @@ export default class AuctionManagePage extends Component {
 
                                     </td>
                                 </tr>
+                                </>
+                                :
+                                null
+                                }
+                            
                             </tbody>
                         </Table>
                     </Col>
