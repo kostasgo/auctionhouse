@@ -243,7 +243,7 @@ public class AuctionService {
         for (int i=0; i<5; i++){
             recommendations.add(allAuctions.get(bestIndexes[i]));
         }
-        System.out.print("AUCTION NAMES OF BEST RESULTS:\n\n");
+        System.out.print("\n\nAUCTION NAMES OF BEST RESULTS:\n\n");
         for(Auction auction : recommendations){
             System.out.print(auction.getName() + "\n");
         }

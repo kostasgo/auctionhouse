@@ -244,7 +244,7 @@ public class XMLParse {
                 }
 
             }
-            System.out.print("\nDONE.\n");
+            System.out.print("\nDONE.\n\n");
 
 
             List<Auction> allAuctions = auctionService.findAll();
