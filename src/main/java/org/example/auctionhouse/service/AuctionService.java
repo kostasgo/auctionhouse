@@ -126,8 +126,8 @@ public class AuctionService {
             Set<Message> sent = sender.getSent();
             Set<Message> received = receiver.getReceived();
 
-            sent.add(message);
-            received.add(message);
+            //sent.add(message);
+            //received.add(message);
 
             sender.setSent(sent);
             receiver.setReceived(received);
