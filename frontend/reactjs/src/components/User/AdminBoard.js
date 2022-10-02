@@ -8,6 +8,8 @@ import EventBus from '../../common/EventBus';
 
 import { Redirect } from 'react-router-dom';
 
+import exportFromJSON from 'export-from-json';
+
 
 export default class AdminBoard extends Component {
 
@@ -121,7 +123,7 @@ export default class AdminBoard extends Component {
 
             if (type === 'JSON') {
                 const jsonString = `data:text/json;chatset=utf-8,
-                    ${JSON.stringify(auctions, null, 2)}
+                    ${JSON.stringify(auctions.data, null, 2)}
                 }`;
                 console.log(jsonString);
 
@@ -135,7 +137,100 @@ export default class AdminBoard extends Component {
                     successful: true,
                     message: "Downloaded Auctions as a JSON file"
                 })
-            };
+            }
+            else {
+                console.log(JSON.stringify(auctions))
+                var xml = '<Items>';
+                auctions.data.forEach(
+                    (auction) => {
+                        xml += '<Item ItemId="' + auction.id + '">\n';
+                        xml += '<Name>';
+                        xml += '<![CDATA[' + auction.name + ']]>';
+                        xml += '</Name>\n';
+                        auction.categories.forEach(
+                            (category) => {
+                                xml += '<Category>';
+                                xml += '<![CDATA[' + category.name + ']]>';
+
+                                xml += '</Category>\n';
+                            }
+                        )
+                        xml += '<Currently>';
+                        xml += '$' + auction.currently;
+                        xml += '</Currently>\n';
+                        xml += '<Buy_Price>';
+                        xml += '$' + auction.buyPrice;
+                        xml += '</Buy_Price>\n';
+                        xml += '<First_Bid>';
+                        xml += '$' + auction.firstBid;
+                        xml += '</First_Bid>\n';
+                        xml += '<Number_of_Bids>';
+                        xml += auction.numberOfBids;
+                        xml += '</Number_of_Bids>\n';
+                        if (auction.numberOfBids == 0) {
+                            xml += '<Bids/>\n';
+                        }
+                        else {
+                            xml += '<Bids>';
+                            auction.bids.forEach(
+                                (bid) => {
+                                    xml += '<Bid>';
+                                    xml += '<Bidder Rating="' + bid.bidder.rating + '" UserId="' + bid.bidder.user.username + '">\n';
+                                    xml += '<Location>';
+                                    xml += bid.bidder.user.location;
+                                    xml += '</Location>\n';
+                                    xml += '<Country>';
+                                    xml += bid.bidder.user.country;
+                                    xml += '</Country>\n';
+                                    xml += '<Time>';
+                                    xml += '<![CDATA[' + auction.time + ']]>';
+                                    xml += '</Time>\n';
+                                    xml += '</Bidder>\n';
+                                    xml += '<Amount>';
+                                    xml += '$' + auction.amount;
+                                    xml += '</Amount>\n';
+                                    xml += '</Bid>\n';
+                                }
+                            )
+                            xml += '</Bids>\n';
+                        }
+                        xml += '<Location' + ((auction.longitude && auction.latitude) ? ' Latitude="' + auction.latitude + '" Longitude="' + auction.longitude + '"' : '') + '>';
+                        xml += '<![CDATA[' + auction.location + ']]>';
+                        xml += '</Location>\n';
+                        xml += '<Country>';
+                        xml += auction.country;
+                        xml += '</Country>\n';
+                        xml += '<Started>';
+                        xml += '<![CDATA[' + auction.started + ']]>';
+                        xml += '</Started>\n';
+                        xml += '<Ends>';
+                        xml += '<![CDATA[' + auction.ends + ']]>';
+                        xml += '</Ends>\n';
+                        xml += '<Seller Rating="' + auction.seller.rating + '" UserId="' + auction.seller.user.username + '"/>';
+                        xml += '<Description>';
+                        xml += '<![CDATA[' + auction.description + ']]>';
+                        xml += '</Description>\n';
+                        xml += '</Item>\n';
+                    }
+                )
+                xml += '</Items>'
+
+                const xmlStr = ('data:Application/octet-stream,' + encodeURIComponent(xml));
+                const link = document.createElement("a");
+                link.href = xmlStr;
+                link.download = "auctions.xml";
+                link.click();
+
+                this.setState({
+                    successful: true,
+                    message: "Downloaded Auctions as an XML file"
+                })
+                //const data = auctions;   //dataForXml
+                //const fileName = "auctions";
+                //let fields = [];  //fieldsAsObjects or fieldsAsStrings, empty list means "use all"
+                //const exportType = 'xml';
+                //exportFromJSON({ data, fileName, fields, exportType });
+            }
 
             this.setState({
                 loading: false
