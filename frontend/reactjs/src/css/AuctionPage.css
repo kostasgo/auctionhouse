@@ -94,3 +94,11 @@
     min-height: auto;
     max-height: auto;
 }
+
+#recommended .row {
+    overflow-x: scroll;
+    flex-wrap: nowrap !important;
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+}

@@ -8,8 +8,6 @@ import EventBus from '../../common/EventBus';
 
 import { Redirect } from 'react-router-dom';
 
-import exportFromJSON from 'export-from-json';
-
 
 export default class AdminBoard extends Component {
 

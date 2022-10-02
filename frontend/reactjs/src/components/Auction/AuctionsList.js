@@ -401,9 +401,7 @@ export default class AuctionsList extends Component {
                 }
             </Row >
             <br></br><br></br><br></br><br></br>
-            <div className="footer">
-                <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p>
-            </div>
+
         </>
         )
     }

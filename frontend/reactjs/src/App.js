@@ -64,7 +64,7 @@ class App extends Component {
     return (
       <div>
         <NavigationBar currentUser={this.state.currentUser} showAdminBoard={this.state.showAdminBoard} />
-        <Container>
+        <Container className="main-body">
           <Switch>
             <Route exact path="/" component={HomePage} />
             <Route exact path="/login" component={Login} />
@@ -72,13 +72,16 @@ class App extends Component {
             <Route path="/user/:username" component={Profile} />
             <Route path="/chat" component={ChatPage} />
             <Route path="/auctions" component={AuctionsList} />
-            <Route path="/auction/item/:id" component={AuctionPage}  />
+            <Route path="/auction/item/:id" component={AuctionPage} />
             <Route path="/new-auction" component={NewAuction} />
             <Route path="/manage" component={ManageAuctions} />
             <Route path="/auction-manage" component={AuctionManagePage} />
             <Route exact path="/admin" component={AdminBoard} />
           </Switch>
         </Container>
+        <div className="footer mt-5 p-3">
+          <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p>
+        </div>
 
       </div>
     );
