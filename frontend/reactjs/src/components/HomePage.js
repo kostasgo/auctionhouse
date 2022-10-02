@@ -27,7 +27,7 @@ export default class HomePage extends Component {
     componentDidMount() {
         const currentUser = AuthService.getCurrentUser();
         const guest = AuthService.getGuest();
-        console.log(guest);
+
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
         if (!guest && !currentUser) this.setState({ redirect: "/login" });
     }
@@ -39,18 +39,14 @@ export default class HomePage extends Component {
         }
 
         const handleSearch = () => {
-            console.log("SEARCH CLICKED");
-            //  <Route path="/" element={<Navigate to="/" />} />
         };
 
         const handleSelect = (id) => {
-            console.log("SELECT CLICKED");
             this.setState({ toAuctionManage: true });
             this.setState({ auction_id: id });
         };
 
         const handleUserClick = (id) => {
-            console.log("USER CLICKED");
         };
 
 

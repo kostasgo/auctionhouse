@@ -64,7 +64,6 @@ export default class AuctionsList extends Component {
         const guest = AuthService.getGuest();
         var activeId = -1;
         if (currentUser) {
-            console.log(currentUser);
             this.setState({ currentUser: currentUser, userReady: true });
             activeId = currentUser.id;
         }
@@ -74,8 +73,7 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctionsCount(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, true)
             .then(response => response.data)
             .then((data) => {
-                console.log("initial count")
-                console.log(data);
+
                 this.setState({
                     totalResults: data,
                     resultsReady: true
@@ -86,7 +84,6 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctions(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, this.state.pageOffset)
             .then(response => response.data)
             .then((data) => {
-                console.log(data.length);
                 this.setState({ auctions: data });
             });
 
@@ -112,9 +109,6 @@ export default class AuctionsList extends Component {
 
     handleReady() {
         this.state.resultsReady = false;
-        console.log("in handle ready")
-        console.log(this.state.pageOffset)
-        console.log(Math.ceil(this.state.totalResults / 9))
 
         if (this.state.pageOffset + 1 > Math.ceil(this.state.totalResults / 9) || Math.ceil(this.state.totalResults / 9) == 1) {
             document.getElementById("next-page").setAttribute("class", "page-link disabled")
@@ -139,8 +133,6 @@ export default class AuctionsList extends Component {
         auctionService.searchAuctionsCount(this.state.search_string, this.state.filter1value, this.state.filter2value, this.state.filter3value, true, activeId, true)
             .then(response => response.data)
             .then((data) => {
-                console.log("after search count")
-                console.log(data);
                 this.setState({
                     totalResults: data,
                     resultsReady: true
@@ -158,36 +150,29 @@ export default class AuctionsList extends Component {
         this.setState({ filter1value: 50000 });
         document.getElementById("price").value = this.state.filter1value;
         document.getElementById("num1").innerHTML = this.state.filter1value;
-        // console.log("handler1");
     }
 
     handleSlider(e) {
         this.state.filter1value = e.target.value;
         document.getElementById("num1").innerHTML = this.state.filter1value;
-        // console.log(this.state.filter1value);
     }
 
     handleCategoryFilter() {
         this.setState({ filter2value: "%" });
         document.getElementById("category").value = null;
-        // console.log("handler2")
-
     }
 
     handleCategory(e) {
         this.state.filter2value = e.target.value;
-        // console.log(this.state.filter2value);
     }
 
     handleCountryFilter() {
         this.setState({ filter3value: "%" });
         document.getElementById("country").value = null;
-        // console.log("handler3");
     }
 
     handleCountry(e) {
         this.state.filter3value = e.target.value;
-        // console.log(this.state.filter3value);
     }
 
     handlePageNext() {
@@ -244,7 +229,6 @@ export default class AuctionsList extends Component {
 
 
     handleUserClick() {
-        // console.log("USER CLICKED");
         //  <Route path="/" element={<Navigate to="/" />} />
     };
 

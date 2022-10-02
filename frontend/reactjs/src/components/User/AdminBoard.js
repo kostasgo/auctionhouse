@@ -9,6 +9,7 @@ import EventBus from '../../common/EventBus';
 import { Redirect } from 'react-router-dom';
 
 
+
 export default class AdminBoard extends Component {
 
     constructor(props) {
@@ -29,7 +30,6 @@ export default class AdminBoard extends Component {
         UserService.getAdminBoard()
             .then(response => response.data)
             .then((data) => {
-                console.log(data);
                 this.setState({ users: data });
             },
                 error => {
@@ -73,14 +73,13 @@ export default class AdminBoard extends Component {
                     for (var i = 0, l = usersEdited.length; i < l; i++) {
                         if (usersEdited[i].id === response.data.id) {
                             usersEdited[i] = response.data;
-                            console.log(usersEdited[i].username + " YES");
+                            // console.log(usersEdited[i].username + " YES");
                         }
                         else {
-                            console.log(usersEdited[i].username + " NO");
+                            // console.log(usersEdited[i].username + " NO");
                         }
 
                     }
-                    console.log(usersEdited);
                     this.setState({
                         users: usersEdited,
                         message: "User successfully enabled!",
@@ -111,7 +110,6 @@ export default class AdminBoard extends Component {
             })
             const auctions = await AuctionService.getAllAuctions();
 
-            console.log(auctions.data);
 
 
 
@@ -123,7 +121,7 @@ export default class AdminBoard extends Component {
                 const jsonString = `data:text/json;chatset=utf-8,
                     ${JSON.stringify(auctions.data, null, 2)}
                 }`;
-                console.log(jsonString);
+                // console.log(jsonString);
 
                 const link = document.createElement("a");
                 link.href = jsonString;
@@ -137,7 +135,7 @@ export default class AdminBoard extends Component {
                 })
             }
             else {
-                console.log(JSON.stringify(auctions))
+                // console.log(JSON.stringify(auctions))
                 var xml = '<Items>';
                 auctions.data.forEach(
                     (auction) => {

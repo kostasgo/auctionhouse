@@ -134,7 +134,6 @@ export default class NewAuction extends Component {
         axios.get("https://nominatim.openstreetmap.org/search.php?q=" + String(e.target.value) + "&format=jsonv2")
             .then(response => response.data)
             .then((data) => {
-                // console.log(data[0]);
                 this.map.flyTo([data[0].lat, data[0].lon], 7);
             });
     }
@@ -146,7 +145,6 @@ export default class NewAuction extends Component {
         axios.get("https://nominatim.openstreetmap.org/search.php?q=" + String(e.target.value) + "&format=jsonv2")
             .then(response => response.data)
             .then((data) => {
-                // console.log(data[0]);
                 this.setState({
                     latitude: parseFloat(data[0].lat),
                     longitude: parseFloat(data[0].lon)
@@ -179,8 +177,6 @@ export default class NewAuction extends Component {
     }
 
     onAddCategory(e) {
-        console.log(e.target.selectedOptions);
-        // console.log(e.target.value);
         this.state.categories = [];
         for (let j = 0; j < e.target.selectedOptions.length; j++) {
             this.state.categories.push(e.target.selectedOptions[j].value);
@@ -192,13 +188,10 @@ export default class NewAuction extends Component {
         this.setState({
             endDate: (e.target.value).replace('T', ' ')
         });
-        // console.log(e.target.value);
     }
 
 
     onChange(e) {
-        console.log(e)
-
         for (let i = 0; i < e.length; i++) {
             document.getElementById("pic" + String(i + 1)).src = (e[i].data);
             document.getElementById("pic" + String(i + 1)).name = (e[i].file.name);
@@ -268,7 +261,6 @@ export default class NewAuction extends Component {
                 imageNames
             ).then(
                 response => {
-                    console.log(response);
                     this.setState({
                         message: response.data.message,
                         successful: true
@@ -300,8 +292,6 @@ export default class NewAuction extends Component {
     }
 
     handleBack2() {
-        console.log("BACK CLICKED");
-        // console.log(this.state.auction.seller);
         this.setState({ toManage2: true });
     };
 

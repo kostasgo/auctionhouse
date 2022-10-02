@@ -63,13 +63,11 @@ export default class ChatPage extends Component {
 
         userService.getNotify(currentUser.id).then(response => response.data)
         .then((data) => {
-            // console.log(data.notify, this.state.userReady)
         this.setState({ notify : data.notify});
         });
     }
 
     handleToInbox() {
-        console.log(this.state.currentUser.notify);
         this.setState({ toInbox: true, toChat: false });
 
         const currentUser = AuthService.getCurrentUser();
@@ -79,7 +77,6 @@ export default class ChatPage extends Component {
         ChatService.getUserInbox(currentUser.id)
             .then(response => response.data)
             .then((data) => {
-                console.log(data);
                 this.setState({ messages: data });
             });
 
@@ -96,7 +93,6 @@ export default class ChatPage extends Component {
         ChatService.getUserSent(currentUser.id)
             .then(response => response.data)
             .then((data) => {
-                // console.log(data);
                 this.setState({ messages: data });
             });
 
@@ -136,7 +132,6 @@ export default class ChatPage extends Component {
     }
 
     handleReply(sender, receiver, text) {
-        // console.log("sender ", sender, "  receiver ", receiver, "  text ", text);
         ChatService.sendMessage(sender,receiver,text);
         this.setState({
             showReplyPopUp: false,

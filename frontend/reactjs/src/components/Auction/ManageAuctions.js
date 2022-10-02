@@ -43,7 +43,6 @@ export default class ManageAuctions extends Component {
         }
         if (currentUser != null) {
             this.setState({ currentUser: currentUser, userReady: true });
-            //console.log(currentUser.id);
             auctionService.getAllUserAuctionsCount(activeId, true)
                 .then(response => response.data)
                 .then((data) => {
@@ -73,7 +72,6 @@ export default class ManageAuctions extends Component {
     
 
     handleSelect(id) {
-        console.log("SELECT CLICKED");
         this.setState({ toAuctionManage: true });
         this.setState({ auction_id: id });
     };
@@ -130,11 +128,7 @@ export default class ManageAuctions extends Component {
     }
 
     render() {
-        console.log(this.state.pageOffset);
-        console.log(this.state.totalResults);
-        console.log(Math.ceil(this.state.totalResults / 8));
     
-
         return (this.state.currentUser != "redirect" ?
             <>
 

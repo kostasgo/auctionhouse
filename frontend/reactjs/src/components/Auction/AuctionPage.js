@@ -22,7 +22,7 @@ export function calcDifference(dt1, dt2) {
 export default class AuctionPage extends Component {
     constructor(props, context) {
         super(props);
-        //console.log(this.props.data_tranfer);
+
         this.state = {
             auction: {},
             seller: {},
@@ -46,13 +46,11 @@ export default class AuctionPage extends Component {
 
     componentDidMount() {
         const id = this.props.match.params.id;
-        // console.log(id);
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
         axios.get("http://localhost:8080/api/v1/auctions/" + String(id))
             .then(response => response.data)
             .then((data) => {
-                console.log(data);
                 this.setState({
                     auction: data,
                     seller: data.seller,
@@ -68,23 +66,20 @@ export default class AuctionPage extends Component {
                 });
 
             });
-        //console.log(this.state.bids);
     }
 
     render() {
         const isHighestBidder = () => {
             var highestBidder = "";
             for (const bid of this.state.bids) {
-                console.log(bid.amount);
                 if (this.state.auction.currently == bid.amount) {
                     highestBidder = bid.bidder.user.username;
-                    console.log(highestBidder);
                     break;
                 }
 
             }
 
-            console.log("highest: " + highestBidder + " current: " + this.state.currentUser.username);
+
             if (highestBidder == this.state.currentUser.username) {
                 return true;
             }
@@ -96,8 +91,6 @@ export default class AuctionPage extends Component {
 
 
         const handleBack = () => {
-            console.log("BACK CLICKED");
-            // console.log(this.state.auction.seller);
             this.setState({ toBack: true });
         };
 
@@ -172,9 +165,6 @@ export default class AuctionPage extends Component {
 
         const handleBidConfirm = () => {
             var amount = parseFloat(document.getElementById("bid_amount").value);
-            //console.log(this.state.currentUser.username);
-            //console.log(this.state.auction.id);
-            //console.log(amount);
 
             this.setState({
                 successful: false,
@@ -269,10 +259,10 @@ export default class AuctionPage extends Component {
                     <a variant="primary" className='back-button shadow btn btn-primary' href="/auctions"> &emsp;BACK TO BROWSING&emsp; </a>
 
                     <Row className="my-4">
-                        <Col className='carousel-info-container mt-0' xs={12} md={6} >
+                        <Col className='carousel-info-container mt-0' xs={12} md={6} key={this.state.auction.imgUrl} >
                             <Carousel variant="dark" className='carousel'>
                                 {this.state.auction.imgUrl.split(",").map((url) => (
-                                    <Carousel.Item>
+                                    <Carousel.Item key={this.state.auction.name}>
                                         <img
                                             className="d-block w-100"
                                             src={url}

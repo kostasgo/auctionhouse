@@ -159,7 +159,6 @@ export default class Register extends Component {
         this.form.validateAll();
 
         if (this.checkBtn.context._errors.length === 0) {
-            console.log(this.state);
             AuthService.register(
                 this.state.username,
                 this.state.name,

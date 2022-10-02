@@ -26,7 +26,7 @@ export function calcDifference(dt1, dt2) {
 export default class AuctionManagePage extends Component {
     constructor(props, context) {
         super(props);
-        console.log(this.props.data_tranfer);
+
         this.state = {
             auction: {},
             seller: {},
@@ -52,7 +52,7 @@ export default class AuctionManagePage extends Component {
         axios.get("http://localhost:8080/api/v1/auctions/" + String(this.props.data_tranfer))
             .then(response => response.data)
             .then((data) => {
-                console.log(data);
+
                 this.setState({
                     auction: data
                     , seller: data.seller
@@ -73,7 +73,6 @@ export default class AuctionManagePage extends Component {
 
                 for (let j = 0; j < data.categories.length; j++) {
                     this.state.cur_categories.push(data.categories[j].name);
-                    console.log(data.categories[j].name);
                 }
 
 
@@ -88,8 +87,6 @@ export default class AuctionManagePage extends Component {
     render() {
 
         const handleBack = () => {
-            console.log("BACK CLICKED");
-            // console.log(this.state.auction.seller);
             this.setState({ toManage: true });
         };
 
@@ -179,14 +176,12 @@ export default class AuctionManagePage extends Component {
 
 
         const handleEdit = () => {
-            console.log("in handleedit")
             this.setState({
                 editMode: true
             });
         };
 
         const handleEditBack = () => {
-            console.log("in handleedit")
             this.setState({
                 editMode: false
             });
@@ -218,13 +213,10 @@ export default class AuctionManagePage extends Component {
         };
 
         const handlecategories = (e) => {
-            // console.log(e.target.selectedOptions);
             this.state.cur_categories = [];
             for (let j = 0; j < e.target.selectedOptions.length; j++) {
                 this.state.cur_categories.push(e.target.selectedOptions[j].value);
-                console.log(e.target.selectedOptions[j].value);
             }
-            console.log(this.state.cur_categories);
         };
 
 
@@ -247,7 +239,7 @@ export default class AuctionManagePage extends Component {
                     toast.success('Auction successfully edited', {
                         position: toast.POSITION.TOP_CENTER
                       });
-                    // console.log(response);
+
                     this.setState({
                         message: response.data.message,
                         successful: true,
