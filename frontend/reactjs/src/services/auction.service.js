@@ -22,18 +22,18 @@ class AuctionService {
             },{ headers: authHeader() });
         }
 
-        updateAuction(id, name, description, categories, firstBid, buyPrice, ends, location) {
-            return axios.post(API_URL+"/update_auction", {
-                id,
-                name,
-                description,
-                categories,
-                firstBid,
-                buyPrice,
-                ends,
-                location,
-                },{ headers: authHeader() });
-            }
+    updateAuction(id, name, description, categories, firstBid, buyPrice, ends, location) {
+        return axios.post(API_URL+"/update_auction", {
+            id,
+            name,
+            description,
+            categories,
+            firstBid,
+            buyPrice,
+            ends,
+            location,
+            },{ headers: authHeader() });
+        }
 
     enableAuction(auction_id) {
         return axios.post(API_URL + "/enable", {
@@ -50,6 +50,10 @@ class AuctionService {
 
     deleteAuction(auction_id) {
         return axios.delete(API_URL + "/delete/" + auction_id, { headers: authHeader() });
+    }
+
+    getRecommended(user_id) {
+        return axios.get(API_URL + "/recommended" + "?id="+ user_id );
     }
 
     getAllAuctions() {

@@ -265,4 +265,10 @@ public class AuctionController {
         return ResponseEntity.ok(new MessageResponse("Auction successfully deleted!"));
     }
 
+    @GetMapping("/recommended")
+    ResponseEntity<Collection<Auction>> getRecommended(@RequestParam("id") String id){
+        Optional<User> user = userService.findById(Long.parseLong(id));
+        return new ResponseEntity<>(auctionService.getUserRecommendations( user.get() ), HttpStatus.OK);
+    }
+
 }

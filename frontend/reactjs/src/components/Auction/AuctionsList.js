@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from 'react'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Router } from 'react-router-dom';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup';
 import "../../css/AuctionsList.css"
@@ -56,7 +56,6 @@ export default class AuctionsList extends Component {
         this.handleCategoryFilter = this.handleCategoryFilter.bind(this);
         this.handleCountryFilter = this.handleCountryFilter.bind(this);
         this.handleReady = this.handleReady.bind(this);
-        this.handleSelect = this.handleSelect.bind(this);
         this.handleUserClick = this.handleUserClick.bind(this);
     }
 
@@ -243,11 +242,6 @@ export default class AuctionsList extends Component {
         document.getElementById("active-page").innerHTML = this.state.pageOffset + 1;
     }
 
-    handleSelect(id) {
-        // console.log("SELECT CLICKED");
-        this.setState({ toAuction: true });
-        this.setState({ auction_id: id });
-    };
 
     handleUserClick() {
         // console.log("USER CLICKED");
@@ -279,7 +273,7 @@ export default class AuctionsList extends Component {
 
 
 
-        return (!this.state.toAuction) ? <>
+        return (<>
 
             <script>{this.state.resultsReady ? this.handleReady() : null}</script>
 
@@ -390,10 +384,10 @@ export default class AuctionsList extends Component {
 
                                                 <div className="mx-5 mt-3 d-flex item-footer">
                                                     <div className="btn-price">
-                                                        <Button variant="primary" className='select-button w-100' onClick={() => this.handleSelect(auction.id)}>
+                                                        <a className='select-button w-100 btn btn-primary' href={`/auction/item/${auction.id}`} >
                                                             <strong>PRICE TO BEAT</strong><br />
                                                             <strong class="price">{auction.currently} €</strong>
-                                                        </Button>
+                                                        </a>
                                                     </div>
 
                                                 </div>
@@ -411,11 +405,7 @@ export default class AuctionsList extends Component {
                 <p className='lead fw-light text-end'>by Konstantinos * (Gogas + Antzoulidis)</p>
             </div>
         </>
-            :
-            <>
-                <AuctionPage data_tranfer={this.state.auction_id} />
-                <br></br><br></br><br></br><br></br>
-            </>
+        )
     }
 
 
