@@ -128,7 +128,7 @@ public class XMLParse {
 
             //Process element list.
 //            items.getLength()
-            for (int temp = 0; temp < 15; temp++) {
+            for (int temp = 0; temp < items.getLength() ; temp++) {
                 Node item = items.item(temp);
                 if (item.getNodeType() == Node.ELEMENT_NODE) {
                     Seller currentSeller = userlist.get(temp % 10).getSeller();
@@ -258,9 +258,9 @@ public class XMLParse {
 
 
 
-            clf.train(allAuctions, allUsers, 100000, 0.00001, 0.001, 1000, 0.001);
+            clf.train(allAuctions, allUsers, 100000, 0.001, 0.01, 10000, 0.001);
 
-            List<Auction> recommendations = auctionService.getUserRecommendations(user);
+//            List<Auction> recommendations = auctionService.getUserRecommendations(user);
 
 
         } catch (Exception e) {

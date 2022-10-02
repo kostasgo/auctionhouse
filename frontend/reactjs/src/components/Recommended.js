@@ -26,12 +26,22 @@ export default class Recommended extends Component {
     componentDidMount() {
         console.log(this.props.id);
 
-        auctionService.getRecommended(this.props.id)
+        const currentUser = AuthService.getCurrentUser();
+        const guest = AuthService.getGuest();
+        var activeId = -1;
+
+        if (currentUser) {
+            this.setState({ currentUser: currentUser, userReady: true });
+            activeId = currentUser.id;
+        }
+        if (currentUser)auctionService.getRecommended(this.props.id)
             .then(response => response.data)
             .then((data) => {
                 console.log(data.length);
                 this.setState({ recommended_auctions: data });
             });
+
+        
     }
 
     handleSelect = (id) => {
@@ -76,7 +86,7 @@ export default class Recommended extends Component {
                 <Row>
                     {
                         this.state.recommended_auctions.length === 0 ?
-                            <h3>0 Auctions Available</h3>
+                            <h3>0 Auctions Recommended</h3>
                             :
 
                             this.state.recommended_auctions.map((auction) => (
