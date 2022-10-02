@@ -10,6 +10,7 @@ import Modal from 'react-bootstrap/Modal';
 import AuthService from "../../services/auth.service";
 import BidService from '../../services/bid.service';
 import AuctionService from '../../services/auction.service';
+import Recommended from "../Recommended";
 
 export function calcDifference(dt1, dt2) {
     var diff = (dt1 - dt2) / 1000;
@@ -44,9 +45,11 @@ export default class AuctionPage extends Component {
     }
 
     componentDidMount() {
+        const id = this.props.match.params.id;
+        // console.log(id);
         const currentUser = AuthService.getCurrentUser();
         if (currentUser) this.setState({ currentUser: currentUser, userReady: true });
-        axios.get("http://localhost:8080/api/v1/auctions/" + String(this.props.data_tranfer))
+        axios.get("http://localhost:8080/api/v1/auctions/" + String(id))
             .then(response => response.data)
             .then((data) => {
                 console.log(data);
@@ -229,7 +232,7 @@ export default class AuctionPage extends Component {
         var lng = this.state.auction.longitude;
 
 
-        return (!this.state.toBack) ?
+        return (
             (!this.state.Loaded) ? <></> :
 
                 <>
@@ -263,7 +266,7 @@ export default class AuctionPage extends Component {
                         </div>
                     </div>
 
-                    <Button variant="primary" className='back-button shadow' onClick={() => handleBack(this.state.auction.id)}> &emsp;BACK TO BROWSING&emsp; </Button>
+                    <a variant="primary" className='back-button shadow btn btn-primary' href="/auctions"> &emsp;BACK TO BROWSING&emsp; </a>
 
                     <Row className="my-4">
                         <Col className='carousel-info-container mt-0' xs={12} md={6} >
@@ -472,14 +475,14 @@ export default class AuctionPage extends Component {
                             }
                         </Col>
                     </Row>
-
+                    <hr />
+                    <div id='recommended'>
+                        <Recommended id={this.state.currentUser.id}></Recommended>
+                    </div>
 
 
 
                 </>
-            :
-            <>
-                <AuctionsList message={this.state.message} successful={this.state.successful} />
-            </>
+            )
     }
 }
